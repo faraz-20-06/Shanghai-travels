@@ -116,7 +116,6 @@
 
         input:focus, textarea:focus, select:focus { outline: none; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1); }
 
-        /* Nav text colors */
         .nav-link { color: rgba(255,255,255,0.85) !important; transition: color 0.3s ease, background-color 0.3s ease !important; }
         .nav-link:hover { color: #ffffff !important; background-color: rgba(255,255,255,0.1) !important; }
         .nav-link.nav-active { color: #f97316 !important; }
@@ -137,9 +136,11 @@
         .mobile-link:hover { color: #f97316 !important; background-color: #fff7ed !important; }
 
         .important-note { background: linear-gradient(135deg, #fff7ed, #fef3c7); border-left: 4px solid #f97316; }
-
-        /* ID number mono style */
         .id-number { font-family: 'Inter', monospace; letter-spacing: 0.15em; }
+
+        /* Social icon hover */
+        .social-icon { transition: all 0.3s ease; }
+        .social-icon:hover { transform: translateY(-2px); }
     </style>
 </head>
 <body class="bg-white text-gray-800 font-inter antialiased">
@@ -272,7 +273,6 @@
             </div>
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
                 <div class="observe-left space-y-6">
-                    <!-- Image -->
                     <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10">
                         <img src="https://picsum.photos/seed/shanghai-skyline-bund/700/420.jpg" alt="Shanghai Skyline" class="w-full h-[320px] sm:h-[420px] object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark/60 via-transparent to-transparent"></div>
@@ -283,23 +283,13 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Identification No. Card -->
                     <div class="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-4">
-                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200">
-                                    <iconify-icon icon="mdi:identifier" class="text-white text-2xl"></iconify-icon>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-brand-blue-dark text-sm">Identification No.</h4>
-                                    <p class="text-gray-400 text-xs">SECP Registration</p>
-                                </div>
+                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200"><iconify-icon icon="mdi:identifier" class="text-white text-2xl"></iconify-icon></div>
+                                <div><h4 class="font-bold text-brand-blue-dark text-sm">Identification No.</h4><p class="text-gray-400 text-xs">SECP Registration</p></div>
                             </div>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-600 text-[10px] font-bold rounded-full uppercase tracking-wider">
-                                <iconify-icon icon="mdi:check-decagram" class="text-xs"></iconify-icon>
-                                Verified
-                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-600 text-[10px] font-bold rounded-full uppercase tracking-wider"><iconify-icon icon="mdi:check-decagram" class="text-xs"></iconify-icon>Verified</span>
                         </div>
                         <div class="mt-5 bg-gradient-to-r from-gray-50 to-brand-blue-50 rounded-2xl px-6 py-5 border border-gray-100 text-center">
                             <span class="id-number text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-widest">0232629</span>
@@ -307,7 +297,6 @@
                         <p class="text-gray-400 text-xs mt-3 text-center">Registered with Securities and Exchange Commission of Pakistan under Companies Act 2017</p>
                     </div>
                 </div>
-
                 <div class="observe-right">
                     <p class="text-gray-600 leading-relaxed mb-6"><strong class="text-gray-800">Shanghai Travel & Tours (Private) Limited</strong> is a premier visa consultancy based in Islamabad, Pakistan, specializing in China visa processing. Legally incorporated under the <strong class="text-gray-800">Companies Act 2017</strong> with the Securities and Exchange Commission of Pakistan (SECP).</p>
                     <p class="text-gray-600 leading-relaxed mb-6">Founded by <strong class="text-gray-800">Salman Sadiq (CEO)</strong>, our company has helped thousands of Pakistani citizens successfully obtain their China visas with over a decade of experience.</p>
@@ -394,7 +383,7 @@
                 <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Documents Required</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Visa <span class="gradient-text">Requirements</span></h2>
                 <div class="section-divider mx-auto mb-6"></div>
-                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed">Make sure you have all the following documents ready before applying. Contact us if you need any assistance.</p>
+                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed">Make sure you have all the following documents ready before applying.</p>
             </div>
             <div class="grid lg:grid-cols-3 gap-6">
                 <div class="observe-scale doc-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm" data-delay="0">
@@ -425,7 +414,7 @@
                 </div>
                 <div class="observe-scale doc-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm lg:col-span-3" data-delay="480">
                     <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4"><div class="w-14 h-14 rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account-group" class="text-brand-orange text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-brand-blue text-white text-xs font-bold flex items-center justify-center">7</span><h4 class="font-bold text-brand-blue-dark text-lg">Family Details for Application Form</h4></div></div>
-                    <p class="text-gray-500 text-sm leading-relaxed mb-4">Complete family details are required to fill in the China visa application form. Please prepare the following information:</p>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-4">Complete family details are required to fill in the China visa application form:</p>
                     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         <div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:account" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Father's full name</span></div>
                         <div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:account" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Mother's full name</span></div>
@@ -460,7 +449,6 @@
                 <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Process</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">How It <span class="gradient-text">Works</span></h2>
                 <div class="section-divider mx-auto mb-6"></div>
-                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed">Getting your China visa is simple with our 4-step process.</p>
             </div>
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="observe-fade text-center relative" data-delay="0">
@@ -557,6 +545,35 @@
                     </form>
                 </div>
             </div>
+
+            <!-- ========== GOOGLE MAP ========== -->
+            <div class="observe-fade mt-12 rounded-3xl overflow-hidden border border-gray-200 shadow-sm">
+                <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b border-gray-200">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+                            <iconify-icon icon="mdi:google" class="text-red-500 text-xl"></iconify-icon>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-brand-blue-dark text-sm">Our Office Location</h4>
+                            <p class="text-gray-400 text-xs">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Islamabad</p>
+                        </div>
+                    </div>
+                    <a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white text-xs font-semibold rounded-lg transition-colors">
+                        <iconify-icon icon="mdi:directions" class="text-base"></iconify-icon>Get Directions
+                    </a>
+                </div>
+                <iframe 
+                    src="https://maps.google.com/maps?q=Office+1-A+Ahmed+Center+Main+Park+Road+Chatha+Bakhtawar+Next+to+Gerrys+Building+Islamabad+Pakistan&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                    width="100%" 
+                    height="350" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    class="w-full"
+                    title="Shanghai Travel & Tours Office Location - Islamabad">
+                </iframe>
+            </div>
         </div>
     </section>
 
@@ -580,19 +597,64 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
                 <div class="lg:col-span-1">
-                    <div class="flex items-center gap-3 mb-5"><div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center"><iconify-icon icon="mdi:airplane-takeoff" class="text-white text-lg"></iconify-icon></div><div><span class="text-sm font-bold leading-tight block">Shanghai Travel</span><span class="text-[9px] text-gray-400 tracking-wider uppercase">& Tours Pvt Ltd</span></div></div>
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center"><iconify-icon icon="mdi:airplane-takeoff" class="text-white text-lg"></iconify-icon></div>
+                        <div><span class="text-sm font-bold leading-tight block">Shanghai Travel</span><span class="text-[9px] text-gray-400 tracking-wider uppercase">& Tours Pvt Ltd</span></div>
+                    </div>
                     <p class="text-gray-400 text-sm leading-relaxed mb-5">Your trusted partner for China visa services in Islamabad. SECP registered.</p>
+                    <!-- Social Icons -->
                     <div class="flex gap-3">
-                        <a href="https://wa.me/923100059895" target="_blank" class="w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 flex items-center justify-center transition-colors"><iconify-icon icon="mdi:whatsapp" class="text-gray-400 hover:text-green-400 text-lg"></iconify-icon></a>
-                        <a href="mailto:shanghaitravel92@hotmail.com" class="w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-500/20 flex items-center justify-center transition-colors"><iconify-icon icon="mdi:microsoft-outlook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon></a>
+                        <a href="https://www.facebook.com/shanghaitravel92/" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-600/20 flex items-center justify-center" aria-label="Facebook">
+                            <iconify-icon icon="mdi:facebook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon>
+                        </a>
+                        <a href="https://wa.me/923100059895" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 flex items-center justify-center" aria-label="WhatsApp">
+                            <iconify-icon icon="mdi:whatsapp" class="text-gray-400 hover:text-green-400 text-lg"></iconify-icon>
+                        </a>
+                        <a href="mailto:shanghaitravel92@hotmail.com" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-500/20 flex items-center justify-center" aria-label="Email">
+                            <iconify-icon icon="mdi:microsoft-outlook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon>
+                        </a>
+                        <a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-red-500/20 flex items-center justify-center" aria-label="Location">
+                            <iconify-icon icon="mdi:map-marker" class="text-gray-400 hover:text-red-400 text-lg"></iconify-icon>
+                        </a>
                     </div>
                 </div>
-                <div><h4 class="font-bold text-sm mb-5 text-white">Quick Links</h4><ul class="space-y-3"><li><a href="#home" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Home</a></li><li><a href="#about" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">About Us</a></li><li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Services</a></li><li><a href="#requirements" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Requirements</a></li><li><a href="#contact" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Contact</a></li></ul></div>
-                <div><h4 class="font-bold text-sm mb-5 text-white">Visa Types</h4><ul class="space-y-3"><li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Tourist Visa (L)</a></li><li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Business Visa (M)</a></li><li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Work Visa (Z)</a></li><li><a href="#requirements" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Document Checklist</a></li></ul></div>
-                <div><h4 class="font-bold text-sm mb-5 text-white">Contact Info</h4><ul class="space-y-3"><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:+923100059895" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">+92 310 0059895</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:+923426019038" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">+92 342 6019038</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:email" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="mailto:shanghaitravel92@hotmail.com" class="text-gray-400 text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:map-marker" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><span class="text-gray-400 text-sm leading-relaxed">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Next to Gerrys Building, Islamabad, Pakistan</span></li></ul></div>
+                <div>
+                    <h4 class="font-bold text-sm mb-5 text-white">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Home</a></li>
+                        <li><a href="#about" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">About Us</a></li>
+                        <li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Services</a></li>
+                        <li><a href="#requirements" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Requirements</a></li>
+                        <li><a href="#contact" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-5 text-white">Visa Types</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Tourist Visa (L)</a></li>
+                        <li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Business Visa (M)</a></li>
+                        <li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Work Visa (Z)</a></li>
+                        <li><a href="#requirements" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Document Checklist</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm mb-5 text-white">Contact Info</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:+923100059895" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">+92 310 0059895</a></li>
+                        <li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:+923426019038" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">+92 342 6019038</a></li>
+                        <li class="flex items-start gap-2"><iconify-icon icon="mdi:email" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="mailto:shanghaitravel92@hotmail.com" class="text-gray-400 text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></li>
+                        <li class="flex items-start gap-2"><iconify-icon icon="mdi:facebook" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="https://www.facebook.com/shanghaitravel92/" target="_blank" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">facebook.com/shanghaitravel92</a></li>
+                        <li class="flex items-start gap-2"><iconify-icon icon="mdi:map-marker" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="text-gray-400 text-sm hover:text-brand-orange transition-colors leading-relaxed">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Next to Gerrys Building, Islamabad</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="border-t border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4"><p class="text-gray-500 text-xs">&copy; 2025 Shanghai Travel & Tours (Private) Limited. All rights reserved.</p><p class="text-gray-600 text-xs">SECP Registered | China Visa Specialist | Islamabad</p></div></div>
+        <div class="border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-gray-500 text-xs">&copy; 2025 Shanghai Travel & Tours (Private) Limited. All rights reserved.</p>
+                <p class="text-gray-600 text-xs">SECP Registered | China Visa Specialist | Islamabad</p>
+            </div>
+        </div>
     </footer>
 
     <!-- ========== WHATSAPP FLOAT ========== -->
@@ -634,7 +696,7 @@
             const n = document.getElementById('formName').value.trim(), p = document.getElementById('formPhone').value.trim(), v = document.getElementById('formVisaType').value, m = document.getElementById('formMessage').value.trim();
             if (!n || !p || !m) return;
             showToast(); e.target.reset();
-            setTimeout(() => window.open('https://wa.me/923100059895?text=' + encodeURIComponent('Hi, I\'m ' + n + '.\nPhone: ' + p + '\nVisa Type: ' + (v || 'Not sure') + '\nMessage: ' + m), '_blank'), 1500);
+            setTimeout(() => window.open('https://wa.me/923100059895?text=' + encodeURIComponent("Hi, I'm " + n + '.\nPhone: ' + p + '\nVisa Type: ' + (v || 'Not sure') + '\nMessage: ' + m), '_blank'), 1500);
         });
 
         function showToast() { document.getElementById('toast').classList.add('show'); setTimeout(hideToast, 5000); }

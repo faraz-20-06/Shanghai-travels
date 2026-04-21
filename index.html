@@ -128,6 +128,11 @@
         .id-number { font-family: 'Inter', monospace; letter-spacing: 0.15em; }
         .social-icon { transition: all 0.3s ease; }
         .social-icon:hover { transform: translateY(-2px); }
+
+        .team-card { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .team-card:hover { transform: translateY(-8px); box-shadow: 0 25px 60px -12px rgba(30, 64, 175, 0.15); }
+        .team-card:hover .team-avatar { transform: scale(1.05); }
+        .team-avatar { transition: transform 0.4s ease; }
     </style>
 </head>
 <body class="bg-white text-gray-800 font-inter antialiased">
@@ -293,8 +298,94 @@
         </div>
     </section>
 
+    <!-- ========== OUR TEAM ========== -->
+    <section id="team" class="py-20 sm:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 observe-fade">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Our Team</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Meet the <span class="gradient-text">People Behind</span></h2>
+                <div class="section-divider mx-auto mb-6"></div>
+                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed">The dedicated professionals who make your China visa journey seamless and successful.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- CEO Card -->
+                <div class="team-card observe-scale bg-white rounded-3xl border-2 border-brand-orange/20 p-8 shadow-lg shadow-orange-50 relative text-center" data-delay="0">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-xs font-bold rounded-full flex items-center gap-1.5">
+                        <iconify-icon icon="mdi:crown" class="text-sm"></iconify-icon>CEO
+                    </div>
+                    <div class="team-avatar w-24 h-24 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mx-auto mb-6 shadow-xl shadow-orange-200/50 mt-2">
+                        <iconify-icon icon="mdi:account-tie" class="text-white text-4xl"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-brand-blue-dark mb-1">Salman Sadiq</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-orange/10 text-brand-orange text-xs font-bold rounded-full mb-5">Chief Executive Officer</span>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Founder of Shanghai Travel & Tours with over 10 years of expertise in China visa consultancy. Leading the company with vision and dedication.</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <a href="https://wa.me/923100059895" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Salman Sadiq">
+                            <iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon>
+                        </a>
+                        <a href="tel:+923100059895" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Salman Sadiq">
+                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon>
+                        </a>
+                    </div>
+                    <div class="mt-5 pt-5 border-t border-orange-100">
+                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs">
+                            <iconify-icon icon="mdi:phone" class="text-brand-orange text-sm"></iconify-icon>
+                            <span>+92 310 0059895</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Partner 1 Card -->
+                <div class="team-card observe-scale bg-white rounded-3xl border border-gray-100 p-8 shadow-sm text-center" data-delay="150">
+                    <div class="team-avatar w-24 h-24 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-200/50">
+                        <iconify-icon icon="mdi:account-tie" class="text-white text-4xl"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-brand-blue-dark mb-1">Afzaal Minhas</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-5">Partner</span>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Experienced professional dedicated to providing seamless visa processing and personalized guidance to every client.</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <a href="https://wa.me/923100059893" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Afzaal Minhas">
+                            <iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon>
+                        </a>
+                        <a href="tel:+923100059893" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Afzaal Minhas">
+                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon>
+                        </a>
+                    </div>
+                    <div class="mt-5 pt-5 border-t border-gray-100">
+                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs">
+                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon>
+                            <span>+92 310 0059893</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Partner 2 Card -->
+                <div class="team-card observe-scale bg-white rounded-3xl border border-gray-100 p-8 shadow-sm text-center" data-delay="300">
+                    <div class="team-avatar w-24 h-24 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-200/50">
+                        <iconify-icon icon="mdi:account-tie" class="text-white text-4xl"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-brand-blue-dark mb-1">Shakeeb Hussain</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-5">Partner</span>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Committed to delivering excellent client service and ensuring smooth documentation and embassy submission processes.</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <a href="https://wa.me/923118666935" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Shakeeb Hussain">
+                            <iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon>
+                        </a>
+                        <a href="tel:+923118666935" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Shakeeb Hussain">
+                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon>
+                        </a>
+                    </div>
+                    <div class="mt-5 pt-5 border-t border-gray-100">
+                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs">
+                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon>
+                            <span>+92 311 8666935</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ========== SERVICES ========== -->
-    <section id="services" class="py-20 sm:py-28 bg-white">
+    <section id="services" class="py-20 sm:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 observe-fade">
                 <span class="inline-block px-4 py-1.5 rounded-full bg-brand-blue-50 text-brand-blue text-xs font-bold tracking-wider uppercase mb-4">Our Services</span>
@@ -329,7 +420,7 @@
     </section>
 
     <!-- ========== REQUIREMENTS ========== -->
-    <section id="requirements" class="py-20 sm:py-28 bg-gray-50">
+    <section id="requirements" class="py-20 sm:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 observe-fade">
                 <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Documents Required</span>
@@ -350,7 +441,7 @@
     </section>
 
     <!-- ========== HOW IT WORKS ========== -->
-    <section class="py-20 sm:py-28 bg-white">
+    <section class="py-20 sm:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Process</span><h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">How It <span class="gradient-text">Works</span></h2><div class="section-divider mx-auto mb-6"></div></div>
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -363,7 +454,7 @@
     </section>
 
     <!-- ========== TESTIMONIALS ========== -->
-    <section class="py-20 sm:py-28 bg-gray-50">
+    <section class="py-20 sm:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-blue-50 text-brand-blue text-xs font-bold tracking-wider uppercase mb-4">Testimonials</span><h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">What Our <span class="gradient-text">Clients Say</span></h2><div class="section-divider mx-auto mb-6"></div></div>
             <div class="grid md:grid-cols-3 gap-8">
@@ -375,7 +466,7 @@
     </section>
 
     <!-- ========== CONTACT ========== -->
-    <section id="contact" class="py-20 sm:py-28 bg-white">
+    <section id="contact" class="py-20 sm:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Get in Touch</span><h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Contact <span class="gradient-text">Us</span></h2><div class="section-divider mx-auto mb-6"></div></div>
             <div class="grid lg:grid-cols-5 gap-10">
@@ -383,12 +474,12 @@
                     <div class="bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-3xl p-8 text-white relative overflow-hidden"><div class="absolute -bottom-6 -right-6 w-32 h-32 bg-white/5 rounded-full"></div><div class="relative z-10"><h3 class="font-bold text-xl mb-6">Shanghai Travel & Tours</h3><div class="space-y-5"><div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account" class="text-brand-orange text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-xs font-medium mb-0.5">CEO</div><div class="font-semibold text-sm">Salman Sadiq</div></div></div><div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:phone" class="text-brand-orange text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-xs font-medium mb-0.5">Phone</div><a href="tel:+923100059895" class="font-semibold text-sm hover:text-brand-orange transition-colors block">+92 310 0059895</a><a href="tel:+923118666935" class="font-semibold text-sm hover:text-brand-orange transition-colors block">+92 311 8666935</a></div></div><div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:email" class="text-brand-orange text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-xs font-medium mb-0.5">Email</div><a href="mailto:shanghaitravel92@hotmail.com" class="font-semibold text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></div></div><div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-brand-orange text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-xs font-medium mb-0.5">Office Address</div><div class="font-semibold text-sm leading-relaxed">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Next to Gerrys Building, Islamabad, Pakistan</div></div></div></div><a href="https://wa.me/923100059895" target="_blank" class="mt-8 inline-flex items-center gap-2 w-full justify-center px-6 py-3.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors text-sm"><iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>Chat on WhatsApp</a></div></div>
                 </div>
                 <div class="lg:col-span-3 observe-right">
-                    <form id="contactForm" class="bg-gray-50 rounded-3xl p-6 sm:p-10 border border-gray-100"><h3 class="text-xl font-bold text-brand-blue-dark mb-2">Send Us a Message</h3><p class="text-gray-400 text-sm mb-6 md:mb-8">Fill out the form and we'll get back to you within hours.</p><div class="grid sm:grid-cols-2 gap-4 md:gap-5 mb-5"><div><label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label><input type="text" id="formName" required placeholder="Your full name" class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 transition-all"></div><div><label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label><input type="tel" id="formPhone" required placeholder="+92 3XX XXXXXXX" class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 transition-all"></div></div><div class="mb-5"><label class="block text-sm font-semibold text-gray-700 mb-2">Visa Type</label><select id="formVisaType" class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 transition-all"><option value="">Select visa type</option><option value="tourist">Tourist Visa (L)</option><option value="business">Business Visa (M)</option><option value="work">Work Visa (Z)</option><option value="other">Other / Not Sure</option></select></div><div class="mb-6"><label class="block text-sm font-semibold text-gray-700 mb-2">Your Message *</label><textarea id="formMessage" required rows="4" placeholder="Tell us about your visa requirements..." class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 transition-all resize-none"></textarea></div><button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-xl shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:scale-105 transition-all duration-300 text-sm"><iconify-icon icon="mdi:send" class="text-lg"></iconify-icon>Send Message</button></form>
+                    <form id="contactForm" class="bg-white rounded-3xl p-6 sm:p-10 border border-gray-100"><h3 class="text-xl font-bold text-brand-blue-dark mb-2">Send Us a Message</h3><p class="text-gray-400 text-sm mb-6 md:mb-8">Fill out the form and we'll get back to you within hours.</p><div class="grid sm:grid-cols-2 gap-4 md:gap-5 mb-5"><div><label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label><input type="text" id="formName" required placeholder="Your full name" class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 transition-all"></div><div><label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label><input type="tel" id="formPhone" required placeholder="+92 3XX XXXXXXX" class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 transition-all"></div></div><div class="mb-5"><label class="block text-sm font-semibold text-gray-700 mb-2">Visa Type</label><select id="formVisaType" class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 transition-all"><option value="">Select visa type</option><option value="tourist">Tourist Visa (L)</option><option value="business">Business Visa (M)</option><option value="work">Work Visa (Z)</option><option value="other">Other / Not Sure</option></select></div><div class="mb-6"><label class="block text-sm font-semibold text-gray-700 mb-2">Your Message *</label><textarea id="formMessage" required rows="4" placeholder="Tell us about your visa requirements..." class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 transition-all resize-none"></textarea></div><button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-xl shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:scale-105 transition-all duration-300 text-sm"><iconify-icon icon="mdi:send" class="text-lg"></iconify-icon>Send Message</button></form>
                 </div>
             </div>
             <!-- Google Map with red pointer -->
             <div class="observe-fade mt-12 rounded-3xl overflow-hidden border border-gray-200 shadow-sm relative">
-                <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b border-gray-200">
+                <div class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center"><iconify-icon icon="mdi:google" class="text-red-500 text-xl"></iconify-icon></div>
                         <div><h4 class="font-bold text-brand-blue-dark text-sm">Our Office Location</h4><p class="text-gray-400 text-xs">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Islamabad</p></div>
@@ -413,7 +504,7 @@
     </section>
 
     <!-- ========== CTA ========== -->
-    <section class="py-20 bg-gradient-to-br from-brand-blue via-brand-blue-dark to-brand-blue relative overflow-hidden"><div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 30px 30px;"></div><div class="absolute top-0 right-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 observe-fade"><div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-orange-200 text-xs font-semibold tracking-wider uppercase mb-6"><iconify-icon icon="mdi:clock-fast" class="text-brand-orange"></iconify-icon>Don't Delay Your Travel Plans</div><h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-6 leading-tight">Ready to Get Your <span class="text-brand-orange">China Visa?</span></h2><p class="text-blue-100/70 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">Visit our office or contact us today for a free consultation.</p><div class="flex flex-wrap justify-center gap-4"><a href="https://wa.me/923100059895?text=Hi, I want to apply for a China visa." target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-2xl shadow-xl shadow-green-500/30 hover:scale-105 transition-all duration-300 text-sm"><iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>WhatsApp: +92 310 0059895</a><a href="tel:+923100059895" class="inline-flex items-center gap-2 px-8 py-4 glass-card text-white font-bold rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-sm"><iconify-icon icon="mdi:phone" class="text-xl text-brand-orange"></iconify-icon>Call Now</a></div></div></div></section>
+    <section class="py-20 bg-gradient-to-br from-brand-blue via-brand-blue-dark to-brand-blue relative overflow-hidden"><div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 30px 30px;"></div><div class="absolute top-0 right-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 observe-fade"><div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-orange-200 text-xs font-semibold tracking-wider uppercase mb-6"><iconify-icon icon="mdi:clock-fast" class="text-brand-orange"></iconify-icon>Don't Delay Your Travel Plans</div><h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-6 leading-tight">Ready to Get Your <span class="text-brand-orange">China Visa?</span></h2><p class="text-blue-100/70 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">Visit our office or contact us today for a free consultation.</p><div class="flex flex-wrap justify-center gap-4"><a href="https://wa.me/923100059895?text=Hi, I want to apply for a China visa." target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-2xl shadow-xl shadow-green-500/30 hover:scale-105 transition-all duration-300 text-sm"><iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>WhatsApp: +92 310 0059895</a><a href="tel:+923100059895" class="inline-flex items-center gap-2 px-8 py-4 glass-card text-white font-bold rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-sm"><iconify-icon icon="mdi:phone" class="text-xl text-brand-orange"></iconify-icon>Call Now</a></div></div></section>
 
     <!-- ========== FOOTER ========== -->
     <footer class="bg-gray-900 text-white">

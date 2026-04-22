@@ -39,6 +39,7 @@
     </script>
     <style>
         * { font-family: 'Inter', sans-serif; }
+        html, body { overflow-x: hidden; width: 100%; }
         
         @keyframes fadeInUp {
             0% { opacity: 0; transform: translateY(40px); }
@@ -83,7 +84,13 @@
 
         .service-card { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .service-card:hover { transform: translateY(-8px); box-shadow: 0 25px 60px -12px rgba(30, 64, 175, 0.2); }
-        .service-card:hover .service-icon { transform: scale(1.1) rotate(5deg); background: linear-gradient(135deg, #f97316, #ea580c); color: white; }
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, #f97316, #ea580c) !important;
+        }
+        .service-card:hover .service-icon iconify-icon {
+            color: #ffffff !important;
+        }
 
         .doc-card { transition: all 0.3s ease; }
         .doc-card:hover { transform: translateX(8px); border-color: #f97316; }
@@ -112,17 +119,18 @@
 
         input:focus, textarea:focus, select:focus { outline: none; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1); }
 
-        .nav-link { color: rgba(255,255,255,0.85) !important; transition: color 0.3s ease, background-color 0.3s ease !important; }
-        .nav-link:hover { color: #ffffff !important; background-color: rgba(255,255,255,0.1) !important; }
+        .nav-link { color: rgba(255,255,255,0.85); transition: color 0.3s ease, background-color 0.3s ease; }
+        .nav-link:hover { color: #ffffff; background-color: rgba(255,255,255,0.1); }
         .nav-link.nav-active { color: #f97316 !important; }
-        .nav-logo-text { color: #ffffff !important; transition: color 0.3s ease !important; }
-        .nav-logo-sub { color: rgba(255,255,255,0.5) !important; transition: color 0.3s ease !important; }
+        .nav-logo-text { color: #ffffff; transition: color 0.3s ease; }
+        .nav-logo-sub { color: rgba(255,255,255,0.5); transition: color 0.3s ease; }
 
-        .navbar-scrolled .nav-link { color: #4b5563 !important; }
-        .navbar-scrolled .nav-link:hover { color: #f97316 !important; background-color: #fff7ed !important; }
+        .navbar-scrolled .nav-link { color: #4b5563; }
+        .navbar-scrolled .nav-link:hover { color: #f97316; background-color: #fff7ed; }
         .navbar-scrolled .nav-link.nav-active { color: #f97316 !important; }
-        .navbar-scrolled .nav-logo-text { color: #1e3a8a !important; }
-        .navbar-scrolled .nav-logo-sub { color: #9ca3af !important; }
+        .navbar-scrolled .nav-logo-text { color: #1e3a8a; }
+        .navbar-scrolled .nav-logo-sub { color: #9ca3af; }
+        .navbar-scrolled .hamburger-icon { color: #4b5563; }
 
         .important-note { background: linear-gradient(135deg, #fff7ed, #fef3c7); border-left: 4px solid #f97316; }
         .id-number { font-family: 'Inter', monospace; letter-spacing: 0.15em; }
@@ -133,15 +141,21 @@
         .team-card:hover { transform: translateY(-8px); box-shadow: 0 25px 60px -12px rgba(30, 64, 175, 0.15); }
         .team-card:hover .team-avatar { transform: scale(1.05); }
         .team-avatar { transition: transform 0.4s ease; }
+
+        .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 0; }
+        .mobile-menu.open { max-height: 400px; opacity: 1; }
+        .mobile-menu a { transition: all 0.2s ease; }
+
+        section { overflow-x: hidden; }
     </style>
 </head>
 <body class="bg-white text-gray-800 font-inter antialiased">
 
-    <!-- ========== NAVIGATION ========== -->
+    
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 md:h-20">
-                <a href="#home" class="flex items-center gap-2.5 group">
+                <a href="#home" class="flex items-center gap-2.5 group flex-shrink-0">
                     <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center shadow-lg shadow-orange-200/50 group-hover:shadow-orange-300 transition-shadow">
                         <iconify-icon icon="mdi:airplane-takeoff" class="text-white text-lg md:text-xl"></iconify-icon>
                     </div>
@@ -150,29 +164,58 @@
                         <span class="nav-logo-sub text-[9px] md:text-[10px] font-medium tracking-wider uppercase">& TOURS PVT LTD</span>
                     </div>
                 </a>
-                <div class="flex items-center gap-0.5 md:gap-1">
-                    <a href="#home" class="nav-link px-2.5 md:px-4 py-2 text-xs md:text-sm font-medium rounded-lg">Home</a>
-                    <a href="#about" class="nav-link px-2.5 md:px-4 py-2 text-xs md:text-sm font-medium rounded-lg">About</a>
-                    <a href="#services" class="nav-link px-2.5 md:px-4 py-2 text-xs md:text-sm font-medium rounded-lg">Services</a>
-                    <a href="#requirements" class="nav-link px-2.5 md:px-4 py-2 text-xs md:text-sm font-medium rounded-lg">Requirements</a>
-                    <a href="#contact" class="nav-link px-2.5 md:px-4 py-2 text-xs md:text-sm font-medium rounded-lg">Contact</a>
+
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="#home" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Home</a>
+                    <a href="#about" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">About</a>
+                    <a href="#services" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Services</a>
+                    <a href="#requirements" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Requirements</a>
+                    <a href="#contact" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Contact</a>
                 </div>
-                <a href="https://wa.me/923100059895" target="_blank" class="inline-flex items-center gap-1.5 px-3 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-xs md:text-sm font-semibold rounded-xl shadow-lg shadow-orange-200/50 hover:shadow-orange-300 hover:scale-105 transition-all duration-300">
-                    <iconify-icon icon="mdi:whatsapp" class="text-base md:text-lg"></iconify-icon>
-                    <span class="hidden sm:inline">WhatsApp</span>
-                </a>
+
+                <div class="flex items-center gap-2">
+                    <a href="https://wa.me/923100059895" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-sm font-semibold rounded-xl shadow-lg shadow-orange-200/50 hover:shadow-orange-300 hover:scale-105 transition-all duration-300">
+                        <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>WhatsApp
+                    </a>
+                    <a href="https://wa.me/923100059895" target="_blank" class="sm:hidden w-10 h-10 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white flex items-center justify-center shadow-lg shadow-orange-200/50 hover:scale-105 transition-all duration-300 flex-shrink-0" aria-label="WhatsApp">
+                        <iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>
+                    </a>
+                    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors flex-shrink-0" aria-label="Toggle menu">
+                        <iconify-icon icon="mdi:menu" class="hamburger-icon text-white text-2xl transition-colors" id="menuIcon"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div id="mobileMenu" class="mobile-menu md:hidden">
+                <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 mt-1 mb-2 overflow-hidden">
+                    <a href="#home" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50">
+                        <iconify-icon icon="mdi:home" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Home
+                    </a>
+                    <a href="#about" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50">
+                        <iconify-icon icon="mdi:information" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>About
+                    </a>
+                    <a href="#services" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50">
+                        <iconify-icon icon="mdi:briefcase" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Services
+                    </a>
+                    <a href="#requirements" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50">
+                        <iconify-icon icon="mdi:file-document" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Requirements
+                    </a>
+                    <a href="#contact" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium">
+                        <iconify-icon icon="mdi:phone" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Contact
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- ========== HERO ========== -->
+    
     <section id="home" class="hero-bg min-h-screen flex items-center relative">
         <div class="absolute top-20 right-10 w-72 h-72 bg-brand-orange/10 rounded-full blur-3xl animate-float"></div>
         <div class="absolute bottom-20 left-10 w-48 h-48 bg-white/5 rounded-full blur-2xl" style="animation: float 8s ease-in-out infinite;"></div>
         <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 40px 40px;"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 md:py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 md:py-32 relative z-10 w-full">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <div>
+                <div class="w-full">
                     <div class="opacity-0 animate-fade-in-up">
                         <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-orange-200 text-xs font-semibold tracking-wider uppercase mb-6">
                             <iconify-icon icon="mdi:shield-check" class="text-brand-orange"></iconify-icon>SECP Registered Company
@@ -182,15 +225,15 @@
                         Get Your<span class="gradient-text"> China Visa</span><br>Easily
                     </h1>
                     <p class="opacity-0 animate-fade-in-up-delay2 text-base sm:text-lg text-blue-100/80 font-light leading-relaxed mb-8 max-w-lg">Fast, reliable, and hassle-free China visa processing from Islamabad. We handle everything so you can focus on your journey.</p>
-                    <div class="opacity-0 animate-fade-in-up-delay2 flex flex-wrap gap-4 mb-12">
-                        <a href="#contact" class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-2xl shadow-xl shadow-orange-900/30 hover:shadow-orange-900/50 hover:scale-105 transition-all duration-300 text-sm">
+                    <div class="opacity-0 animate-fade-in-up-delay2 flex flex-wrap gap-3 sm:gap-4 mb-12">
+                        <a href="#contact" class="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-2xl shadow-xl shadow-orange-900/30 hover:shadow-orange-900/50 hover:scale-105 transition-all duration-300 text-sm">
                             <iconify-icon icon="mdi:file-document-edit" class="text-lg"></iconify-icon>Apply Now
                         </a>
-                        <a href="https://wa.me/923100059895" target="_blank" class="inline-flex items-center gap-2 px-8 py-4 glass-card text-white font-bold rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-sm">
-                            <iconify-icon icon="mdi:whatsapp" class="text-lg text-green-400"></iconify-icon>Contact on WhatsApp
+                        <a href="https://wa.me/923100059895" target="_blank" class="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 glass-card text-white font-bold rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-sm">
+                            <iconify-icon icon="mdi:whatsapp" class="text-lg text-green-400"></iconify-icon>WhatsApp
                         </a>
                     </div>
-                    <div class="opacity-0 animate-fade-in-up-delay2 flex flex-wrap gap-6">
+                    <div class="opacity-0 animate-fade-in-up-delay2 flex flex-wrap gap-4 sm:gap-6">
                         <div class="flex items-center gap-2"><iconify-icon icon="mdi:check-decagram" class="text-brand-orange text-xl"></iconify-icon><span class="text-blue-100/70 text-sm">SECP Registered</span></div>
                         <div class="flex items-center gap-2"><iconify-icon icon="mdi:clock-fast" class="text-brand-orange text-xl"></iconify-icon><span class="text-blue-100/70 text-sm">Fast Processing</span></div>
                         <div class="flex items-center gap-2"><iconify-icon icon="mdi:headset" class="text-brand-orange text-xl"></iconify-icon><span class="text-blue-100/70 text-sm">24/7 Support</span></div>
@@ -221,301 +264,299 @@
                 </div>
             </div>
         </div>
-        <div class="absolute bottom-0 left-0 right-0">
-            <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full"><path d="M0 80L60 73.3C120 66.7 240 53.3 360 46.7C480 40 600 40 720 46.7C840 53.3 960 66.7 1080 66.7C1200 66.7 1320 53.3 1380 46.7L1440 40V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0Z" fill="white"/></svg>
+        <div class="absolute bottom-0 left-0 right-0 w-full">
+            <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full block" preserveAspectRatio="none"><path d="M0 80L60 73.3C120 66.7 240 53.3 360 46.7C480 40 600 40 720 46.7C840 53.3 960 66.7 1080 66.7C1200 66.7 1320 53.3 1380 46.7L1440 40V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0Z" fill="white"/></svg>
         </div>
     </section>
 
-    <!-- ========== TRUST STATS ========== -->
-    <section class="py-16 bg-white relative z-10">
+    
+    <section class="py-12 sm:py-16 bg-white relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="observe-fade text-center p-6 rounded-2xl bg-brand-orange-50 border border-orange-100" data-delay="0"><div class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">10+</div><div class="text-sm text-gray-500 font-medium">Years Experience</div></div>
-                <div class="observe-fade text-center p-6 rounded-2xl bg-brand-blue-50 border border-blue-100" data-delay="100"><div class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">5,000+</div><div class="text-sm text-gray-500 font-medium">Visas Processed</div></div>
-                <div class="observe-fade text-center p-6 rounded-2xl bg-brand-orange-50 border border-orange-100" data-delay="200"><div class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">99.2%</div><div class="text-sm text-gray-500 font-medium">Success Rate</div></div>
-                <div class="observe-fade text-center p-6 rounded-2xl bg-brand-blue-50 border border-blue-100" data-delay="300"><div class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">4.9</div><div class="text-sm text-gray-500 font-medium">Customer Rating</div></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+                <div class="observe-fade text-center p-4 sm:p-6 rounded-2xl bg-brand-orange-50 border border-orange-100" data-delay="0"><div class="text-2xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">10+</div><div class="text-xs sm:text-sm text-gray-500 font-medium">Years Experience</div></div>
+                <div class="observe-fade text-center p-4 sm:p-6 rounded-2xl bg-brand-blue-50 border border-blue-100" data-delay="100"><div class="text-2xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">5,000+</div><div class="text-xs sm:text-sm text-gray-500 font-medium">Visas Processed</div></div>
+                <div class="observe-fade text-center p-4 sm:p-6 rounded-2xl bg-brand-orange-50 border border-orange-100" data-delay="200"><div class="text-2xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">99.2%</div><div class="text-xs sm:text-sm text-gray-500 font-medium">Success Rate</div></div>
+                <div class="observe-fade text-center p-4 sm:p-6 rounded-2xl bg-brand-blue-50 border border-blue-100" data-delay="300"><div class="text-2xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">4.9</div><div class="text-xs sm:text-sm text-gray-500 font-medium">Customer Rating</div></div>
             </div>
         </div>
     </section>
 
-    <!-- ========== ABOUT ========== -->
-    <section id="about" class="py-20 sm:py-28 bg-gray-50">
+   
+    <section id="about" class="py-16 sm:py-20 lg:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 observe-fade">
+            <div class="text-center mb-12 sm:mb-16 observe-fade">
                 <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">About Us</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Pakistan's Trusted Partner for <span class="gradient-text">China Visas</span></h2>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Pakistan's Trusted Partner for <span class="gradient-text">China Visas</span></h2>
                 <div class="section-divider mx-auto mb-6"></div>
-                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed">A legally registered company with SECP, dedicated to providing professional China visa services.</p>
+                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">A legally registered company with SECP, dedicated to providing professional China visa services.</p>
             </div>
-            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
                 <div class="observe-left space-y-6">
-                    <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10">
-                        <img src="https://picsum.photos/seed/shanghai-skyline-bund/700/420.jpg" alt="Shanghai Skyline" class="w-full h-[320px] sm:h-[420px] object-cover">
+                    <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10">
+                        <img src="https://picsum.photos/seed/shanghai-skyline-bund/700/420.jpg" alt="Shanghai Skyline" class="w-full h-64 sm:h-[420px] object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark/60 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-6 left-6 right-6">
-                            <div class="glass-card rounded-2xl p-4 flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-white text-xl"></iconify-icon></div>
-                                <div><div class="text-white font-bold text-sm">Islamabad, Pakistan</div><div class="text-blue-100/60 text-xs">Your gateway to China</div></div>
+                        <div class="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6">
+                            <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-white text-lg sm:text-xl"></iconify-icon></div>
+                                <div><div class="text-white font-bold text-xs sm:text-sm">Islamabad, Pakistan</div><div class="text-blue-100/60 text-[10px] sm:text-xs">Your gateway to China</div></div>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+                    <div class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-lg border border-gray-100">
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200"><iconify-icon icon="mdi:identifier" class="text-white text-2xl"></iconify-icon></div>
-                                <div><h4 class="font-bold text-brand-blue-dark text-sm">Identification No.</h4><p class="text-gray-400 text-xs">SECP Registration</p></div>
+                            <div class="flex items-center gap-3 sm:gap-4">
+                                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200"><iconify-icon icon="mdi:identifier" class="text-white text-xl sm:text-2xl"></iconify-icon></div>
+                                <div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Identification No.</h4><p class="text-gray-400 text-[10px] sm:text-xs">SECP Registration</p></div>
                             </div>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-600 text-[10px] font-bold rounded-full uppercase tracking-wider"><iconify-icon icon="mdi:check-decagram" class="text-xs"></iconify-icon>Verified</span>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-green-50 text-green-600 text-[9px] sm:text-[10px] font-bold rounded-full uppercase tracking-wider flex-shrink-0"><iconify-icon icon="mdi:check-decagram" class="text-xs"></iconify-icon>Verified</span>
                         </div>
-                        <div class="mt-5 bg-gradient-to-r from-gray-50 to-brand-blue-50 rounded-2xl px-6 py-5 border border-gray-100 text-center">
-                            <span class="id-number text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-widest">0232629</span>
+                        <div class="mt-4 sm:mt-5 bg-gradient-to-r from-gray-50 to-brand-blue-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-4 sm:py-5 border border-gray-100 text-center">
+                            <span class="id-number text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-widest">0232629</span>
                         </div>
-                        <p class="text-gray-400 text-xs mt-3 text-center">Registered with Securities and Exchange Commission of Pakistan under Companies Act 2017</p>
+                        <p class="text-gray-400 text-[10px] sm:text-xs mt-2 sm:mt-3 text-center">Registered with Securities and Exchange Commission of Pakistan under Companies Act 2017</p>
                     </div>
                 </div>
                 <div class="observe-right">
-                    <p class="text-gray-600 leading-relaxed mb-6"><strong class="text-gray-800">Shanghai Travel & Tours (Private) Limited</strong> is a premier visa consultancy based in Islamabad, Pakistan, specializing in China visa processing. Legally incorporated under the <strong class="text-gray-800">Companies Act 2017</strong> with the Securities and Exchange Commission of Pakistan (SECP).</p>
-                    <p class="text-gray-600 leading-relaxed mb-6">Founded by <strong class="text-gray-800">Salman Sadiq (CEO)</strong>, our company has helped thousands of Pakistani citizens successfully obtain their China visas with over a decade of experience.</p>
-                    <p class="text-gray-600 leading-relaxed mb-8">Our dedicated team ensures that every application is handled with precision, maximizing your chances of approval with complete transparency.</p>
-                    <div class="grid sm:grid-cols-2 gap-4 mb-8">
-                        <div class="trust-card bg-white rounded-2xl p-5 shadow-sm"><div class="flex items-center gap-3 mb-3 pl-3"><iconify-icon icon="mdi:target" class="text-brand-orange text-xl"></iconify-icon><h4 class="font-bold text-brand-blue-dark text-sm">Our Mission</h4></div><p class="text-gray-500 text-sm leading-relaxed pl-3">To make China visa accessible and stress-free for every Pakistani citizen.</p></div>
-                        <div class="trust-card bg-white rounded-2xl p-5 shadow-sm"><div class="flex items-center gap-3 mb-3 pl-3"><iconify-icon icon="mdi:eye-outline" class="text-brand-blue text-xl"></iconify-icon><h4 class="font-bold text-brand-blue-dark text-sm">Our Vision</h4></div><p class="text-gray-500 text-sm leading-relaxed pl-3">To become the leading China visa consultancy in Pakistan with global standards.</p></div>
+                    <p class="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base"><strong class="text-gray-800">Shanghai Travel & Tours (Private) Limited</strong> is a premier visa consultancy based in Islamabad, Pakistan, specializing in China visa processing. Legally incorporated under the <strong class="text-gray-800">Companies Act 2017</strong> with the Securities and Exchange Commission of Pakistan (SECP).</p>
+                    <p class="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">Founded by <strong class="text-gray-800">Salman Sadiq (CEO)</strong>, our company has helped thousands of Pakistani citizens successfully obtain their China visas with over a decade of experience.</p>
+                    <p class="text-gray-600 leading-relaxed mb-6 sm:mb-8 text-sm sm:text-base">Our dedicated team ensures that every application is handled with precision, maximizing your chances of approval with complete transparency.</p>
+                    <div class="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                        <div class="trust-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm"><div class="flex items-center gap-3 mb-2 sm:mb-3 pl-3"><iconify-icon icon="mdi:target" class="text-brand-orange text-lg sm:text-xl"></iconify-icon><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Our Mission</h4></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed pl-3">To make China visa accessible and stress-free for every Pakistani citizen.</p></div>
+                        <div class="trust-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm"><div class="flex items-center gap-3 mb-2 sm:mb-3 pl-3"><iconify-icon icon="mdi:eye-outline" class="text-brand-blue text-lg sm:text-xl"></iconify-icon><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Our Vision</h4></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed pl-3">To become the leading China visa consultancy in Pakistan with global standards.</p></div>
                     </div>
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-                        <h4 class="font-bold text-brand-blue-dark text-sm mb-4 flex items-center gap-2"><iconify-icon icon="mdi:star-four-points" class="text-brand-orange"></iconify-icon>Why Choose Us</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div class="flex items-center gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-sm">SECP Registered Company</span></div>
-                            <div class="flex items-center gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-sm">10+ Years Experience</span></div>
-                            <div class="flex items-center gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-sm">99.2% Success Rate</span></div>
-                            <div class="flex items-center gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-sm">Affordable Fees</span></div>
-                            <div class="flex items-center gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-sm">Form Filling Assistance</span></div>
-                            <div class="flex items-center gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-sm">Direct Embassy Submission</span></div>
+                    <div class="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-100 mb-6 sm:mb-8">
+                        <h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-3 sm:mb-4 flex items-center gap-2"><iconify-icon icon="mdi:star-four-points" class="text-brand-orange"></iconify-icon>Why Choose Us</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">SECP Registered Company</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">10+ Years Experience</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">99.2% Success Rate</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">Affordable Fees</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">Form Filling Assistance</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">Direct Embassy Submission</span></div>
                         </div>
                     </div>
-                    <a href="#contact" class="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-brand-blue to-brand-blue-dark text-white font-bold rounded-xl shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:scale-105 transition-all duration-300 text-sm">Get in Touch<iconify-icon icon="mdi:arrow-right" class="text-lg"></iconify-icon></a>
+                    <a href="#contact" class="inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-gradient-to-r from-brand-blue to-brand-blue-dark text-white font-bold rounded-xl shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:scale-105 transition-all duration-300 text-xs sm:text-sm">Get in Touch<iconify-icon icon="mdi:arrow-right" class="text-lg"></iconify-icon></a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ========== OUR TEAM ========== -->
-    <section id="team" class="py-20 sm:py-28 bg-white">
+    
+    <section id="team" class="py-16 sm:py-20 lg:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 observe-fade">
+            <div class="text-center mb-12 sm:mb-16 observe-fade">
                 <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Our Team</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Meet the <span class="gradient-text">People Behind</span></h2>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Meet the <span class="gradient-text">People Behind</span></h2>
                 <div class="section-divider mx-auto mb-6"></div>
-                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed">The dedicated professionals who make your China visa journey seamless and successful.</p>
+                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">The dedicated professionals who make your China visa journey seamless and successful.</p>
             </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- CEO Card -->
-                <div class="team-card observe-scale bg-white rounded-3xl border-2 border-brand-orange/20 p-8 shadow-lg shadow-orange-50 relative text-center" data-delay="0">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                
+                <div class="team-card observe-scale bg-white rounded-2xl sm:rounded-3xl border-2 border-brand-orange/20 p-6 sm:p-8 shadow-lg shadow-orange-50 relative text-center sm:col-span-2 lg:col-span-1" data-delay="0">
                     <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-xs font-bold rounded-full flex items-center gap-1.5">
                         <iconify-icon icon="mdi:crown" class="text-sm"></iconify-icon>CEO
                     </div>
-                    <div class="team-avatar w-24 h-24 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mx-auto mb-6 shadow-xl shadow-orange-200/50 mt-2">
-                        <iconify-icon icon="mdi:account-tie" class="text-white text-4xl"></iconify-icon>
+                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-orange-200/50 mt-2 border-4 border-white">
+                        <img src="https://z-cdn-media.chatglm.cn/files/f9337705-b2d4-4b82-a9ae-828a9761786a.jpg?auth_key=1876832679-1e1d356e198b4ad1a50e6ef02743ae40-0-bf78bdf8674c0b6a87bdf620cea29537" alt="Salman Sadiq - CEO" class="w-full h-full object-cover">
                     </div>
-                    <h3 class="text-xl font-extrabold text-brand-blue-dark mb-1">Salman Sadiq</h3>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-orange/10 text-brand-orange text-xs font-bold rounded-full mb-5">Chief Executive Officer</span>
-                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Founder of Shanghai Travel & Tours with over 10 years of expertise in China visa consultancy. Leading the company with vision and dedication.</p>
+                    <h3 class="text-lg sm:text-xl font-extrabold text-brand-blue-dark mb-1">Salman Sadiq</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-orange/10 text-brand-orange text-xs font-bold rounded-full mb-4 sm:mb-5">Chief Executive Officer</span>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Founder of Shanghai Travel & Tours with over 10 years of expertise in China visa consultancy. Leading the company with vision and dedication.</p>
                     <div class="flex items-center justify-center gap-3">
-                        <a href="https://wa.me/923100059895" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Salman Sadiq">
-                            <iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon>
-                        </a>
-                        <a href="tel:+923100059895" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Salman Sadiq">
-                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon>
-                        </a>
+                        <a href="https://wa.me/923100059895" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Salman Sadiq"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a>
+                        <a href="tel:03100059895" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Salman Sadiq"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a>
                     </div>
-                    <div class="mt-5 pt-5 border-t border-orange-100">
-                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs">
-                            <iconify-icon icon="mdi:phone" class="text-brand-orange text-sm"></iconify-icon>
-                            <span>+92 310 0059895</span>
-                        </div>
+                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-orange-100">
+                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-orange text-sm"></iconify-icon><span>03100059895</span></div>
                     </div>
                 </div>
-                <!-- Partner 1 Card -->
-                <div class="team-card observe-scale bg-white rounded-3xl border border-gray-100 p-8 shadow-sm text-center" data-delay="150">
-                    <div class="team-avatar w-24 h-24 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-200/50">
-                        <iconify-icon icon="mdi:account-tie" class="text-white text-4xl"></iconify-icon>
+               
+                <div class="team-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm text-center" data-delay="150">
+                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-blue-200/50 border-4 border-white">
+                        <img src="https://z-cdn-media.chatglm.cn/files/b1dd1dae-ed99-4142-9fde-fa2253d8d91d.jpeg?auth_key=1876871265-3b119715d03e41f297f275a3567192cf-0-7b2134441d3dd30d084b36b8bda54213" alt="Afzaal Minhas - Director" class="w-full h-full object-cover">
                     </div>
-                    <h3 class="text-xl font-extrabold text-brand-blue-dark mb-1">Afzaal Minhas</h3>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-5">Partner</span>
-                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Experienced professional dedicated to providing seamless visa processing and personalized guidance to every client.</p>
+                    <h3 class="text-lg sm:text-xl font-extrabold text-brand-blue-dark mb-1">Afzaal Minhas</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-4 sm:mb-5">Director</span>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Experienced professional dedicated to providing seamless visa processing and personalized guidance to every client.</p>
                     <div class="flex items-center justify-center gap-3">
-                        <a href="https://wa.me/923100059893" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Afzaal Minhas">
-                            <iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon>
-                        </a>
-                        <a href="tel:+923100059893" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Afzaal Minhas">
-                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon>
-                        </a>
+                        <a href="https://wa.me/923100059893" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Afzaal Minhas"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a>
+                        <a href="tel:03100059893" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Afzaal Minhas"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a>
                     </div>
-                    <div class="mt-5 pt-5 border-t border-gray-100">
-                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs">
-                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon>
-                            <span>+92 310 0059893</span>
-                        </div>
+                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-100">
+                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon><span>0310 0059893</span></div>
                     </div>
                 </div>
-                <!-- Partner 2 Card -->
-                <div class="team-card observe-scale bg-white rounded-3xl border border-gray-100 p-8 shadow-sm text-center" data-delay="300">
-                    <div class="team-avatar w-24 h-24 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-200/50">
-                        <iconify-icon icon="mdi:account-tie" class="text-white text-4xl"></iconify-icon>
+                
+                <div class="team-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm text-center" data-delay="300">
+                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-blue-200/50 border-4 border-white">
+                        <img src="https://z-cdn-media.chatglm.cn/files/7472852b-2faa-421e-a46b-686dc0d87fc5.jpeg?auth_key=1876870678-077b5f76d74f470b8d83baeb34a07ffe-0-957605c34e0695be4726495ed3d3a85b" alt="Shakeeb Hussain - Director" class="w-full h-full object-cover">
                     </div>
-                    <h3 class="text-xl font-extrabold text-brand-blue-dark mb-1">Shakeeb Hussain</h3>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-5">Partner</span>
-                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Committed to delivering excellent client service and ensuring smooth documentation and embassy submission processes.</p>
+                    <h3 class="text-lg sm:text-xl font-extrabold text-brand-blue-dark mb-1">Shakeeb Hussain</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-4 sm:mb-5">Director</span>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Committed to delivering excellent client service and ensuring smooth documentation and embassy submission processes.</p>
                     <div class="flex items-center justify-center gap-3">
-                        <a href="https://wa.me/923118666935" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Shakeeb Hussain">
-                            <iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon>
-                        </a>
-                        <a href="tel:+923118666935" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Shakeeb Hussain">
-                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon>
-                        </a>
+                        <a href="https://wa.me/923118666935" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Shakeeb Hussain"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a>
+                        <a href="tel:03118666935" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Shakeeb Hussain"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a>
                     </div>
-                    <div class="mt-5 pt-5 border-t border-gray-100">
-                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs">
-                            <iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon>
-                            <span>+92 311 8666935</span>
-                        </div>
+                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-100">
+                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon><span>0311 8666935</span></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ========== SERVICES ========== -->
-    <section id="services" class="py-20 sm:py-28 bg-gray-50">
+    
+    <section id="services" class="py-16 sm:py-20 lg:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 observe-fade">
+            <div class="text-center mb-12 sm:mb-16 observe-fade">
                 <span class="inline-block px-4 py-1.5 rounded-full bg-brand-blue-50 text-brand-blue text-xs font-bold tracking-wider uppercase mb-4">Our Services</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">China Visa <span class="gradient-text">Categories</span></h2>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">China Visa <span class="gradient-text">Categories</span></h2>
                 <div class="section-divider mx-auto mb-6"></div>
             </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="service-card observe-scale bg-white rounded-3xl border border-gray-100 p-8 shadow-sm" data-delay="0">
-                    <div class="service-icon w-16 h-16 rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-6 transition-all duration-400"><iconify-icon icon="mdi:palm-tree" class="text-brand-orange text-3xl"></iconify-icon></div>
-                    <h3 class="text-xl font-bold text-brand-blue-dark mb-3">Tourist Visa (L)</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Perfect for leisure travel, sightseeing, and visiting friends or family in China.</p>
-                    <ul class="space-y-2.5 mb-6"><li class="flex items-center gap-2 text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li><li class="flex items-center gap-2 text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Single/Double entry</li><li class="flex items-center gap-2 text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Hotel booking assistance</li></ul>
-                    <div class="flex items-center justify-between pt-5 border-t border-gray-100"><div><span class="text-xs text-gray-400 block">Processing Time</span><span class="text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div><a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-base"></iconify-icon></a></div>
+            <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+                <div class="service-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm" data-delay="0">
+                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400">
+                        <iconify-icon icon="mdi:palm-tree" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-2 sm:mb-3">Tourist Visa (L)</h3>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Perfect for leisure travel, sightseeing, and visiting friends or family in China.</p>
+                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6">
+                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li>
+                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Single/Double entry</li>
+                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Hotel booking assistance</li>
+                    </ul>
+                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-gray-100">
+                        <div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div>
+                        <a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a>
+                    </div>
                 </div>
-                <div class="service-card observe-scale bg-white rounded-3xl border-2 border-brand-orange/20 p-8 shadow-lg shadow-orange-50 relative" data-delay="150">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-xs font-bold rounded-full">Most Popular</div>
-                    <div class="service-icon w-16 h-16 rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-6 transition-all duration-400"><iconify-icon icon="mdi:briefcase" class="text-brand-orange text-3xl"></iconify-icon></div>
-                    <h3 class="text-xl font-bold text-brand-blue-dark mb-3">Business Visa (M)</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed mb-6">Ideal for business meetings, trade fairs, and Canton Fair participants.</p>
-                    <ul class="space-y-2.5 mb-6"><li class="flex items-center gap-2 text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li><li class="flex items-center gap-2 text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Multiple entry available</li><li class="flex items-center gap-2 text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Invitation letter help</li></ul>
-                    <div class="flex items-center justify-between pt-5 border-t border-orange-100"><div><span class="text-xs text-gray-400 block">Processing Time</span><span class="text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div><a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-base"></iconify-icon></a></div>
+                <div class="service-card observe-scale bg-white rounded-2xl sm:rounded-3xl border-2 border-brand-orange/20 p-6 sm:p-8 shadow-lg shadow-orange-50 relative" data-delay="150">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-[10px] sm:text-xs font-bold rounded-full whitespace-nowrap">Most Popular</div>
+                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400">
+                        <iconify-icon icon="mdi:briefcase" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-2 sm:mb-3">Business Visa (M)</h3>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Ideal for business meetings, trade fairs, and Canton Fair participants.</p>
+                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6">
+                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li>
+                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Multiple entry available</li>
+                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Invitation letter help</li>
+                    </ul>
+                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-orange-100">
+                        <div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div>
+                        <a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a>
+                    </div>
                 </div>
-                <div class="service-card observe-scale bg-white rounded-3xl border border-gray-100 p-8 shadow-sm" data-delay="300">
-                    <div class="service-icon w-16 h-16 rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-6 transition-all duration-400"><iconify-icon icon="mdi:hard-hat" class="text-brand-orange text-3xl"></iconify-icon></div>
-                    <h3 class="text-xl font-bold text-brand-blue-dark mb-3">Work Visa (Z)</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed mb-6">For employment in China. Complete work permit and residence permit assistance.</p>
-                    <ul class="space-y-2.5 mb-6"><li class="flex items-center gap-2 text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 1 Year+</li><li class="flex items-center gap-2 text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Work permit included</li><li class="flex items-center gap-2 text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Residence permit help</li></ul>
-                    <div class="flex items-center justify-between pt-5 border-t border-gray-100"><div><span class="text-xs text-gray-400 block">Processing Time</span><span class="text-sm font-bold text-brand-blue-dark">10-15 Working Days</span></div><a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-base"></iconify-icon></a></div>
+                <div class="service-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm" data-delay="300">
+                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400">
+                        <iconify-icon icon="mdi:hard-hat" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-2 sm:mb-3">Work Visa (Z)</h3>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">For employment in China. Complete work permit and residence permit assistance.</p>
+                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6">
+                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 1 Year+</li>
+                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Work permit included</li>
+                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Residence permit help</li>
+                    </ul>
+                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-gray-100">
+                        <div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">10-15 Working Days</span></div>
+                        <a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ========== REQUIREMENTS ========== -->
-    <section id="requirements" class="py-20 sm:py-28 bg-white">
+    
+    <section id="requirements" class="py-16 sm:py-20 lg:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 observe-fade">
+            <div class="text-center mb-12 sm:mb-16 observe-fade">
                 <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Documents Required</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Visa <span class="gradient-text">Requirements</span></h2>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Visa <span class="gradient-text">Requirements</span></h2>
                 <div class="section-divider mx-auto mb-6"></div>
             </div>
-            <div class="grid lg:grid-cols-3 gap-6">
-                <div class="observe-scale doc-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm" data-delay="0"><div class="flex items-center gap-4 mb-4"><div class="w-14 h-14 rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:passport" class="text-brand-orange text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-brand-blue text-white text-xs font-bold flex items-center justify-center">1</span><h4 class="font-bold text-brand-blue-dark">Original Passport</h4></div></div><p class="text-gray-500 text-sm leading-relaxed">Your current valid original passport. Must be submitted at the time of application processing.</p></div>
-                <div class="observe-scale doc-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm" data-delay="80"><div class="flex items-center gap-4 mb-4"><div class="w-14 h-14 rounded-2xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:book-open-variant" class="text-brand-blue text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-brand-orange text-white text-xs font-bold flex items-center justify-center">2</span><h4 class="font-bold text-brand-blue-dark">Old Passport</h4></div></div><p class="text-gray-500 text-sm leading-relaxed">Your previous/expired passport. Required to verify travel history and previous visa records.</p></div>
-                <div class="observe-scale doc-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm" data-delay="160"><div class="flex items-center gap-4 mb-4"><div class="w-14 h-14 rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:camera" class="text-brand-orange text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-brand-blue text-white text-xs font-bold flex items-center justify-center">3</span><h4 class="font-bold text-brand-blue-dark">Passport Size Photo</h4></div></div><p class="text-gray-500 text-sm leading-relaxed">Recent passport-size photograph with <strong class="text-gray-700">white background</strong>. Should be clear, without glasses or head covering.</p></div>
-                <div class="observe-scale doc-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm" data-delay="240"><div class="flex items-center gap-4 mb-4"><div class="w-14 h-14 rounded-2xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:card-account-details" class="text-brand-blue text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-brand-orange text-white text-xs font-bold flex items-center justify-center">4</span><h4 class="font-bold text-brand-blue-dark">CNIC Copy</h4></div></div><p class="text-gray-500 text-sm leading-relaxed">Clear copy of your valid Computerized National Identity Card (CNIC). Both front and back sides required.</p></div>
-                <div class="observe-scale doc-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative" data-delay="320"><div class="flex items-center gap-4 mb-4"><div class="w-14 h-14 rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:shield-account" class="text-brand-orange text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-brand-blue text-white text-xs font-bold flex items-center justify-center">5</span><h4 class="font-bold text-brand-blue-dark">Police Character Certificate</h4></div></div><p class="text-gray-500 text-sm leading-relaxed mb-3">Police character certificate covering <strong class="text-gray-700">from since birth to today</strong> — complete lifelong record.</p><div class="important-note rounded-xl px-4 py-3"><div class="flex items-start gap-2"><iconify-icon icon="mdi:alert-circle" class="text-brand-orange text-base flex-shrink-0 mt-0.5"></iconify-icon><p class="text-brand-orange-dark text-xs font-semibold leading-relaxed"><strong>Apostille attestation from MOFA</strong> (Ministry of Foreign Affairs) is required on this certificate.</p></div></div></div>
-                <div class="observe-scale doc-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm" data-delay="400"><div class="flex items-center gap-4 mb-4"><div class="w-14 h-14 rounded-2xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:bank" class="text-brand-blue text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-brand-orange text-white text-xs font-bold flex items-center justify-center">6</span><h4 class="font-bold text-brand-blue-dark">Bank Statement</h4></div></div><p class="text-gray-500 text-sm leading-relaxed mb-3">Personal account bank statement of <strong class="text-gray-700">last 6 months</strong> with closing balance clearly mentioned.</p><div class="flex items-center gap-2 px-3 py-2 bg-red-50 rounded-lg border border-red-100"><iconify-icon icon="mdi:information" class="text-red-500 text-sm flex-shrink-0"></iconify-icon><span class="text-red-700 text-xs font-semibold">Minimum closing balance: 1 Million PKR</span></div></div>
-                <div class="observe-scale doc-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm lg:col-span-3" data-delay="480"><div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4"><div class="w-14 h-14 rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account-group" class="text-brand-orange text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-brand-blue text-white text-xs font-bold flex items-center justify-center">7</span><h4 class="font-bold text-brand-blue-dark text-lg">Family Details for Application Form</h4></div></div><p class="text-gray-500 text-sm leading-relaxed mb-4">Complete family details are required to fill in the China visa application form:</p><div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3"><div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:account" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Father's full name</span></div><div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:account" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Mother's full name</span></div><div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:account-heart" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Spouse name (if married)</span></div><div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:human-male-child" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Children names & DOB</span></div><div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:calendar" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Your date of birth</span></div><div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:map-marker" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Place of birth</span></div><div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:translate" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Nationality</span></div><div class="flex items-center gap-2.5 px-4 py-3 bg-gray-50 rounded-xl"><iconify-icon icon="mdi:briefcase" class="text-brand-orange text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-sm font-medium">Your occupation</span></div></div></div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="0"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:passport" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-blue text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">1</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Original Passport</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Your current valid original passport. Must be submitted at the time of application processing.</p></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="80"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:book-open-variant" class="text-brand-blue text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-orange text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">2</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Old Passport</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Your previous/expired passport. Required to verify travel history and previous visa records.</p></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="160"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:camera" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-blue text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">3</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Passport Size Photo</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Recent passport-size photograph with <strong class="text-gray-700">white background</strong>. Clear, without glasses.</p></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="240"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:card-account-details" class="text-brand-blue text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-orange text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">4</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">CNIC Copy</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Clear copy of your valid CNIC. Both front and back sides required.</p></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm relative" data-delay="320"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:shield-account" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-blue text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">5</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Police Character Certificate</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3">Certificate covering <strong class="text-gray-700">from since birth to today</strong>.</p><div class="important-note rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3"><div class="flex items-start gap-2"><iconify-icon icon="mdi:alert-circle" class="text-brand-orange text-sm sm:text-base flex-shrink-0 mt-0.5"></iconify-icon><p class="text-brand-orange-dark text-[10px] sm:text-xs font-semibold leading-relaxed"><strong>Apostille attestation from MOFA</strong> is required on this certificate.</p></div></div></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="400"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:bank" class="text-brand-blue text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-orange text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">6</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Bank Statement</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3">Personal account statement of <strong class="text-gray-700">last 6 months</strong>.</p><div class="flex items-center gap-2 px-3 py-2 bg-red-50 rounded-lg border border-red-100"><iconify-icon icon="mdi:information" class="text-red-500 text-xs sm:text-sm flex-shrink-0"></iconify-icon><span class="text-red-700 text-[10px] sm:text-xs font-semibold">Min balance: 1 Million PKR</span></div></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm sm:col-span-2 lg:col-span-3" data-delay="480"><div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account-group" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-blue text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">7</span><h4 class="font-bold text-brand-blue-dark text-sm sm:text-lg">Family Details for Application Form</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4">Complete family details required for the China visa application form:</p><div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3"><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:account" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Father's name</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:account" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Mother's name</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:account-heart" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Spouse name</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:human-male-child" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Children & DOB</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:calendar" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Your DOB</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:map-marker" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Place of birth</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:translate" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Nationality</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:briefcase" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Occupation</span></div></div></div>
             </div>
-            <div class="observe-fade mt-12 bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-3xl p-8 sm:p-10 text-white relative overflow-hidden"><div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div><div class="absolute bottom-0 left-0 w-32 h-32 bg-brand-orange/10 rounded-full translate-y-1/2 -translate-x-1/2"></div><div class="relative z-10 flex flex-col sm:flex-row items-center gap-6"><div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:whatsapp" class="text-green-400 text-3xl"></iconify-icon></div><div class="flex-1 text-center sm:text-left"><h4 class="font-bold text-xl mb-1">Need Help with Documents?</h4><p class="text-blue-100/70 text-sm leading-relaxed">Don't worry if any document seems complicated — especially the Police Character Certificate with MOFA apostille. We'll guide you step by step.</p></div><a href="https://wa.me/923100059895?text=Hi, I need help with China visa documents." target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors text-sm whitespace-nowrap flex-shrink-0"><iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>Ask Us Now</a></div></div>
+            <div class="observe-fade mt-8 sm:mt-12 bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 text-white relative overflow-hidden"><div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div><div class="absolute bottom-0 left-0 w-32 h-32 bg-brand-orange/10 rounded-full translate-y-1/2 -translate-x-1/2"></div><div class="relative z-10 flex flex-col sm:flex-row items-center gap-5 sm:gap-6 text-center sm:text-left"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:whatsapp" class="text-green-400 text-2xl sm:text-3xl"></iconify-icon></div><div class="flex-1"><h4 class="font-bold text-lg sm:text-xl mb-1">Need Help with Documents?</h4><p class="text-blue-100/70 text-xs sm:text-sm leading-relaxed">Don't worry if any document seems complicated — especially the Police Character Certificate with MOFA apostille. We'll guide you step by step.</p></div><a href="https://wa.me/923100059895?text=Hi, I need help with China visa documents." target="_blank" class="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors text-xs sm:text-sm whitespace-nowrap flex-shrink-0"><iconify-icon icon="mdi:whatsapp" class="text-lg sm:text-xl"></iconify-icon>Ask Us Now</a></div></div>
         </div>
     </section>
 
-    <!-- ========== HOW IT WORKS ========== -->
-    <section class="py-20 sm:py-28 bg-gray-50">
+   
+    <section class="py-16 sm:py-20 lg:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Process</span><h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">How It <span class="gradient-text">Works</span></h2><div class="section-divider mx-auto mb-6"></div></div>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="observe-fade text-center relative" data-delay="0"><div class="w-16 h-16 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mx-auto mb-5 shadow-lg shadow-orange-200"><span class="text-white text-xl font-extrabold">1</span></div><h4 class="font-bold text-brand-blue-dark mb-2">Contact Us</h4><p class="text-gray-500 text-sm leading-relaxed">Reach out via WhatsApp or visit our office.</p><div class="hidden lg:block absolute top-8 left-[60%] w-[80%] border-t-2 border-dashed border-orange-200"></div></div>
-                <div class="observe-fade text-center relative" data-delay="150"><div class="w-16 h-16 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-5 shadow-lg shadow-blue-200"><span class="text-white text-xl font-extrabold">2</span></div><h4 class="font-bold text-brand-blue-dark mb-2">Submit Documents</h4><p class="text-gray-500 text-sm leading-relaxed">We verify and help with all forms.</p><div class="hidden lg:block absolute top-8 left-[60%] w-[80%] border-t-2 border-dashed border-blue-200"></div></div>
-                <div class="observe-fade text-center relative" data-delay="300"><div class="w-16 h-16 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mx-auto mb-5 shadow-lg shadow-orange-200"><span class="text-white text-xl font-extrabold">3</span></div><h4 class="font-bold text-brand-blue-dark mb-2">We Process</h4><p class="text-gray-500 text-sm leading-relaxed">We submit to the embassy and track progress.</p><div class="hidden lg:block absolute top-8 left-[60%] w-[80%] border-t-2 border-dashed border-orange-200"></div></div>
-                <div class="observe-fade text-center" data-delay="450"><div class="w-16 h-16 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-5 shadow-lg shadow-blue-200"><span class="text-white text-xl font-extrabold">4</span></div><h4 class="font-bold text-brand-blue-dark mb-2">Get Your Visa</h4><p class="text-gray-500 text-sm leading-relaxed">Collect your passport. Ready to travel!</p></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== TESTIMONIALS ========== -->
-    <section class="py-20 sm:py-28 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-blue-50 text-brand-blue text-xs font-bold tracking-wider uppercase mb-4">Testimonials</span><h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">What Our <span class="gradient-text">Clients Say</span></h2><div class="section-divider mx-auto mb-6"></div></div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="testimonial-card observe-scale bg-white rounded-3xl p-8 border border-gray-100 shadow-sm" data-delay="0"><div class="flex text-yellow-400 mb-4"><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon></div><p class="text-gray-600 text-sm leading-relaxed mb-6">"Excellent service! Salman Sadiq and his team made the entire process so smooth. I got my China business visa in just 5 days. Highly recommended!"</p><div class="flex items-center gap-3 pt-5 border-t border-gray-100"><div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center text-white font-bold text-sm">AK</div><div><div class="font-bold text-brand-blue-dark text-sm">Ahmed Khan</div><div class="text-gray-400 text-xs">Businessman, Lahore</div></div></div></div>
-                <div class="testimonial-card observe-scale bg-white rounded-3xl p-8 border border-gray-100 shadow-sm" data-delay="150"><div class="flex text-yellow-400 mb-4"><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon></div><p class="text-gray-600 text-sm leading-relaxed mb-6">"I was worried about my first China visa, but Shanghai Travel guided me through every step. Very professional and affordable!"</p><div class="flex items-center gap-3 pt-5 border-t border-gray-100"><div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center text-white font-bold text-sm">SF</div><div><div class="font-bold text-brand-blue-dark text-sm">Sara Fatima</div><div class="text-gray-400 text-xs">Tourist, Islamabad</div></div></div></div>
-                <div class="testimonial-card observe-scale bg-white rounded-3xl p-8 border border-gray-100 shadow-sm" data-delay="300"><div class="flex text-yellow-400 mb-4"><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star-half-full"></iconify-icon></div><p class="text-gray-600 text-sm leading-relaxed mb-6">"Applied for a work visa. The team helped with all paperwork including police certificate and MOFA attestation. Got approved!"</p><div class="flex items-center gap-3 pt-5 border-t border-gray-100"><div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-orange to-brand-blue flex items-center justify-center text-white font-bold text-sm">MR</div><div><div class="font-bold text-brand-blue-dark text-sm">Muhammad Rizwan</div><div class="text-gray-400 text-xs">Engineer, Rawalpindi</div></div></div></div>
+            <div class="text-center mb-12 sm:mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Process</span><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">How It <span class="gradient-text">Works</span></h2><div class="section-divider mx-auto mb-6"></div></div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+                <div class="observe-fade text-center relative" data-delay="0"><div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg shadow-orange-200"><span class="text-white text-base sm:text-xl font-extrabold">1</span></div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-1 sm:mb-2">Contact Us</h4><p class="text-gray-500 text-[11px] sm:text-sm leading-relaxed">Reach out via WhatsApp or visit our office.</p><div class="hidden lg:block absolute top-6 sm:top-8 left-[60%] w-[80%] border-t-2 border-dashed border-orange-200"></div></div>
+                <div class="observe-fade text-center relative" data-delay="150"><div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg shadow-blue-200"><span class="text-white text-base sm:text-xl font-extrabold">2</span></div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-1 sm:mb-2">Submit Documents</h4><p class="text-gray-500 text-[11px] sm:text-sm leading-relaxed">We verify and help with all forms.</p><div class="hidden lg:block absolute top-6 sm:top-8 left-[60%] w-[80%] border-t-2 border-dashed border-blue-200"></div></div>
+                <div class="observe-fade text-center relative" data-delay="300"><div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg shadow-orange-200"><span class="text-white text-base sm:text-xl font-extrabold">3</span></div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-1 sm:mb-2">We Process</h4><p class="text-gray-500 text-[11px] sm:text-sm leading-relaxed">We submit to embassy and track progress.</p><div class="hidden lg:block absolute top-6 sm:top-8 left-[60%] w-[80%] border-t-2 border-dashed border-orange-200"></div></div>
+                <div class="observe-fade text-center" data-delay="450"><div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg shadow-blue-200"><span class="text-white text-base sm:text-xl font-extrabold">4</span></div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-1 sm:mb-2">Get Your Visa</h4><p class="text-gray-500 text-[11px] sm:text-sm leading-relaxed">Collect your passport. Ready to travel!</p></div>
             </div>
         </div>
     </section>
 
-    <!-- ========== CONTACT ========== -->
-    <section id="contact" class="py-20 sm:py-28 bg-gray-50">
+   
+    <section class="py-16 sm:py-20 lg:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Get in Touch</span><h2 class="text-3xl sm:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Contact <span class="gradient-text">Us</span></h2><div class="section-divider mx-auto mb-6"></div></div>
-            <div class="grid lg:grid-cols-5 gap-10">
+            <div class="text-center mb-12 sm:mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-blue-50 text-brand-blue text-xs font-bold tracking-wider uppercase mb-4">Testimonials</span><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">What Our <span class="gradient-text">Clients Say</span></h2><div class="section-divider mx-auto mb-6"></div></div>
+            <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+                <div class="testimonial-card observe-scale bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm" data-delay="0"><div class="flex text-yellow-400 mb-3 sm:mb-4 text-sm sm:text-base"><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon></div><p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">"Excellent service! Salman Sadiq and his team made the entire process so smooth. I got my China business visa in just 5 days. Highly recommended!"</p><div class="flex items-center gap-3 pt-4 sm:pt-5 border-t border-gray-100"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center text-white font-bold text-xs sm:text-sm">AK</div><div><div class="font-bold text-brand-blue-dark text-xs sm:text-sm">Ahmed Khan</div><div class="text-gray-400 text-[10px] sm:text-xs">Businessman, Lahore</div></div></div></div>
+                <div class="testimonial-card observe-scale bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm" data-delay="150"><div class="flex text-yellow-400 mb-3 sm:mb-4 text-sm sm:text-base"><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon></div><p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">"I was worried about my first China visa, but Shanghai Travel guided me through every step. Very professional and affordable!"</p><div class="flex items-center gap-3 pt-4 sm:pt-5 border-t border-gray-100"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center text-white font-bold text-xs sm:text-sm">SF</div><div><div class="font-bold text-brand-blue-dark text-xs sm:text-sm">Sara Fatima</div><div class="text-gray-400 text-[10px] sm:text-xs">Tourist, Islamabad</div></div></div></div>
+                <div class="testimonial-card observe-scale bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm" data-delay="300"><div class="flex text-yellow-400 mb-3 sm:mb-4 text-sm sm:text-base"><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star-half-full"></iconify-icon></div><p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">"Applied for a work visa. The team helped with all paperwork including police certificate and MOFA attestation. Got approved!"</p><div class="flex items-center gap-3 pt-4 sm:pt-5 border-t border-gray-100"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-orange to-brand-blue flex items-center justify-center text-white font-bold text-xs sm:text-sm">MR</div><div><div class="font-bold text-brand-blue-dark text-xs sm:text-sm">Muhammad Rizwan</div><div class="text-gray-400 text-[10px] sm:text-xs">Engineer, Rawalpindi</div></div></div></div>
+            </div>
+        </div>
+    </section>
+
+   
+    <section id="contact" class="py-16 sm:py-20 lg:py-28 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Get in Touch</span><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Contact <span class="gradient-text">Us</span></h2><div class="section-divider mx-auto mb-6"></div></div>
+            <div class="grid lg:grid-cols-5 gap-6 sm:gap-10">
                 <div class="lg:col-span-2 observe-left">
-                    <div class="bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-3xl p-8 text-white relative overflow-hidden"><div class="absolute -bottom-6 -right-6 w-32 h-32 bg-white/5 rounded-full"></div><div class="relative z-10"><h3 class="font-bold text-xl mb-6">Shanghai Travel & Tours</h3><div class="space-y-5"><div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account" class="text-brand-orange text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-xs font-medium mb-0.5">CEO</div><div class="font-semibold text-sm">Salman Sadiq</div></div></div><div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:phone" class="text-brand-orange text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-xs font-medium mb-0.5">Phone</div><a href="tel:+923100059895" class="font-semibold text-sm hover:text-brand-orange transition-colors block">+92 310 0059895</a><a href="tel:+923118666935" class="font-semibold text-sm hover:text-brand-orange transition-colors block">+92 311 8666935</a></div></div><div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:email" class="text-brand-orange text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-xs font-medium mb-0.5">Email</div><a href="mailto:shanghaitravel92@hotmail.com" class="font-semibold text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></div></div><div class="flex items-start gap-4"><div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-brand-orange text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-xs font-medium mb-0.5">Office Address</div><div class="font-semibold text-sm leading-relaxed">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Next to Gerrys Building, Islamabad, Pakistan</div></div></div></div><a href="https://wa.me/923100059895" target="_blank" class="mt-8 inline-flex items-center gap-2 w-full justify-center px-6 py-3.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors text-sm"><iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>Chat on WhatsApp</a></div></div>
+                    <div class="bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden"><div class="absolute -bottom-6 -right-6 w-32 h-32 bg-white/5 rounded-full"></div><div class="relative z-10"><h3 class="font-bold text-lg sm:text-xl mb-5 sm:mb-6">Shanghai Travel & Tours</h3><div class="space-y-4 sm:space-y-5">
+                        <div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">CEO</div><div class="font-semibold text-xs sm:text-sm">Salman Sadiq</div></div></div>
+                        <div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:phone" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Phone</div><a href="tel:03100059895" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors block">03100059895</a><a href="tel:03118666935" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors block">0311 8666935</a></div></div>
+                        <div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:email" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Email</div><a href="mailto:shanghaitravel92@hotmail.com" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></div></div>
+                        <div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Office Address</div><div class="font-semibold text-xs sm:text-sm leading-relaxed">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Next to Gerrys Building, Islamabad</div></div></div>
+                    </div><a href="https://wa.me/923100059895" target="_blank" class="mt-6 sm:mt-8 inline-flex items-center gap-2 w-full justify-center px-5 sm:px-6 py-3 sm:py-3.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors text-xs sm:text-sm"><iconify-icon icon="mdi:whatsapp" class="text-lg sm:text-xl"></iconify-icon>Chat on WhatsApp</a></div></div>
                 </div>
                 <div class="lg:col-span-3 observe-right">
-                    <form id="contactForm" class="bg-white rounded-3xl p-6 sm:p-10 border border-gray-100"><h3 class="text-xl font-bold text-brand-blue-dark mb-2">Send Us a Message</h3><p class="text-gray-400 text-sm mb-6 md:mb-8">Fill out the form and we'll get back to you within hours.</p><div class="grid sm:grid-cols-2 gap-4 md:gap-5 mb-5"><div><label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label><input type="text" id="formName" required placeholder="Your full name" class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 transition-all"></div><div><label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label><input type="tel" id="formPhone" required placeholder="+92 3XX XXXXXXX" class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 transition-all"></div></div><div class="mb-5"><label class="block text-sm font-semibold text-gray-700 mb-2">Visa Type</label><select id="formVisaType" class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 transition-all"><option value="">Select visa type</option><option value="tourist">Tourist Visa (L)</option><option value="business">Business Visa (M)</option><option value="work">Work Visa (Z)</option><option value="other">Other / Not Sure</option></select></div><div class="mb-6"><label class="block text-sm font-semibold text-gray-700 mb-2">Your Message *</label><textarea id="formMessage" required rows="4" placeholder="Tell us about your visa requirements..." class="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder-gray-400 transition-all resize-none"></textarea></div><button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-xl shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:scale-105 transition-all duration-300 text-sm"><iconify-icon icon="mdi:send" class="text-lg"></iconify-icon>Send Message</button></form>
+                    <form id="contactForm" class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-10 border border-gray-100"><h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-1 sm:mb-2">Send Us a Message</h3><p class="text-gray-400 text-xs sm:text-sm mb-5 sm:mb-8">Fill out the form and we'll get back to you within hours.</p><div class="grid sm:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5"><div><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Full Name *</label><input type="text" id="formName" required placeholder="Your full name" class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 placeholder-gray-400 transition-all"></div><div><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Phone Number *</label><input type="tel" id="formPhone" required placeholder="+92 3XX XXXXXXX" class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 placeholder-gray-400 transition-all"></div></div><div class="mb-4 sm:mb-5"><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Visa Type</label><select id="formVisaType" class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 transition-all"><option value="">Select visa type</option><option value="tourist">Tourist Visa (L)</option><option value="business">Business Visa (M)</option><option value="work">Work Visa (Z)</option><option value="other">Other / Not Sure</option></select></div><div class="mb-5 sm:mb-6"><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Your Message *</label><textarea id="formMessage" required rows="4" placeholder="Tell us about your visa requirements..." class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 placeholder-gray-400 transition-all resize-none"></textarea></div><button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-xl shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:scale-105 transition-all duration-300 text-xs sm:text-sm"><iconify-icon icon="mdi:send" class="text-lg"></iconify-icon>Send Message</button></form>
                 </div>
             </div>
-            <!-- Google Map with red pointer -->
-            <div class="observe-fade mt-12 rounded-3xl overflow-hidden border border-gray-200 shadow-sm relative">
-                <div class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center"><iconify-icon icon="mdi:google" class="text-red-500 text-xl"></iconify-icon></div>
-                        <div><h4 class="font-bold text-brand-blue-dark text-sm">Our Office Location</h4><p class="text-gray-400 text-xs">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Islamabad</p></div>
+            <div class="observe-fade mt-8 sm:mt-12 rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-200 gap-2 sm:gap-0">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:google" class="text-red-500 text-lg sm:text-xl"></iconify-icon></div>
+                        <div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Our Office Location</h4><p class="text-gray-400 text-[10px] sm:text-xs hidden sm:block">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Islamabad</p></div>
                     </div>
-                    <a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white text-xs font-semibold rounded-lg transition-colors"><iconify-icon icon="mdi:directions" class="text-base"></iconify-icon>Get Directions</a>
+                    <a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white text-[10px] sm:text-xs font-semibold rounded-lg transition-colors flex-shrink-0"><iconify-icon icon="mdi:directions" class="text-sm sm:text-base"></iconify-icon>Directions</a>
                 </div>
-                <div class="relative">
-                    <iframe src="https://maps.google.com/maps?q=Office+1-A+Ahmed+Center+Main+Park+Road+Chatha+Bakhtawar+Next+to+Gerrys+Building+Islamabad+Pakistan&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full" title="Shanghai Travel & Tours Office"></iframe>
-                    <!-- Red map pointer -->
-                    <div class="absolute top-1/2 left-1/2 -translate-x-[17px] -translate-y-[42px] z-10 pointer-events-none">
-                        <div class="w-[34px] h-[44px] relative">
-                            <svg viewBox="0 0 34 44" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-lg">
-                                <path d="M17 2C17 9.5 9.5 25.3 17 34 44C17 42.7 9.5 33 2 25.3 2 17 9.5 9.5 2 2 9.5 2 17 9.5 25.3 17 34 42.7 25.3 34 17 42.7 9.5 34 2 25.3 2 17 9.5 9.5 2 25.3 2 34 9.5 42.7 17 34 25.3 34 17 42.7 25.3 42.7 34 34Z" fill="#EF4444"/>
-                                <path d="M17 4L20.5 7.5L17 11L24.5 4L17 11Z" fill="white"/>
-                                <circle cx="17" cy="17" r="2" fill="#EF4444"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
+                <iframe src="https://maps.google.com/maps?q=Office+1-A+Ahmed+Center+Main+Park+Road+Chatha+Bakhtawar+Next+to+Gerrys+Building+Islamabad+Pakistan&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="280" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full" title="Shanghai Travel & Tours Office"></iframe>
             </div>
         </div>
     </section>
 
-    <!-- ========== CTA ========== -->
-    <section class="py-20 bg-gradient-to-br from-brand-blue via-brand-blue-dark to-brand-blue relative overflow-hidden"><div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 30px 30px;"></div><div class="absolute top-0 right-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 observe-fade"><div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-orange-200 text-xs font-semibold tracking-wider uppercase mb-6"><iconify-icon icon="mdi:clock-fast" class="text-brand-orange"></iconify-icon>Don't Delay Your Travel Plans</div><h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-6 leading-tight">Ready to Get Your <span class="text-brand-orange">China Visa?</span></h2><p class="text-blue-100/70 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">Visit our office or contact us today for a free consultation.</p><div class="flex flex-wrap justify-center gap-4"><a href="https://wa.me/923100059895?text=Hi, I want to apply for a China visa." target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-2xl shadow-xl shadow-green-500/30 hover:scale-105 transition-all duration-300 text-sm"><iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>WhatsApp: +92 310 0059895</a><a href="tel:+923100059895" class="inline-flex items-center gap-2 px-8 py-4 glass-card text-white font-bold rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-sm"><iconify-icon icon="mdi:phone" class="text-xl text-brand-orange"></iconify-icon>Call Now</a></div></div></section>
+   
+    <section class="py-16 sm:py-20 bg-gradient-to-br from-brand-blue via-brand-blue-dark to-brand-blue relative overflow-hidden"><div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 30px 30px;"></div><div class="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 observe-fade"><div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-orange-200 text-[10px] sm:text-xs font-semibold tracking-wider uppercase mb-4 sm:mb-6"><iconify-icon icon="mdi:clock-fast" class="text-brand-orange"></iconify-icon>Don't Delay Your Travel Plans</div><h2 class="text-2xl sm:text-3xl lg:text-5xl font-extrabold text-white tracking-tight mb-5 sm:mb-6 leading-tight">Ready to Get Your <span class="text-brand-orange">China Visa?</span></h2><p class="text-blue-100/70 text-sm sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto">Visit our office or contact us today for a free consultation.</p><div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4"><a href="https://wa.me/923100059895?text=Hi, I want to apply for a China visa." target="_blank" class="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl sm:rounded-2xl shadow-xl shadow-green-500/30 hover:scale-105 transition-all duration-300 text-xs sm:text-sm"><iconify-icon icon="mdi:whatsapp" class="text-lg sm:text-xl"></iconify-icon>WhatsApp: 03100059895</a><a href="tel:03100059895" class="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 glass-card text-white font-bold rounded-xl sm:rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-xs sm:text-sm"><iconify-icon icon="mdi:phone" class="text-lg sm:text-xl text-brand-orange"></iconify-icon>Call Now</a></div></div></section>
 
-    <!-- ========== FOOTER ========== -->
+    
     <footer class="bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
-                <div class="lg:col-span-1">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+                <div class="col-span-2 sm:col-span-2 lg:col-span-1">
                     <div class="flex items-center gap-3 mb-5">
                         <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center"><iconify-icon icon="mdi:airplane-takeoff" class="text-white text-lg"></iconify-icon></div>
                         <div><span class="text-sm font-bold leading-tight block">Shanghai Travel</span><span class="text-[9px] text-gray-400 tracking-wider uppercase">& Tours Pvt Ltd</span></div>
                     </div>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-5">Your trusted partner for China visa services in Islamabad. SECP registered.</p>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed mb-5">Your trusted partner for China visa services in Islamabad. SECP registered.</p>
                     <div class="flex gap-3">
                         <a href="https://www.facebook.com/shanghaitravel92/" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-600/20 flex items-center justify-center" aria-label="Facebook"><iconify-icon icon="mdi:facebook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon></a>
                         <a href="https://wa.me/923100059895" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 flex items-center justify-center" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-gray-400 hover:text-green-400 text-lg"></iconify-icon></a>
@@ -523,50 +564,107 @@
                         <a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-red-500/20 flex items-center justify-center" aria-label="Location"><iconify-icon icon="mdi:map-marker" class="text-gray-400 hover:text-red-400 text-lg"></iconify-icon></a>
                     </div>
                 </div>
-                <div><h4 class="font-bold text-sm mb-5 text-white">Quick Links</h4><ul class="space-y-3"><li><a href="#home" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Home</a></li><li><a href="#about" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">About Us</a></li><li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Services</a></li><li><a href="#requirements" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Requirements</a></li><li><a href="#contact" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Contact</a></li></ul></div>
-                <div><h4 class="font-bold text-sm mb-5 text-white">Visa Types</h4><ul class="space-y-3"><li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Tourist Visa (L)</a></li><li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Business Visa (M)</a></li><li><a href="#services" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Work Visa (Z)</a></li><li><a href="#requirements" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">Document Checklist</a></li></ul></div>
-                <div><h4 class="font-bold text-sm mb-5 text-white">Contact Info</h4><ul class="space-y-3"><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:+923100059895" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">+92 310 0059895</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:+923118666935" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">+92 311 8666935</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:email" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="mailto:shanghaitravel92@hotmail.com" class="text-gray-400 text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:facebook" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="https://www.facebook.com/shanghaitravel92/" target="_blank" class="text-gray-400 text-sm hover:text-brand-orange transition-colors">facebook.com/shanghaitravel92</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:map-marker" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="text-gray-400 text-sm hover:text-brand-orange transition-colors leading-relaxed">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Next to Gerrys Building, Islamabad</a></li></ul></div>
+                <div><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Quick Links</h4><ul class="space-y-2.5 sm:space-y-3"><li><a href="#home" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Home</a></li><li><a href="#about" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">About Us</a></li><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Services</a></li><li><a href="#requirements" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Requirements</a></li><li><a href="#contact" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Contact</a></li></ul></div>
+                <div><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Visa Types</h4><ul class="space-y-2.5 sm:space-y-3"><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Tourist Visa (L)</a></li><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Business Visa (M)</a></li><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Work Visa (Z)</a></li><li><a href="#requirements" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Document Checklist</a></li></ul></div>
+                <div class="col-span-2 sm:col-span-1"><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Contact Info</h4><ul class="space-y-2.5 sm:space-y-3"><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:03100059895" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">03100059895</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:03118666935" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">0311 8666935</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:email" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="mailto:shanghaitravel92@hotmail.com" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:map-marker" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors leading-relaxed">Office 1-A, Ahmed Center, Islamabad</a></li></ul></div>
             </div>
         </div>
-        <div class="border-t border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4"><p class="text-gray-500 text-xs">&copy; 2025 Shanghai Travel & Tours (Private) Limited. All rights reserved.</p><p class="text-gray-600 text-xs">SECP Registered | China Visa Specialist | Islamabad</p></div></div>
+        <div class="border-t border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4"><p class="text-gray-500 text-[10px] sm:text-xs">&copy; 2025 Shanghai Travel & Tours (Private) Limited. All rights reserved.</p><p class="text-gray-600 text-[10px] sm:text-xs">SECP Registered | China Visa Specialist | Islamabad</p></div></div>
     </footer>
 
-    <!-- WhatsApp Float -->
-    <a href="https://wa.me/923100059895?text=Hi, I need information about China visa services." target="_blank" class="whatsapp-float fixed bottom-6 right-6 z-50 w-16 h-16 bg-green-500 rounded-full flex items-center justify-center shadow-xl hover:bg-green-600 hover:scale-110 transition-all duration-300 group" aria-label="Chat on WhatsApp">
-        <iconify-icon icon="mdi:whatsapp" class="text-white text-3xl"></iconify-icon>
-        <span class="absolute right-20 bg-gray-900 text-white text-xs font-medium px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Chat with us!<span class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-gray-900 rotate-45"></span></span>
+    
+    <a href="https://wa.me/923100059895?text=Hi, I need information about China visa services." target="_blank" class="whatsapp-float fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 bg-green-500 rounded-full flex items-center justify-center shadow-xl hover:bg-green-600 hover:scale-110 transition-all duration-300 group" aria-label="Chat on WhatsApp">
+        <iconify-icon icon="mdi:whatsapp" class="text-white text-2xl sm:text-3xl"></iconify-icon>
+        <span class="absolute right-18 sm:right-20 bg-gray-900 text-white text-[10px] sm:text-xs font-medium px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Chat with us!<span class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-gray-900 rotate-45"></span></span>
     </a>
 
-    <!-- Toast -->
-    <div id="toast" class="toast fixed top-24 right-6 z-50 bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 max-w-sm"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-xl"></iconify-icon></div><div><h4 class="font-bold text-gray-800 text-sm">Message Sent!</h4><p class="text-gray-500 text-xs mt-0.5">We'll contact you shortly via WhatsApp.</p></div><button onclick="hideToast()" class="text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0"><iconify-icon icon="mdi:close" class="text-lg"></iconify-icon></button></div></div>
+    
+    <div id="toast" class="toast fixed top-20 sm:top-24 right-4 sm:right-6 z-50 bg-white rounded-xl sm:rounded-2xl shadow-2xl border border-gray-100 p-4 sm:p-5 max-w-[calc(100vw-2rem)] sm:max-w-sm"><div class="flex items-start gap-3"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-lg sm:text-xl"></iconify-icon></div><div><h4 class="font-bold text-gray-800 text-xs sm:text-sm">Message Sent!</h4><p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">We'll contact you shortly via WhatsApp.</p></div><button onclick="hideToast()" class="text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0 ml-1"><iconify-icon icon="mdi:close" class="text-base sm:text-lg"></iconify-icon></button></div></div>
 
-    <!-- JS -->
     <script>
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             const s = window.pageYOffset;
-            if (s > 50) { navbar.classList.add('navbar-scrolled', 'bg-white/95', 'backdrop-blur-lg', 'shadow-lg', 'shadow-gray-200/50'); }
-            else { navbar.classList.remove('navbar-scrolled', 'bg-white/95', 'backdrop-blur-lg', 'shadow-lg', 'shadow-gray-200/50'); }
+            if (s > 50) {
+                navbar.classList.add('navbar-scrolled', 'bg-white/95', 'backdrop-blur-lg', 'shadow-lg', 'shadow-gray-200/50');
+            } else {
+                navbar.classList.remove('navbar-scrolled', 'bg-white/95', 'backdrop-blur-lg', 'shadow-lg', 'shadow-gray-200/50');
+            }
             document.querySelectorAll('section[id]').forEach(sec => {
                 const top = sec.offsetTop - 120, h = sec.offsetHeight, id = sec.id;
-                if (s >= top && s < top + h) { document.querySelectorAll('.nav-link').forEach(l => { l.classList.remove('nav-active'); if (l.getAttribute('href') === '#' + id) l.classList.add('nav-active'); }); }
+                if (s >= top && s < top + h) {
+                    document.querySelectorAll('.nav-link').forEach(l => {
+                        l.classList.remove('nav-active');
+                        if (l.getAttribute('href') === '#' + id) l.classList.add('nav-active');
+                    });
+                }
             });
+        });
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+        let menuOpen = false;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            mobileMenu.classList.toggle('open', menuOpen);
+            menuIcon.setAttribute('icon', menuOpen ? 'mdi:close' : 'mdi:menu');
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                mobileMenu.classList.remove('open');
+                menuIcon.setAttribute('icon', 'mdi:menu');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (menuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                menuOpen = false;
+                mobileMenu.classList.remove('open');
+                menuIcon.setAttribute('icon', 'mdi:menu');
+            }
         });
 
         document.getElementById('contactForm').addEventListener('submit', e => {
             e.preventDefault();
-            const n = document.getElementById('formName').value.trim(), p = document.getElementById('formPhone').value.trim(), v = document.getElementById('formVisaType').value, m = document.getElementById('formMessage').value.trim();
+            const n = document.getElementById('formName').value.trim();
+            const p = document.getElementById('formPhone').value.trim();
+            const v = document.getElementById('formVisaType').value;
+            const m = document.getElementById('formMessage').value.trim();
             if (!n || !p || !m) return;
-            showToast(); e.target.reset();
-            setTimeout(() => window.open('https://wa.me/923100059895?text=' + encodeURIComponent("Hi, I'm " + n + '.\nPhone: ' + p + '\nVisa Type: ' + (v || 'Not sure') + '\nMessage: ' + m), '_blank'), 1500);
+            showToast();
+            e.target.reset();
+            setTimeout(() => {
+                window.open('https://wa.me/923100059895?text=' + encodeURIComponent(
+                    "Hi, I'm " + n + ".\nPhone: " + p + "\nVisa Type: " + (v || 'Not sure') + "\nMessage: " + m
+                ), '_blank');
+            }, 1500);
         });
 
-        function showToast() { document.getElementById('toast').classList.add('show'); setTimeout(hideToast, 5000); }
-        function hideToast() { document.getElementById('toast').classList.remove('show'); }
+        function showToast() {
+            document.getElementById('toast').classList.add('show');
+            setTimeout(hideToast, 5000);
+        }
+        function hideToast() {
+            document.getElementById('toast').classList.remove('show');
+        }
 
-        // Scroll animations
-        const observer = new IntersectionObserver(e => { e.forEach(en => { if (en.isIntersecting) { setTimeout(() => en.target.classList.add('visible'), parseInt(en.target.dataset.delay || 0)); observer.unobserve(en.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-        document.querySelectorAll('.observe-fade, .observe-left, .observe-right, .observe-scale').forEach(el => observer.observe(el));
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = parseInt(entry.target.dataset.delay || 0);
+                    setTimeout(() => entry.target.classList.add('visible'), delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.observe-fade, .observe-left, .observe-right, .observe-scale').forEach(el => {
+            observer.observe(el);
+        });
 
         window.dispatchEvent(new Event('scroll'));
     </script>

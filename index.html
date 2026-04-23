@@ -31,6 +31,7 @@
                         'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
                         'fade-in-up-delay': 'fadeInUp 0.8s ease-out 0.2s forwards',
                         'fade-in-up-delay2': 'fadeInUp 0.8s ease-out 0.4s forwards',
+                        'fade-in-up-delay3': 'fadeInUp 0.8s ease-out 0.6s forwards',
                         'float': 'float 6s ease-in-out infinite',
                     }
                 }
@@ -60,26 +61,60 @@
         .observe-scale.visible { opacity: 1; transform: scale(1); }
 
         .hero-bg {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 30%, #2563eb 60%, #1e40af 100%);
-            position: relative; overflow: hidden;
+            position: relative;
+            overflow: hidden;
+            background-color: #0f1b3d;
+        }
+        .hero-bg .hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+        }
+        .hero-bg .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(15, 27, 61, 0.88) 0%,
+                rgba(30, 58, 138, 0.75) 40%,
+                rgba(37, 99, 235, 0.55) 70%,
+                rgba(30, 64, 175, 0.65) 100%
+            );
         }
         .hero-bg::before {
             content: ''; position: absolute; top: -50%; right: -20%;
             width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%);
             border-radius: 50%;
+            z-index: 1;
         }
         .hero-bg::after {
             content: ''; position: absolute; bottom: -30%; left: -10%;
             width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(249,115,22,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%);
             border-radius: 50%;
+            z-index: 1;
         }
 
         .glass-card {
             background: rgba(255,255,255,0.08);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .why-card {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .why-card:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(249,115,22,0.3);
+            transform: translateY(-3px);
         }
 
         .service-card { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
@@ -119,18 +154,30 @@
 
         input:focus, textarea:focus, select:focus { outline: none; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1); }
 
-        .nav-link { color: rgba(255,255,255,0.85); transition: color 0.3s ease, background-color 0.3s ease; }
-        .nav-link:hover { color: #ffffff; background-color: rgba(255,255,255,0.1); }
+        #navbar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        #navbar.navbar-scrolled {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .nav-link { color: #4b5563; transition: color 0.3s ease, background-color 0.3s ease; }
+        .nav-link:hover { color: #f97316; background-color: #fff7ed; }
         .nav-link.nav-active { color: #f97316 !important; }
-        .nav-logo-text { color: #ffffff; transition: color 0.3s ease; }
-        .nav-logo-sub { color: rgba(255,255,255,0.5); transition: color 0.3s ease; }
+        .hamburger-icon { color: #4b5563 !important; }
 
-        .navbar-scrolled .nav-link { color: #4b5563; }
-        .navbar-scrolled .nav-link:hover { color: #f97316; background-color: #fff7ed; }
-        .navbar-scrolled .nav-link.nav-active { color: #f97316 !important; }
-        .navbar-scrolled .nav-logo-text { color: #1e3a8a; }
-        .navbar-scrolled .nav-logo-sub { color: #9ca3af; }
-        .navbar-scrolled .hamburger-icon { color: #4b5563; }
+        .nav-logo-img { height: 40px; width: auto; object-fit: contain; }
+        @media (min-width: 640px) { .nav-logo-img { height: 44px; } }
+        @media (min-width: 768px) { .nav-logo-img { height: 48px; } }
+        .footer-logo-img { height: 36px; width: auto; object-fit: contain; }
+        @media (min-width: 640px) { .footer-logo-img { height: 40px; } }
+
+        .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 0; }
+        .mobile-menu.open { max-height: 400px; opacity: 1; }
+        .mobile-menu a { transition: all 0.2s ease; }
+
+        section { overflow-x: hidden; }
 
         .important-note { background: linear-gradient(135deg, #fff7ed, #fef3c7); border-left: 4px solid #f97316; }
         .id-number { font-family: 'Inter', monospace; letter-spacing: 0.15em; }
@@ -142,29 +189,29 @@
         .team-card:hover .team-avatar { transform: scale(1.05); }
         .team-avatar { transition: transform 0.4s ease; }
 
-        .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 0; }
-        .mobile-menu.open { max-height: 400px; opacity: 1; }
-        .mobile-menu a { transition: all 0.2s ease; }
+        @keyframes pinPulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .map-red-pin { animation: pinPulse 2s ease-out infinite; }
 
-        section { overflow-x: hidden; }
+        @keyframes heroGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .hero-glow { animation: heroGlow 3s ease-in-out infinite; }
     </style>
 </head>
 <body class="bg-white text-gray-800 font-inter antialiased">
 
-    
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+    <!-- ========== NAVIGATION ========== -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 md:h-20">
-                <a href="#home" class="flex items-center gap-2.5 group flex-shrink-0">
-                    <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center shadow-lg shadow-orange-200/50 group-hover:shadow-orange-300 transition-shadow">
-                        <iconify-icon icon="mdi:airplane-takeoff" class="text-white text-lg md:text-xl"></iconify-icon>
-                    </div>
-                    <div class="hidden sm:block">
-                        <span class="nav-logo-text text-sm md:text-base font-bold leading-tight block">Shanghai Travel</span>
-                        <span class="nav-logo-sub text-[9px] md:text-[10px] font-medium tracking-wider uppercase">& TOURS PVT LTD</span>
-                    </div>
+                <a href="#home" class="flex items-center flex-shrink-0">
+                    <img src="https://z-cdn-media.chatglm.cn/files/6ff81dfa-93c3-46b7-a68b-5b795895e49b.png?auth_key=1876970550-f588c873a73b4f8eba144940c0af9fa5-0-9aa811b65a989622ae9247567e61d657" alt="Shanghai Travel & Tours Pvt Ltd" class="nav-logo-img">
                 </a>
-
                 <div class="hidden md:flex items-center gap-1">
                     <a href="#home" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Home</a>
                     <a href="#about" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">About</a>
@@ -172,7 +219,6 @@
                     <a href="#requirements" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Requirements</a>
                     <a href="#contact" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Contact</a>
                 </div>
-
                 <div class="flex items-center gap-2">
                     <a href="https://wa.me/923100059895" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-sm font-semibold rounded-xl shadow-lg shadow-orange-200/50 hover:shadow-orange-300 hover:scale-105 transition-all duration-300">
                         <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>WhatsApp
@@ -180,68 +226,102 @@
                     <a href="https://wa.me/923100059895" target="_blank" class="sm:hidden w-10 h-10 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white flex items-center justify-center shadow-lg shadow-orange-200/50 hover:scale-105 transition-all duration-300 flex-shrink-0" aria-label="WhatsApp">
                         <iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>
                     </a>
-                    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors flex-shrink-0" aria-label="Toggle menu">
-                        <iconify-icon icon="mdi:menu" class="hamburger-icon text-white text-2xl transition-colors" id="menuIcon"></iconify-icon>
+                    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0" aria-label="Toggle menu">
+                        <iconify-icon icon="mdi:menu" class="hamburger-icon text-2xl transition-colors" id="menuIcon"></iconify-icon>
                     </button>
                 </div>
             </div>
-
             <div id="mobileMenu" class="mobile-menu md:hidden">
                 <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 mt-1 mb-2 overflow-hidden">
-                    <a href="#home" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50">
-                        <iconify-icon icon="mdi:home" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Home
-                    </a>
-                    <a href="#about" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50">
-                        <iconify-icon icon="mdi:information" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>About
-                    </a>
-                    <a href="#services" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50">
-                        <iconify-icon icon="mdi:briefcase" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Services
-                    </a>
-                    <a href="#requirements" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50">
-                        <iconify-icon icon="mdi:file-document" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Requirements
-                    </a>
-                    <a href="#contact" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium">
-                        <iconify-icon icon="mdi:phone" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Contact
-                    </a>
+                    <a href="#home" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50"><iconify-icon icon="mdi:home" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Home</a>
+                    <a href="#about" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50"><iconify-icon icon="mdi:information" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>About</a>
+                    <a href="#services" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50"><iconify-icon icon="mdi:briefcase" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Services</a>
+                    <a href="#requirements" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50"><iconify-icon icon="mdi:file-document" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Requirements</a>
+                    <a href="#contact" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium"><iconify-icon icon="mdi:phone" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Contact</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    
+    <!-- ========== HERO (UPDATED TEXT FROM IMAGE) ========== -->
     <section id="home" class="hero-bg min-h-screen flex items-center relative">
-        <div class="absolute top-20 right-10 w-72 h-72 bg-brand-orange/10 rounded-full blur-3xl animate-float"></div>
-        <div class="absolute bottom-20 left-10 w-48 h-48 bg-white/5 rounded-full blur-2xl" style="animation: float 8s ease-in-out infinite;"></div>
-        <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 40px 40px;"></div>
+        <img src="https://z-cdn-media.chatglm.cn/files/d8a58ee3-0513-4b19-9199-5ed640757916.jpeg?auth_key=1876971118-9bc21c432587464f8fc7c85a4078c4e7-0-a924e5002f59bc7caac4c64eed313e2f" alt="Shanghai Skyline" class="hero-img">
+        <div class="hero-overlay"></div>
+
+        <div class="absolute top-20 right-10 w-72 h-72 bg-brand-orange/10 rounded-full blur-3xl animate-float z-[1]"></div>
+        <div class="absolute bottom-20 left-10 w-48 h-48 bg-white/5 rounded-full blur-2xl z-[1]" style="animation: float 8s ease-in-out infinite;"></div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 md:py-32 relative z-10 w-full">
-            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <!-- LEFT SIDE - Updated text from image -->
                 <div class="w-full">
                     <div class="opacity-0 animate-fade-in-up">
                         <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-orange-200 text-xs font-semibold tracking-wider uppercase mb-6">
                             <iconify-icon icon="mdi:shield-check" class="text-brand-orange"></iconify-icon>SECP Registered Company
                         </span>
                     </div>
-                    <h1 class="opacity-0 animate-fade-in-up-delay text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.05] tracking-tight mb-6">
-                        Get Your<span class="gradient-text"> China Visa</span><br>Easily
+
+                    <h1 class="opacity-0 animate-fade-in-up-delay text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-extrabold text-white leading-[1.1] tracking-tight mb-5">
+                        Trusted China Visa<br><span class="gradient-text">Consultancy Partner</span>
                     </h1>
-                    <p class="opacity-0 animate-fade-in-up-delay2 text-base sm:text-lg text-blue-100/80 font-light leading-relaxed mb-8 max-w-lg">Fast, reliable, and hassle-free China visa processing from Islamabad. We handle everything so you can focus on your journey.</p>
-                    <div class="opacity-0 animate-fade-in-up-delay2 flex flex-wrap gap-3 sm:gap-4 mb-12">
+
+                    <p class="opacity-0 animate-fade-in-up-delay2 text-base sm:text-lg text-blue-100/80 font-light leading-relaxed mb-7 max-w-lg">
+                        Fast and reliable visa processing with complete guidance at every step.
+                    </p>
+
+                    <div class="opacity-0 animate-fade-in-up-delay2 flex flex-wrap gap-3 sm:gap-4 mb-10">
                         <a href="#contact" class="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-2xl shadow-xl shadow-orange-900/30 hover:shadow-orange-900/50 hover:scale-105 transition-all duration-300 text-sm">
                             <iconify-icon icon="mdi:file-document-edit" class="text-lg"></iconify-icon>Apply Now
                         </a>
                         <a href="https://wa.me/923100059895" target="_blank" class="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 glass-card text-white font-bold rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-sm">
-                            <iconify-icon icon="mdi:whatsapp" class="text-lg text-green-400"></iconify-icon>WhatsApp
+                            <iconify-icon icon="mdi:whatsapp" class="text-lg text-green-400"></iconify-icon>WhatsApp Us
                         </a>
                     </div>
-                    <div class="opacity-0 animate-fade-in-up-delay2 flex flex-wrap gap-4 sm:gap-6">
-                        <div class="flex items-center gap-2"><iconify-icon icon="mdi:check-decagram" class="text-brand-orange text-xl"></iconify-icon><span class="text-blue-100/70 text-sm">SECP Registered</span></div>
-                        <div class="flex items-center gap-2"><iconify-icon icon="mdi:clock-fast" class="text-brand-orange text-xl"></iconify-icon><span class="text-blue-100/70 text-sm">Fast Processing</span></div>
-                        <div class="flex items-center gap-2"><iconify-icon icon="mdi:headset" class="text-brand-orange text-xl"></iconify-icon><span class="text-blue-100/70 text-sm">24/7 Support</span></div>
+
+                    <!-- Why Choose Us - Inside Hero -->
+                    <div class="opacity-0 animate-fade-in-up-delay3">
+                        <h4 class="text-white/90 text-xs sm:text-sm font-bold tracking-wider uppercase mb-3 sm:mb-4 flex items-center gap-2">
+                            <span class="w-8 h-[2px] bg-brand-orange"></span>Why Choose Us
+                        </h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-brand-orange/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:lightning-bolt" class="text-brand-orange text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">Fast Visa Processing</span>
+                            </div>
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-400/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:account-group" class="text-blue-300 text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">Professional Team</span>
+                            </div>
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-green-400/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:compass" class="text-green-300 text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">Complete Guidance</span>
+                            </div>
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-purple-400/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:shield-check" class="text-purple-300 text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">Trusted Consultancy</span>
+                            </div>
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3 col-span-2 sm:col-span-1">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-yellow-400/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:trending-up" class="text-yellow-300 text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">High Success Rate</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- RIGHT SIDE - Glass Card -->
                 <div class="hidden lg:flex justify-center relative">
                     <div class="relative">
-                        <div class="w-96 h-[460px] rounded-3xl glass-card p-8 flex flex-col justify-between animate-float">
+                        <div class="w-96 h-[500px] rounded-3xl glass-card p-8 flex flex-col justify-between animate-float">
                             <div>
                                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mb-6 shadow-lg"><iconify-icon icon="mdi:passport" class="text-white text-3xl"></iconify-icon></div>
                                 <h3 class="text-2xl font-bold text-white mb-2">China Visa</h3>
@@ -263,13 +343,23 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Simple Visa Process Label -->
+            <div class="opacity-0 animate-fade-in-up-delay3 mt-12 sm:mt-16 text-center">
+                <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full glass-card">
+                    <iconify-icon icon="mdi:arrow-right-circle" class="text-brand-orange text-lg hero-glow"></iconify-icon>
+                    <span class="text-white/90 text-sm font-semibold tracking-wide">Simple Visa Process</span>
+                    <iconify-icon icon="mdi:arrow-right-circle" class="text-brand-orange text-lg hero-glow"></iconify-icon>
+                </div>
+            </div>
         </div>
-        <div class="absolute bottom-0 left-0 right-0 w-full">
+
+        <div class="absolute bottom-0 left-0 right-0 w-full z-10">
             <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full block" preserveAspectRatio="none"><path d="M0 80L60 73.3C120 66.7 240 53.3 360 46.7C480 40 600 40 720 46.7C840 53.3 960 66.7 1080 66.7C1200 66.7 1320 53.3 1380 46.7L1440 40V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0Z" fill="white"/></svg>
         </div>
     </section>
 
-    
+    <!-- ========== TRUST STATS ========== -->
     <section class="py-12 sm:py-16 bg-white relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
@@ -281,7 +371,7 @@
         </div>
     </section>
 
-   
+    <!-- ========== ABOUT ========== -->
     <section id="about" class="py-16 sm:py-20 lg:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 sm:mb-16 observe-fade">
@@ -341,7 +431,7 @@
         </div>
     </section>
 
-    
+    <!-- ========== OUR TEAM ========== -->
     <section id="team" class="py-16 sm:py-20 lg:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 sm:mb-16 observe-fade">
@@ -351,62 +441,36 @@
                 <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">The dedicated professionals who make your China visa journey seamless and successful.</p>
             </div>
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                
                 <div class="team-card observe-scale bg-white rounded-2xl sm:rounded-3xl border-2 border-brand-orange/20 p-6 sm:p-8 shadow-lg shadow-orange-50 relative text-center sm:col-span-2 lg:col-span-1" data-delay="0">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-xs font-bold rounded-full flex items-center gap-1.5">
-                        <iconify-icon icon="mdi:crown" class="text-sm"></iconify-icon>CEO
-                    </div>
-                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-orange-200/50 mt-2 border-4 border-white">
-                        <img src="https://z-cdn-media.chatglm.cn/files/f9337705-b2d4-4b82-a9ae-828a9761786a.jpg?auth_key=1876832679-1e1d356e198b4ad1a50e6ef02743ae40-0-bf78bdf8674c0b6a87bdf620cea29537" alt="Salman Sadiq - CEO" class="w-full h-full object-cover">
-                    </div>
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-xs font-bold rounded-full flex items-center gap-1.5"><iconify-icon icon="mdi:crown" class="text-sm"></iconify-icon>CEO</div>
+                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-orange-200/50 mt-2 border-4 border-white"><img src="https://z-cdn-media.chatglm.cn/files/f9337705-b2d4-4b82-a9ae-828a9761786a.jpg?auth_key=1876832679-1e1d356e198b4ad1a50e6ef02743ae40-0-bf78bdf8674c0b6a87bdf620cea29537" alt="Salman Sadiq - CEO" class="w-full h-full object-cover"></div>
                     <h3 class="text-lg sm:text-xl font-extrabold text-brand-blue-dark mb-1">Salman Sadiq</h3>
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-orange/10 text-brand-orange text-xs font-bold rounded-full mb-4 sm:mb-5">Chief Executive Officer</span>
-                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Founder of Shanghai Travel & Tours with over 10 years of expertise in China visa consultancy. Leading the company with vision and dedication.</p>
-                    <div class="flex items-center justify-center gap-3">
-                        <a href="https://wa.me/923100059895" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Salman Sadiq"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a>
-                        <a href="tel:03100059895" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Salman Sadiq"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a>
-                    </div>
-                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-orange-100">
-                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-orange text-sm"></iconify-icon><span>03100059895</span></div>
-                    </div>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Founder of Shanghai Travel & Tours with over 10 years of expertise in China visa consultancy.</p>
+                    <div class="flex items-center justify-center gap-3"><a href="https://wa.me/923100059895" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a><a href="tel:03100059895" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a></div>
+                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-orange-100"><div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-orange text-sm"></iconify-icon><span>03100059895</span></div></div>
                 </div>
-               
                 <div class="team-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm text-center" data-delay="150">
-                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-blue-200/50 border-4 border-white">
-                        <img src="https://z-cdn-media.chatglm.cn/files/b1dd1dae-ed99-4142-9fde-fa2253d8d91d.jpeg?auth_key=1876871265-3b119715d03e41f297f275a3567192cf-0-7b2134441d3dd30d084b36b8bda54213" alt="Afzaal Minhas - Director" class="w-full h-full object-cover">
-                    </div>
+                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-blue-200/50 border-4 border-white"><img src="https://z-cdn-media.chatglm.cn/files/b1dd1dae-ed99-4142-9fde-fa2253d8d91d.jpeg?auth_key=1876871265-3b119715d03e41f297f275a3567192cf-0-7b2134441d3dd30d084b36b8bda54213" alt="Afzaal Minhas" class="w-full h-full object-cover"></div>
                     <h3 class="text-lg sm:text-xl font-extrabold text-brand-blue-dark mb-1">Afzaal Minhas</h3>
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-4 sm:mb-5">Director</span>
-                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Experienced professional dedicated to providing seamless visa processing and personalized guidance to every client.</p>
-                    <div class="flex items-center justify-center gap-3">
-                        <a href="https://wa.me/923100059893" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Afzaal Minhas"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a>
-                        <a href="tel:03100059893" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Afzaal Minhas"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a>
-                    </div>
-                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-100">
-                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon><span>0310 0059893</span></div>
-                    </div>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Experienced professional dedicated to providing seamless visa processing.</p>
+                    <div class="flex items-center justify-center gap-3"><a href="https://wa.me/923100059893" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a><a href="tel:03100059893" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a></div>
+                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-100"><div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon><span>0310 0059893</span></div></div>
                 </div>
-                
                 <div class="team-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm text-center" data-delay="300">
-                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-blue-200/50 border-4 border-white">
-                        <img src="https://z-cdn-media.chatglm.cn/files/7472852b-2faa-421e-a46b-686dc0d87fc5.jpeg?auth_key=1876870678-077b5f76d74f470b8d83baeb34a07ffe-0-957605c34e0695be4726495ed3d3a85b" alt="Shakeeb Hussain - Director" class="w-full h-full object-cover">
-                    </div>
+                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-blue-200/50 border-4 border-white"><img src="https://z-cdn-media.chatglm.cn/files/7472852b-2faa-421e-a46b-686dc0d87fc5.jpeg?auth_key=1876870678-077b5f76d74f470b8d83baeb34a07ffe-0-957605c34e0695be4726495ed3d3a85b" alt="Shakeeb Hussain" class="w-full h-full object-cover"></div>
                     <h3 class="text-lg sm:text-xl font-extrabold text-brand-blue-dark mb-1">Shakeeb Hussain</h3>
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-4 sm:mb-5">Director</span>
-                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Committed to delivering excellent client service and ensuring smooth documentation and embassy submission processes.</p>
-                    <div class="flex items-center justify-center gap-3">
-                        <a href="https://wa.me/923118666935" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp Shakeeb Hussain"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a>
-                        <a href="tel:03118666935" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call Shakeeb Hussain"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a>
-                    </div>
-                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-100">
-                        <div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon><span>0311 8666935</span></div>
-                    </div>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Committed to delivering excellent client service and smooth embassy submissions.</p>
+                    <div class="flex items-center justify-center gap-3"><a href="https://wa.me/923118666935" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a><a href="tel:03118666935" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a></div>
+                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-100"><div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon><span>0311 8666935</span></div></div>
                 </div>
             </div>
         </div>
     </section>
 
-    
+    <!-- ========== SERVICES ========== -->
     <section id="services" class="py-16 sm:py-20 lg:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 sm:mb-16 observe-fade">
@@ -416,59 +480,32 @@
             </div>
             <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
                 <div class="service-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm" data-delay="0">
-                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400">
-                        <iconify-icon icon="mdi:palm-tree" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon>
-                    </div>
+                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400"><iconify-icon icon="mdi:palm-tree" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div>
                     <h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-2 sm:mb-3">Tourist Visa (L)</h3>
                     <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Perfect for leisure travel, sightseeing, and visiting friends or family in China.</p>
-                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6">
-                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li>
-                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Single/Double entry</li>
-                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Hotel booking assistance</li>
-                    </ul>
-                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-gray-100">
-                        <div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div>
-                        <a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a>
-                    </div>
+                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6"><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Single/Double entry</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Hotel booking assistance</li></ul>
+                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-gray-100"><div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div><a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a></div>
                 </div>
                 <div class="service-card observe-scale bg-white rounded-2xl sm:rounded-3xl border-2 border-brand-orange/20 p-6 sm:p-8 shadow-lg shadow-orange-50 relative" data-delay="150">
                     <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-[10px] sm:text-xs font-bold rounded-full whitespace-nowrap">Most Popular</div>
-                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400">
-                        <iconify-icon icon="mdi:briefcase" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon>
-                    </div>
+                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400"><iconify-icon icon="mdi:briefcase" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div>
                     <h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-2 sm:mb-3">Business Visa (M)</h3>
                     <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Ideal for business meetings, trade fairs, and Canton Fair participants.</p>
-                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6">
-                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li>
-                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Multiple entry available</li>
-                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Invitation letter help</li>
-                    </ul>
-                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-orange-100">
-                        <div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div>
-                        <a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a>
-                    </div>
+                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6"><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Multiple entry available</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Invitation letter help</li></ul>
+                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-orange-100"><div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div><a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a></div>
                 </div>
                 <div class="service-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm" data-delay="300">
-                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400">
-                        <iconify-icon icon="mdi:hard-hat" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon>
-                    </div>
+                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400"><iconify-icon icon="mdi:hard-hat" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div>
                     <h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-2 sm:mb-3">Work Visa (Z)</h3>
                     <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">For employment in China. Complete work permit and residence permit assistance.</p>
-                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6">
-                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 1 Year+</li>
-                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Work permit included</li>
-                        <li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Residence permit help</li>
-                    </ul>
-                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-gray-100">
-                        <div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">10-15 Working Days</span></div>
-                        <a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a>
-                    </div>
+                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6"><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 1 Year+</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Work permit included</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Residence permit help</li></ul>
+                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-gray-100"><div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">10-15 Working Days</span></div><a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a></div>
                 </div>
             </div>
         </div>
     </section>
 
-    
+    <!-- ========== REQUIREMENTS ========== -->
     <section id="requirements" class="py-16 sm:py-20 lg:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 sm:mb-16 observe-fade">
@@ -489,7 +526,7 @@
         </div>
     </section>
 
-   
+    <!-- ========== HOW IT WORKS ========== -->
     <section class="py-16 sm:py-20 lg:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 sm:mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Process</span><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">How It <span class="gradient-text">Works</span></h2><div class="section-divider mx-auto mb-6"></div></div>
@@ -502,7 +539,7 @@
         </div>
     </section>
 
-   
+    <!-- ========== TESTIMONIALS ========== -->
     <section class="py-16 sm:py-20 lg:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 sm:mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-blue-50 text-brand-blue text-xs font-bold tracking-wider uppercase mb-4">Testimonials</span><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">What Our <span class="gradient-text">Clients Say</span></h2><div class="section-divider mx-auto mb-6"></div></div>
@@ -514,158 +551,79 @@
         </div>
     </section>
 
-   
+    <!-- ========== CONTACT ========== -->
     <section id="contact" class="py-16 sm:py-20 lg:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 sm:mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Get in Touch</span><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Contact <span class="gradient-text">Us</span></h2><div class="section-divider mx-auto mb-6"></div></div>
             <div class="grid lg:grid-cols-5 gap-6 sm:gap-10">
                 <div class="lg:col-span-2 observe-left">
-                    <div class="bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden"><div class="absolute -bottom-6 -right-6 w-32 h-32 bg-white/5 rounded-full"></div><div class="relative z-10"><h3 class="font-bold text-lg sm:text-xl mb-5 sm:mb-6">Shanghai Travel & Tours</h3><div class="space-y-4 sm:space-y-5">
-                        <div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">CEO</div><div class="font-semibold text-xs sm:text-sm">Salman Sadiq</div></div></div>
-                        <div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:phone" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Phone</div><a href="tel:03100059895" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors block">03100059895</a><a href="tel:03118666935" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors block">0311 8666935</a></div></div>
-                        <div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:email" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Email</div><a href="mailto:shanghaitravel92@hotmail.com" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></div></div>
-                        <div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Office Address</div><div class="font-semibold text-xs sm:text-sm leading-relaxed">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Next to Gerrys Building, Islamabad</div></div></div>
-                    </div><a href="https://wa.me/923100059895" target="_blank" class="mt-6 sm:mt-8 inline-flex items-center gap-2 w-full justify-center px-5 sm:px-6 py-3 sm:py-3.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors text-xs sm:text-sm"><iconify-icon icon="mdi:whatsapp" class="text-lg sm:text-xl"></iconify-icon>Chat on WhatsApp</a></div></div>
+                    <div class="bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden"><div class="absolute -bottom-6 -right-6 w-32 h-32 bg-white/5 rounded-full"></div><div class="relative z-10"><h3 class="font-bold text-lg sm:text-xl mb-5 sm:mb-6">Shanghai Travel & Tours</h3><div class="space-y-4 sm:space-y-5"><div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">CEO</div><div class="font-semibold text-xs sm:text-sm">Salman Sadiq</div></div></div><div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:phone" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Phone</div><a href="tel:03100059895" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors block">03100059895</a><a href="tel:03118666935" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors block">0311 8666935</a></div></div><div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:email" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Email</div><a href="mailto:shanghaitravel92@hotmail.com" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></div></div><div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Office Address</div><div class="font-semibold text-xs sm:text-sm leading-relaxed">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Next to Gerrys Building, Islamabad</div></div></div></div><a href="https://wa.me/923100059895" target="_blank" class="mt-6 sm:mt-8 inline-flex items-center gap-2 w-full justify-center px-5 sm:px-6 py-3 sm:py-3.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors text-xs sm:text-sm"><iconify-icon icon="mdi:whatsapp" class="text-lg sm:text-xl"></iconify-icon>Chat on WhatsApp</a></div></div>
                 </div>
                 <div class="lg:col-span-3 observe-right">
                     <form id="contactForm" class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-10 border border-gray-100"><h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-1 sm:mb-2">Send Us a Message</h3><p class="text-gray-400 text-xs sm:text-sm mb-5 sm:mb-8">Fill out the form and we'll get back to you within hours.</p><div class="grid sm:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5"><div><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Full Name *</label><input type="text" id="formName" required placeholder="Your full name" class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 placeholder-gray-400 transition-all"></div><div><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Phone Number *</label><input type="tel" id="formPhone" required placeholder="+92 3XX XXXXXXX" class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 placeholder-gray-400 transition-all"></div></div><div class="mb-4 sm:mb-5"><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Visa Type</label><select id="formVisaType" class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 transition-all"><option value="">Select visa type</option><option value="tourist">Tourist Visa (L)</option><option value="business">Business Visa (M)</option><option value="work">Work Visa (Z)</option><option value="other">Other / Not Sure</option></select></div><div class="mb-5 sm:mb-6"><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Your Message *</label><textarea id="formMessage" required rows="4" placeholder="Tell us about your visa requirements..." class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 placeholder-gray-400 transition-all resize-none"></textarea></div><button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-xl shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:scale-105 transition-all duration-300 text-xs sm:text-sm"><iconify-icon icon="mdi:send" class="text-lg"></iconify-icon>Send Message</button></form>
                 </div>
             </div>
-            <div class="observe-fade mt-8 sm:mt-12 rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200 shadow-sm">
+            <div class="observe-fade mt-8 sm:mt-12 rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200 shadow-sm relative">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-200 gap-2 sm:gap-0">
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:google" class="text-red-500 text-lg sm:text-xl"></iconify-icon></div>
-                        <div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Our Office Location</h4><p class="text-gray-400 text-[10px] sm:text-xs hidden sm:block">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Islamabad</p></div>
-                    </div>
-                    <a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white text-[10px] sm:text-xs font-semibold rounded-lg transition-colors flex-shrink-0"><iconify-icon icon="mdi:directions" class="text-sm sm:text-base"></iconify-icon>Directions</a>
+                    <div class="flex items-center gap-2 sm:gap-3"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-red-500 text-lg sm:text-xl"></iconify-icon></div><div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Shanghai Travel & Tours (Pvt) Ltd</h4><p class="text-gray-400 text-[10px] sm:text-xs hidden sm:block">Office 1-A, Ahmed Center, Park Rd, Chatta Bakhtawar, Islamabad</p></div></div>
+                    <a href="https://maps.google.com?q=Office%201-A,%20Shanghai%20Travel%20and%20Tours%20(Pvt)%20ltd,%20ahmad%20center,%20Park%20Rd,%20Chatta%20Bakhtawar,%20Islamabad,%2044000&ftid=0x38dfeb613308a5ef:0x1c199bf2d523ca13&entry=gps&shh=CAE&lucs=,94259550,94297699,94284499,94231188,94280568,47071704,94218641,94282134,94286869&g_st=iw" target="_blank" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white text-[10px] sm:text-xs font-semibold rounded-lg transition-colors flex-shrink-0"><iconify-icon icon="mdi:directions" class="text-sm sm:text-base"></iconify-icon>Get Directions</a>
                 </div>
-                <iframe src="https://maps.google.com/maps?q=Office+1-A+Ahmed+Center+Main+Park+Road+Chatha+Bakhtawar+Next+to+Gerrys+Building+Islamabad+Pakistan&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="280" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full" title="Shanghai Travel & Tours Office"></iframe>
+                <div class="relative">
+                    <iframe src="https://maps.google.com/maps?q=Office+1-A,+Shanghai+Travel+and+Tours+(Pvt)+ltd,+ahmad+center,+Park+Rd,+Chatta+Bakhtawar,+Islamabad,+44000&t=&z=17&ie=UTF8&iwloc=&output=embed" width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full" title="Office Location"></iframe>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[90%] pointer-events-none z-10 flex flex-col items-center"><div class="map-red-pin w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-500 flex items-center justify-center shadow-lg shadow-red-500/40 border-[3px] border-white"><iconify-icon icon="mdi:map-marker" class="text-white text-xl sm:text-2xl"></iconify-icon></div><div class="w-3 h-3 bg-red-500 rotate-45 -mt-1.5 shadow-md shadow-red-500/30"></div><div class="mt-1 px-3 py-1.5 bg-white rounded-lg shadow-lg shadow-gray-300/50 border border-gray-100 whitespace-nowrap"><p class="text-[10px] sm:text-xs font-bold text-gray-800">Shanghai Travel & Tours</p><p class="text-[8px] sm:text-[10px] text-gray-500">Office 1-A, Ahmed Center</p></div></div>
+                </div>
             </div>
         </div>
     </section>
 
-   
+    <!-- ========== CTA ========== -->
     <section class="py-16 sm:py-20 bg-gradient-to-br from-brand-blue via-brand-blue-dark to-brand-blue relative overflow-hidden"><div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 30px 30px;"></div><div class="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 observe-fade"><div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-orange-200 text-[10px] sm:text-xs font-semibold tracking-wider uppercase mb-4 sm:mb-6"><iconify-icon icon="mdi:clock-fast" class="text-brand-orange"></iconify-icon>Don't Delay Your Travel Plans</div><h2 class="text-2xl sm:text-3xl lg:text-5xl font-extrabold text-white tracking-tight mb-5 sm:mb-6 leading-tight">Ready to Get Your <span class="text-brand-orange">China Visa?</span></h2><p class="text-blue-100/70 text-sm sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto">Visit our office or contact us today for a free consultation.</p><div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4"><a href="https://wa.me/923100059895?text=Hi, I want to apply for a China visa." target="_blank" class="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl sm:rounded-2xl shadow-xl shadow-green-500/30 hover:scale-105 transition-all duration-300 text-xs sm:text-sm"><iconify-icon icon="mdi:whatsapp" class="text-lg sm:text-xl"></iconify-icon>WhatsApp: 03100059895</a><a href="tel:03100059895" class="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 glass-card text-white font-bold rounded-xl sm:rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-xs sm:text-sm"><iconify-icon icon="mdi:phone" class="text-lg sm:text-xl text-brand-orange"></iconify-icon>Call Now</a></div></div></section>
 
-    
+    <!-- ========== FOOTER ========== -->
     <footer class="bg-gray-900 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
             <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
                 <div class="col-span-2 sm:col-span-2 lg:col-span-1">
-                    <div class="flex items-center gap-3 mb-5">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center"><iconify-icon icon="mdi:airplane-takeoff" class="text-white text-lg"></iconify-icon></div>
-                        <div><span class="text-sm font-bold leading-tight block">Shanghai Travel</span><span class="text-[9px] text-gray-400 tracking-wider uppercase">& Tours Pvt Ltd</span></div>
-                    </div>
+                    <div class="flex items-center gap-2 sm:gap-3 mb-5"><img src="https://z-cdn-media.chatglm.cn/files/6ff81dfa-93c3-46b7-a68b-5b795895e49b.png?auth_key=1876970550-f588c873a73b4f8eba144940c0af9fa5-0-9aa811b65a989622ae9247567e61d657" alt="Shanghai Travel & Tours" class="footer-logo-img"></div>
                     <p class="text-gray-400 text-xs sm:text-sm leading-relaxed mb-5">Your trusted partner for China visa services in Islamabad. SECP registered.</p>
-                    <div class="flex gap-3">
-                        <a href="https://www.facebook.com/shanghaitravel92/" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-600/20 flex items-center justify-center" aria-label="Facebook"><iconify-icon icon="mdi:facebook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon></a>
-                        <a href="https://wa.me/923100059895" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 flex items-center justify-center" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-gray-400 hover:text-green-400 text-lg"></iconify-icon></a>
-                        <a href="mailto:shanghaitravel92@hotmail.com" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-500/20 flex items-center justify-center" aria-label="Email"><iconify-icon icon="mdi:microsoft-outlook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon></a>
-                        <a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-red-500/20 flex items-center justify-center" aria-label="Location"><iconify-icon icon="mdi:map-marker" class="text-gray-400 hover:text-red-400 text-lg"></iconify-icon></a>
-                    </div>
+                    <div class="flex gap-3"><a href="https://www.facebook.com/shanghaitravel92/" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-600/20 flex items-center justify-center" aria-label="Facebook"><iconify-icon icon="mdi:facebook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon></a><a href="https://wa.me/923100059895" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 flex items-center justify-center" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-gray-400 hover:text-green-400 text-lg"></iconify-icon></a><a href="mailto:shanghaitravel92@hotmail.com" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-500/20 flex items-center justify-center" aria-label="Email"><iconify-icon icon="mdi:microsoft-outlook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon></a><a href="https://maps.google.com?q=Office%201-A,%20Shanghai%20Travel%20and%20Tours%20(Pvt)%20ltd,%20ahmad%20center,%20Park%20Rd,%20Chatta%20Bakhtawar,%20Islamabad,%2044000&ftid=0x38dfeb613308a5ef:0x1c199bf2d523ca13&entry=gps&g_st=iw" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-red-500/20 flex items-center justify-center" aria-label="Location"><iconify-icon icon="mdi:map-marker" class="text-gray-400 hover:text-red-400 text-lg"></iconify-icon></a></div>
                 </div>
                 <div><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Quick Links</h4><ul class="space-y-2.5 sm:space-y-3"><li><a href="#home" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Home</a></li><li><a href="#about" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">About Us</a></li><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Services</a></li><li><a href="#requirements" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Requirements</a></li><li><a href="#contact" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Contact</a></li></ul></div>
                 <div><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Visa Types</h4><ul class="space-y-2.5 sm:space-y-3"><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Tourist Visa (L)</a></li><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Business Visa (M)</a></li><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Work Visa (Z)</a></li><li><a href="#requirements" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Document Checklist</a></li></ul></div>
-                <div class="col-span-2 sm:col-span-1"><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Contact Info</h4><ul class="space-y-2.5 sm:space-y-3"><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:03100059895" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">03100059895</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:03118666935" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">0311 8666935</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:email" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="mailto:shanghaitravel92@hotmail.com" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:map-marker" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="https://maps.app.goo.gl/eBPKRDQTbvqbPCPp8?g_st=iw" target="_blank" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors leading-relaxed">Office 1-A, Ahmed Center, Islamabad</a></li></ul></div>
+                <div class="col-span-2 sm:col-span-1"><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Contact Info</h4><ul class="space-y-2.5 sm:space-y-3"><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:03100059895" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">03100059895</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:03118666935" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">0311 8666935</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:email" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="mailto:shanghaitravel92@hotmail.com" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:map-marker" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="https://maps.google.com?q=Office%201-A,%20Shanghai%20Travel%20and%20Tours%20(Pvt)%20ltd,%20ahmad%20center,%20Park%20Rd,%20Chatta%20Bakhtawar,%20Islamabad,%2044000&ftid=0x38dfeb613308a5ef:0x1c199bf2d523ca13&entry=gps&g_st=iw" target="_blank" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors leading-relaxed">Office 1-A, Ahmed Center, Islamabad</a></li></ul></div>
             </div>
         </div>
         <div class="border-t border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4"><p class="text-gray-500 text-[10px] sm:text-xs">&copy; 2025 Shanghai Travel & Tours (Private) Limited. All rights reserved.</p><p class="text-gray-600 text-[10px] sm:text-xs">SECP Registered | China Visa Specialist | Islamabad</p></div></div>
     </footer>
 
-    
-    <a href="https://wa.me/923100059895?text=Hi, I need information about China visa services." target="_blank" class="whatsapp-float fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 bg-green-500 rounded-full flex items-center justify-center shadow-xl hover:bg-green-600 hover:scale-110 transition-all duration-300 group" aria-label="Chat on WhatsApp">
-        <iconify-icon icon="mdi:whatsapp" class="text-white text-2xl sm:text-3xl"></iconify-icon>
-        <span class="absolute right-18 sm:right-20 bg-gray-900 text-white text-[10px] sm:text-xs font-medium px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Chat with us!<span class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-gray-900 rotate-45"></span></span>
-    </a>
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/923100059895?text=Hi, I need information about China visa services." target="_blank" class="whatsapp-float fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 bg-green-500 rounded-full flex items-center justify-center shadow-xl hover:bg-green-600 hover:scale-110 transition-all duration-300 group" aria-label="Chat on WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-white text-2xl sm:text-3xl"></iconify-icon><span class="absolute right-18 sm:right-20 bg-gray-900 text-white text-[10px] sm:text-xs font-medium px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Chat with us!<span class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-gray-900 rotate-45"></span></span></a>
 
-    
+    <!-- Toast -->
     <div id="toast" class="toast fixed top-20 sm:top-24 right-4 sm:right-6 z-50 bg-white rounded-xl sm:rounded-2xl shadow-2xl border border-gray-100 p-4 sm:p-5 max-w-[calc(100vw-2rem)] sm:max-w-sm"><div class="flex items-start gap-3"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-lg sm:text-xl"></iconify-icon></div><div><h4 class="font-bold text-gray-800 text-xs sm:text-sm">Message Sent!</h4><p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">We'll contact you shortly via WhatsApp.</p></div><button onclick="hideToast()" class="text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0 ml-1"><iconify-icon icon="mdi:close" class="text-base sm:text-lg"></iconify-icon></button></div></div>
 
     <script>
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             const s = window.pageYOffset;
-            if (s > 50) {
-                navbar.classList.add('navbar-scrolled', 'bg-white/95', 'backdrop-blur-lg', 'shadow-lg', 'shadow-gray-200/50');
-            } else {
-                navbar.classList.remove('navbar-scrolled', 'bg-white/95', 'backdrop-blur-lg', 'shadow-lg', 'shadow-gray-200/50');
-            }
+            if (s > 50) { navbar.classList.add('navbar-scrolled'); } else { navbar.classList.remove('navbar-scrolled'); }
             document.querySelectorAll('section[id]').forEach(sec => {
                 const top = sec.offsetTop - 120, h = sec.offsetHeight, id = sec.id;
                 if (s >= top && s < top + h) {
-                    document.querySelectorAll('.nav-link').forEach(l => {
-                        l.classList.remove('nav-active');
-                        if (l.getAttribute('href') === '#' + id) l.classList.add('nav-active');
-                    });
+                    document.querySelectorAll('.nav-link').forEach(l => { l.classList.remove('nav-active'); if (l.getAttribute('href') === '#' + id) l.classList.add('nav-active'); });
                 }
             });
         });
-
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const menuIcon = document.getElementById('menuIcon');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn'), mobileMenu = document.getElementById('mobileMenu'), menuIcon = document.getElementById('menuIcon');
         let menuOpen = false;
-
-        mobileMenuBtn.addEventListener('click', () => {
-            menuOpen = !menuOpen;
-            mobileMenu.classList.toggle('open', menuOpen);
-            menuIcon.setAttribute('icon', menuOpen ? 'mdi:close' : 'mdi:menu');
-        });
-
-        document.querySelectorAll('.mobile-link').forEach(link => {
-            link.addEventListener('click', () => {
-                menuOpen = false;
-                mobileMenu.classList.remove('open');
-                menuIcon.setAttribute('icon', 'mdi:menu');
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (menuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                menuOpen = false;
-                mobileMenu.classList.remove('open');
-                menuIcon.setAttribute('icon', 'mdi:menu');
-            }
-        });
-
-        document.getElementById('contactForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const n = document.getElementById('formName').value.trim();
-            const p = document.getElementById('formPhone').value.trim();
-            const v = document.getElementById('formVisaType').value;
-            const m = document.getElementById('formMessage').value.trim();
-            if (!n || !p || !m) return;
-            showToast();
-            e.target.reset();
-            setTimeout(() => {
-                window.open('https://wa.me/923100059895?text=' + encodeURIComponent(
-                    "Hi, I'm " + n + ".\nPhone: " + p + "\nVisa Type: " + (v || 'Not sure') + "\nMessage: " + m
-                ), '_blank');
-            }, 1500);
-        });
-
-        function showToast() {
-            document.getElementById('toast').classList.add('show');
-            setTimeout(hideToast, 5000);
-        }
-        function hideToast() {
-            document.getElementById('toast').classList.remove('show');
-        }
-
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const delay = parseInt(entry.target.dataset.delay || 0);
-                    setTimeout(() => entry.target.classList.add('visible'), delay);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-        document.querySelectorAll('.observe-fade, .observe-left, .observe-right, .observe-scale').forEach(el => {
-            observer.observe(el);
-        });
-
+        mobileMenuBtn.addEventListener('click', () => { menuOpen = !menuOpen; mobileMenu.classList.toggle('open', menuOpen); menuIcon.setAttribute('icon', menuOpen ? 'mdi:close' : 'mdi:menu'); });
+        document.querySelectorAll('.mobile-link').forEach(link => { link.addEventListener('click', () => { menuOpen = false; mobileMenu.classList.remove('open'); menuIcon.setAttribute('icon', 'mdi:menu'); }); });
+        document.addEventListener('click', (e) => { if (menuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) { menuOpen = false; mobileMenu.classList.remove('open'); menuIcon.setAttribute('icon', 'mdi:menu'); } });
+        document.getElementById('contactForm').addEventListener('submit', e => { e.preventDefault(); const n = document.getElementById('formName').value.trim(), p = document.getElementById('formPhone').value.trim(), v = document.getElementById('formVisaType').value, m = document.getElementById('formMessage').value.trim(); if (!n || !p || !m) return; showToast(); e.target.reset(); setTimeout(() => { window.open('https://wa.me/923100059895?text=' + encodeURIComponent("Hi, I'm " + n + ".\nPhone: " + p + "\nVisa Type: " + (v || 'Not sure') + "\nMessage: " + m), '_blank'); }, 1500); });
+        function showToast() { document.getElementById('toast').classList.add('show'); setTimeout(hideToast, 5000); }
+        function hideToast() { document.getElementById('toast').classList.remove('show'); }
+        const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) { const delay = parseInt(entry.target.dataset.delay || 0); setTimeout(() => entry.target.classList.add('visible'), delay); observer.unobserve(entry.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.observe-fade, .observe-left, .observe-right, .observe-scale').forEach(el => { observer.observe(el); });
         window.dispatchEvent(new Event('scroll'));
     </script>
 </body>

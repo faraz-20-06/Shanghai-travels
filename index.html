@@ -1,1350 +1,630 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DiscreteAI — Intelligent Structures Solver</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#04050e;--bg2:#070818;--bg3:#0b0d1f;
-  --surface:#0f1123;--surface2:#141728;--surface3:#1a1e35;--surface4:#1f2440;
-  --border:#1c2038;--border2:#242b4a;--border3:#2e375e;
-  --text:#eef0ff;--text2:#8892c8;--text3:#4e5888;--text4:#2d3560;
-  --accent:#5b7eff;--accent2:#9b6bff;--accent3:#36d9f8;--accent4:#ff6b9d;
-  --green:#20e08a;--amber:#ffb830;--red:#ff5c7d;
-  --glow:rgba(91,126,255,0.18);
-}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-
-/* BG effects */
-.canvas-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.13}
-.orb1{width:700px;height:700px;background:radial-gradient(circle,#5b7eff,transparent 70%);top:-250px;left:-150px}
-.orb2{width:600px;height:600px;background:radial-gradient(circle,#9b6bff,transparent 70%);bottom:-150px;right:-100px}
-.orb3{width:350px;height:350px;background:radial-gradient(circle,#36d9f8,transparent 70%);top:40%;right:15%}
-.grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(91,126,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(91,126,255,0.03) 1px,transparent 1px);background-size:60px 60px}
-
-.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
-
-/* NAV */
-nav{display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem;border-bottom:1px solid var(--border);background:rgba(4,5,14,0.85);backdrop-filter:blur(24px);position:sticky;top:0;z-index:200}
-.logo{display:flex;align-items:center;gap:.7rem;cursor:pointer;text-decoration:none}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:9px;display:grid;place-items:center;font-weight:700;font-size:13px;font-family:'Space Mono',monospace;color:#fff}
-.logo-text{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;color:var(--text)}
-.logo-text span{color:var(--accent)}
-.nav-links{display:flex;gap:.2rem}
-.nav-btn{background:none;border:none;color:var(--text3);font-size:.82rem;font-family:'Outfit',sans-serif;font-weight:500;padding:.45rem .9rem;border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.35rem}
-.nav-btn:hover{color:var(--text);background:var(--surface)}
-.nav-btn.active{color:var(--accent);background:rgba(91,126,255,.1);border:1px solid rgba(91,126,255,.15)}
-.nav-btn:not(.active){border:1px solid transparent}
-.nav-badge{background:var(--accent);color:#fff;font-size:.6rem;padding:1px 5px;border-radius:20px;font-weight:700;font-family:'Space Mono',monospace}
-
-/* HERO */
-.hero{padding:3.5rem 2rem 1.5rem;text-align:center;max-width:820px;margin:0 auto}
-.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(91,126,255,.08);border:1px solid rgba(91,126,255,.2);padding:.3rem .8rem;border-radius:30px;font-size:.72rem;color:var(--accent);margin-bottom:1.4rem;font-family:'Space Mono',monospace}
-.pulse-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.9rem,4.5vw,3rem);font-weight:700;line-height:1.15;margin-bottom:.9rem;letter-spacing:-0.5px}
-h1 .g{background:linear-gradient(135deg,var(--accent),var(--accent2) 50%,var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{color:var(--text2);font-size:.95rem;line-height:1.75;max-width:560px;margin:0 auto 2rem;font-weight:400}
-
-/* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;max-width:820px;margin:0 auto 1.25rem;padding:0 1rem}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.85rem;text-align:center}
-.stat-n{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.stat-l{font-size:.68rem;color:var(--text3);margin-top:.15rem;font-weight:500;letter-spacing:.3px}
-
-/* MAIN SOLVER CARD */
-.solver-wrap{max-width:860px;margin:0 auto 2rem;padding:0 1rem;width:100%}
-.solver-card{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:1.5rem;overflow:hidden}
-
-/* TOPIC SELECT */
-.section-label{font-size:.7rem;font-family:'Space Mono',monospace;color:var(--accent3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.65rem;display:flex;align-items:center;gap:.4rem}
-.section-label::before{content:'▸';color:var(--accent)}
-.topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.45rem;margin-bottom:1.25rem}
-.tc{background:var(--surface2);border:1px solid var(--border);padding:.5rem .75rem;border-radius:9px;font-size:.75rem;cursor:pointer;transition:all .18s;color:var(--text3);text-align:left;line-height:1.35;font-weight:500}
-.tc:hover{border-color:var(--accent2);color:var(--text);background:rgba(155,107,255,.07)}
-.tc.sel{border-color:var(--accent);color:var(--accent);background:rgba(91,126,255,.1)}
-.tc-w{display:inline-block;background:var(--surface3);min-width:24px;padding:0 5px;height:18px;border-radius:4px;font-family:'Space Mono',monospace;font-size:.58rem;text-align:center;line-height:18px;margin-right:.35rem;color:var(--text3)}
-
-/* DYNAMIC INPUT PANEL */
-.input-panel{display:none;background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:1.25rem;margin-bottom:1.1rem;animation:fadeIn .25s ease}
-.input-panel.show{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.panel-title{font-family:'Space Grotesk',sans-serif;font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
-.panel-title .badge{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.62rem;padding:2px 8px;border-radius:20px;font-family:'Space Mono',monospace}
-.field-row{display:grid;gap:.75rem;margin-bottom:.85rem}
-.field-row.cols2{grid-template-columns:1fr 1fr}
-.field-row.cols3{grid-template-columns:1fr 1fr 1fr}
-.field-group{display:flex;flex-direction:column;gap:.35rem}
-.field-label{font-size:.68rem;font-family:'Space Mono',monospace;color:var(--text3);letter-spacing:.8px;text-transform:uppercase}
-.field-input{background:var(--surface3);border:1px solid var(--border);border-radius:9px;padding:.55rem .8rem;color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;outline:none;transition:border .2s;width:100%}
-.field-input:focus{border-color:var(--accent)}
-.field-input::placeholder{color:var(--text4)}
-.field-select{background:var(--surface3);border:1px solid var(--border);border-radius:9px;padding:.55rem .8rem;color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;outline:none;transition:border .2s;width:100%;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235b7eff' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
-.field-select option{background:var(--surface3)}
-.op-buttons{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.85rem}
-.op-btn{background:var(--surface3);border:1px solid var(--border);padding:.4rem .85rem;border-radius:7px;font-size:.77rem;cursor:pointer;transition:all .18s;color:var(--text2);font-family:'Space Mono',monospace}
-.op-btn:hover{border-color:var(--accent2);color:var(--accent2)}
-.op-btn.active-op{border-color:var(--accent);color:var(--accent);background:rgba(91,126,255,.12)}
-
-/* FALLBACK TEXTAREA */
-.fallback-wrap{margin-bottom:1rem}
-textarea.main-ta{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.1rem;color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;resize:none;height:100px;outline:none;transition:border .2s;line-height:1.65}
-textarea.main-ta:focus{border-color:var(--accent)}
-textarea.main-ta::placeholder{color:var(--text4)}
-.hint-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
-.hc{background:var(--surface2);border:1px solid var(--border);padding:.22rem .6rem;border-radius:20px;font-size:.7rem;cursor:pointer;transition:all .18s;color:var(--text3);white-space:nowrap}
-.hc:hover{border-color:var(--accent);color:var(--accent)}
-
-.solve-btn{width:100%;padding:.8rem;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s;letter-spacing:.2px;display:flex;align-items:center;justify-content:center;gap:.5rem}
-.solve-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 30px rgba(91,126,255,.35)}
-.solve-btn:disabled{opacity:.45;cursor:not-allowed}
-
-/* RESPONSE */
-.response-wrap{max-width:860px;margin:0 auto 3rem;padding:0 1rem;width:100%}
-.resp-card{background:var(--surface);border:1px solid var(--border2);border-radius:20px;overflow:hidden;animation:slideUp .35s ease}
-@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.resp-head{background:linear-gradient(135deg,rgba(91,126,255,.12),rgba(155,107,255,.08));border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
-.resp-head-left{display:flex;align-items:center;gap:.6rem}
-.resp-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.92rem}
-.ai-pulse{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
-.resp-badge{background:rgba(91,126,255,.15);border:1px solid rgba(91,126,255,.25);padding:.2rem .65rem;border-radius:20px;font-size:.68rem;color:var(--accent);font-family:'Space Mono',monospace}
-.resp-body{padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem}
-
-/* ANSWER BOX — FIRST & MOST PROMINENT */
-.answer-box{background:linear-gradient(135deg,rgba(54,217,248,.07),rgba(91,126,255,.07));border:1px solid rgba(54,217,248,.22);border-radius:14px;padding:1.1rem 1.3rem}
-.answer-lbl{font-size:.65rem;font-family:'Space Mono',monospace;color:var(--accent3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.4rem}
-.answer-val{font-size:1.05rem;font-weight:500;color:var(--text);line-height:1.6}
-
-/* SECTIONS */
-.sec{border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.sec-hd{background:var(--surface2);padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .15s;user-select:none}
-.sec-hd:hover{background:var(--surface3)}
-.sec-hd-left{display:flex;align-items:center;gap:.5rem;font-size:.72rem;font-family:'Space Mono',monospace;color:var(--accent3);text-transform:uppercase;letter-spacing:1.3px}
-.sec-hd-left span.icon{font-size:.9rem}
-.sec-toggle{font-size:.7rem;color:var(--text3);transition:transform .2s}
-.sec.open .sec-toggle{transform:rotate(180deg)}
-.sec-body{display:none;padding:1rem;border-top:1px solid var(--border)}
-.sec.open .sec-body{display:block}
-
-/* STEPS */
-.step{display:flex;gap:.7rem;margin-bottom:.8rem;align-items:flex-start}
-.step:last-child{margin-bottom:0}
-.step-n{min-width:26px;height:26px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:7px;display:grid;place-items:center;font-size:.68rem;font-weight:700;color:#fff;font-family:'Space Mono',monospace;flex-shrink:0;margin-top:1px}
-.step-t{font-size:.87rem;color:var(--text2);line-height:1.75}
-.step-t strong,.step-t b{color:var(--text)}
-.step-t code{background:var(--surface3);padding:1px 6px;border-radius:4px;font-family:'Space Mono',monospace;font-size:.8rem;color:var(--accent3)}
-
-/* FORMULA CHIPS — EXPANDABLE */
-.formula-list{display:flex;flex-direction:column;gap:.5rem}
-.formula-item{background:var(--surface2);border:1px solid var(--border2);border-radius:9px;overflow:hidden;cursor:pointer;transition:border-color .15s}
-.formula-item:hover{border-color:var(--accent2)}
-.formula-top{display:flex;align-items:center;justify-content:space-between;padding:.6rem .9rem;gap:.5rem}
-.formula-expr{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--accent3)}
-.formula-expand-icon{font-size:.65rem;color:var(--text3);transition:transform .15s;flex-shrink:0}
-.formula-item.fx-open .formula-expand-icon{transform:rotate(180deg)}
-.formula-detail{display:none;padding:.6rem .9rem;border-top:1px solid var(--border);font-size:.82rem;color:var(--text2);line-height:1.65;background:rgba(91,126,255,.03)}
-.formula-item.fx-open .formula-detail{display:block}
-
-/* TRUTH TABLE */
-.tt-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
-table.tt{width:100%;border-collapse:collapse;font-family:'Space Mono',monospace;font-size:.78rem}
-.tt th{background:var(--surface3);padding:.55rem .8rem;text-align:center;color:var(--accent);font-weight:700;letter-spacing:.5px;border-bottom:1px solid var(--border)}
-.tt td{padding:.5rem .8rem;text-align:center;border-bottom:1px solid var(--border);color:var(--text2)}
-.tt tr:last-child td{border-bottom:none}
-.tt tr:hover td{background:rgba(91,126,255,.04);color:var(--text)}
-.tt-true{color:var(--green)!important;font-weight:700}
-.tt-false{color:var(--red)!important}
-
-/* SET VISUAL */
-.set-display{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
-.set-elem{background:rgba(91,126,255,.12);border:1px solid rgba(91,126,255,.25);padding:.25rem .6rem;border-radius:6px;font-family:'Space Mono',monospace;font-size:.78rem;color:var(--accent)}
-.set-label{font-size:.7rem;color:var(--text3);margin-bottom:.3rem;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.8px}
-
-.text-content{font-size:.88rem;color:var(--text2);line-height:1.8}
-.text-content strong{color:var(--text)}
-.beginner-box{background:rgba(54,217,248,.04);border:1px solid rgba(54,217,248,.12);border-radius:10px;padding:.85rem 1rem;font-size:.87rem;color:var(--text2);line-height:1.8}
-
-/* LOADING */
-.loading-dots{display:flex;gap:5px;align-items:center;padding:1.5rem 1.5rem}
-.ld{width:8px;height:8px;border-radius:50%;animation:bounce .7s ease-in-out infinite}
-.ld:nth-child(1){background:var(--accent);animation-delay:0s}
-.ld:nth-child(2){background:var(--accent2);animation-delay:.12s}
-.ld:nth-child(3){background:var(--accent3);animation-delay:.24s}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-
-.error-box{background:rgba(255,92,125,.06);border:1px solid rgba(255,92,125,.2);border-radius:12px;padding:1rem 1.25rem;color:var(--red);font-size:.85rem}
-
-/* TOPICS PAGE */
-.page-content{padding:2rem;max-width:1200px;margin:0 auto}
-.page-hd{margin-bottom:2rem}
-.page-title{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;margin-bottom:.4rem}
-.page-sub{color:var(--text2);font-size:.85rem}
-.wk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:.9rem}
-.wk-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.2rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.wk-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:0;transition:.2s}
-.wk-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
-.wk-card:hover::before,.wk-card.wk-open::before{opacity:1}
-.wk-card.wk-open{border-color:var(--accent);box-shadow:0 0 0 1px rgba(91,126,255,.15)}
-.wk-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
-.wk-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:.2rem .65rem;border-radius:20px;font-size:.67rem;font-family:'Space Mono',monospace}
-.wk-arrow{color:var(--text3);transition:transform .2s}
-.wk-card.wk-open .wk-arrow{transform:rotate(180deg)}
-.wk-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.9rem;margin-bottom:.3rem}
-.wk-desc{font-size:.75rem;color:var(--text3);line-height:1.5}
-.wk-detail{display:none;margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--border)}
-.wk-card.wk-open .wk-detail{display:block}
-.dl-label{font-size:.63rem;font-family:'Space Mono',monospace;color:var(--accent);text-transform:uppercase;letter-spacing:1.4px;margin-bottom:.3rem}
-.dl-formula{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:.5rem .75rem;font-family:'Space Mono',monospace;font-size:.75rem;color:var(--accent3);margin:.3rem 0}
-.dl-text{font-size:.8rem;color:var(--text2);line-height:1.55;margin-bottom:.6rem}
-.try-btn{background:rgba(91,126,255,.1);border:1px solid rgba(91,126,255,.25);color:var(--accent);padding:.38rem .85rem;border-radius:7px;font-size:.76rem;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif}
-.try-btn:hover{background:rgba(91,126,255,.2)}
-
-/* HISTORY PAGE */
-.hist-page{padding:2rem;max-width:860px;margin:0 auto}
-.hist-empty{text-align:center;padding:4rem 2rem;color:var(--text3)}
-.hist-items{display:flex;flex-direction:column;gap:.7rem}
-.hist-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:1rem 1.2rem;animation:slideUp .3s ease;position:relative;overflow:hidden}
-.hist-card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--accent),var(--accent2))}
-.hist-meta{display:flex;align-items:center;gap:.65rem;margin-bottom:.45rem;font-size:.7rem;color:var(--text3)}
-.hist-topic-tag{color:var(--accent);background:rgba(91,126,255,.08);padding:.12rem .45rem;border-radius:4px}
-.hist-q{font-size:.85rem;color:var(--text);margin-bottom:.35rem;line-height:1.5}
-.hist-prev{font-size:.76rem;color:var(--text2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.hist-actions{display:flex;gap:.45rem;margin-top:.55rem}
-.hist-use{background:rgba(91,126,255,.08);border:1px solid rgba(91,126,255,.2);color:var(--accent);padding:.22rem .6rem;border-radius:5px;font-size:.7rem;cursor:pointer;transition:all .18s}
-.hist-use:hover{background:rgba(91,126,255,.18)}
-.clear-btn{background:rgba(255,92,125,.08);border:1px solid rgba(255,92,125,.2);color:var(--red);padding:.38rem .85rem;border-radius:8px;font-size:.76rem;cursor:pointer;font-family:'Outfit',sans-serif}
-
-@media(max-width:600px){
-  .field-row.cols2,.field-row.cols3{grid-template-columns:1fr}
-  nav{padding:.7rem 1rem}
-  .hero{padding:2rem 1rem 1rem}
-  .solver-wrap,.response-wrap{padding:0 .75rem}
-  .topics-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
-}
-</style>
-</head>
-<body>
-<div class="canvas-bg">
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="orb orb3"></div>
-  <div class="grid-lines"></div>
-</div>
-
-<div class="app">
-<nav>
-  <div class="logo" onclick="showPage('solver')">
-    <div class="logo-icon">Δ∑</div>
-    <div class="logo-text">Discrete<span>AI</span></div>
-  </div>
-  <div class="nav-links">
-    <button class="nav-btn active" id="nav-solver" onclick="showPage('solver')">⚡ AI Solver</button>
-    <button class="nav-btn" id="nav-topics" onclick="showPage('topics')">📚 Topics</button>
-    <button class="nav-btn" id="nav-history" onclick="showPage('history')">🕒 History <span class="nav-badge" id="hist-count">0</span></button>
-  </div>
-</nav>
-
-<!-- SOLVER PAGE -->
-<div id="page-solver">
-  <div class="hero">
-    <div class="hero-pill"><span class="pulse-dot"></span> Powered by Gemini AI · MAJU Karachi</div>
-    <h1>Solve <span class="g">Discrete Structures</span><br>Problems Instantly</h1>
-    <p>Select a topic to get smart input fields. Enter your values and let AI compute exact step-by-step solutions — not just theory.</p>
-  </div>
-
-  <div class="stats-row">
-    <div class="stat"><div class="stat-n">16</div><div class="stat-l">Topics</div></div>
-    <div class="stat"><div class="stat-n" id="solved-count">0</div><div class="stat-l">Problems Solved</div></div>
-    <div class="stat"><div class="stat-n">∞</div><div class="stat-l">AI-Powered</div></div>
-  </div>
-
-  <div class="solver-wrap">
-    <div class="solver-card">
-      <div class="section-label">Select a Topic</div>
-      <div class="topics-grid" id="topic-selector"></div>
-
-      <!-- DYNAMIC PANELS PER TOPIC GROUP -->
-
-      <!-- SET OPS Panel (topics 1,2,3) -->
-      <div class="input-panel" id="panel-sets">
-        <div class="panel-title">Set Operations <span class="badge">Calculator</span></div>
-        <div class="field-row cols2">
-          <div class="field-group">
-            <div class="field-label">Set A (comma-separated)</div>
-            <input class="field-input" id="setA" placeholder="e.g. 1, 2, 3, 4" />
-          </div>
-          <div class="field-group">
-            <div class="field-label">Set B (comma-separated)</div>
-            <input class="field-input" id="setB" placeholder="e.g. 3, 4, 5, 6" />
-          </div>
-        </div>
-        <div class="field-row" id="setU-row" style="display:none">
-          <div class="field-group">
-            <div class="field-label">Universal Set U (for Complement, optional)</div>
-            <input class="field-input" id="setU" placeholder="e.g. 1, 2, 3, 4, 5, 6, 7" />
-          </div>
-        </div>
-        <div class="section-label" style="margin-top:.1rem">Choose Operation</div>
-        <div class="op-buttons" id="set-ops">
-          <button class="op-btn active-op" data-op="union" onclick="pickSetOp(this)">A ∪ B — Union</button>
-          <button class="op-btn" data-op="intersection" onclick="pickSetOp(this)">A ∩ B — Intersection</button>
-          <button class="op-btn" data-op="difference_ab" onclick="pickSetOp(this)">A − B — Difference</button>
-          <button class="op-btn" data-op="difference_ba" onclick="pickSetOp(this)">B − A — Difference</button>
-          <button class="op-btn" data-op="complement_a" onclick="pickSetOp(this)">A′ — Complement A</button>
-          <button class="op-btn" data-op="complement_b" onclick="pickSetOp(this)">B′ — Complement B</button>
-          <button class="op-btn" data-op="cartesian" onclick="pickSetOp(this)">A × B — Cartesian Product</button>
-          <button class="op-btn" data-op="power" onclick="pickSetOp(this)">P(A) — Power Set</button>
-          <button class="op-btn" data-op="all" onclick="pickSetOp(this)">All Operations</button>
-        </div>
-      </div>
-
-      <!-- RELATIONS Panel (topics 4,5,6,7) -->
-      <div class="input-panel" id="panel-relations">
-        <div class="panel-title">Relations on Sets <span class="badge">Analyzer</span></div>
-        <div class="field-row cols2">
-          <div class="field-group">
-            <div class="field-label">Base Set A (comma-separated)</div>
-            <input class="field-input" id="relSet" placeholder="e.g. 1, 2, 3" />
-          </div>
-          <div class="field-group">
-            <div class="field-label">Relation R as ordered pairs</div>
-            <input class="field-input" id="relPairs" placeholder="e.g. (1,1),(1,2),(2,1),(2,2)" />
-          </div>
-        </div>
-        <div class="section-label">Check Properties</div>
-        <div class="op-buttons" id="rel-ops">
-          <button class="op-btn active-op" data-op="all_props" onclick="pickRelOp(this)">All Properties</button>
-          <button class="op-btn" data-op="reflexive" onclick="pickRelOp(this)">Reflexive</button>
-          <button class="op-btn" data-op="irreflexive" onclick="pickRelOp(this)">Irreflexive</button>
-          <button class="op-btn" data-op="symmetric" onclick="pickRelOp(this)">Symmetric</button>
-          <button class="op-btn" data-op="antisymmetric" onclick="pickRelOp(this)">Antisymmetric</button>
-          <button class="op-btn" data-op="transitive" onclick="pickRelOp(this)">Transitive</button>
-          <button class="op-btn" data-op="equivalence" onclick="pickRelOp(this)">Equivalence Relation</button>
-          <button class="op-btn" data-op="matrix" onclick="pickRelOp(this)">Matrix Representation</button>
-          <button class="op-btn" data-op="transitive_closure" onclick="pickRelOp(this)">Transitive Closure</button>
-        </div>
-      </div>
-
-      <!-- LOGIC Panel (topics 9,10,11,12,13) -->
-      <div class="input-panel" id="panel-logic">
-        <div class="panel-title">Propositional Logic <span class="badge">Solver</span></div>
-        <div class="field-row">
-          <div class="field-group">
-            <div class="field-label">Logic Type</div>
-            <select class="field-select" id="logic-type" onchange="onLogicTypeChange()">
-              <option value="truth_table">Truth Table (e.g. p → (q ∧ r))</option>
-              <option value="equivalence">Logical Equivalence (e.g. p → q ≡ ¬p ∨ q)</option>
-              <option value="inference">Rules of Inference (Modus Ponens, Tollens…)</option>
-              <option value="quantifier">Negate a Quantifier (e.g. ∀x P(x))</option>
-            </select>
-          </div>
-        </div>
-        <div id="logic-subfields">
-          <div class="field-group">
-            <div class="field-label">Formula / Expression</div>
-            <input class="field-input" id="logic-expr" placeholder="e.g. p → (q ∧ r)" />
-          </div>
-        </div>
-      </div>
-
-      <!-- PROOF Panel (topics 14,15,16) -->
-      <div class="input-panel" id="panel-proof">
-        <div class="panel-title">Proof Techniques <span class="badge">Step-by-Step</span></div>
-        <div class="field-row">
-          <div class="field-group">
-            <div class="field-label">Proof Method</div>
-            <select class="field-select" id="proof-method">
-              <option value="induction">Mathematical Induction</option>
-              <option value="direct">Direct Proof</option>
-              <option value="contradiction">Proof by Contradiction</option>
-              <option value="contrapositive">Contrapositive Proof</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-group" style="margin-top:.75rem">
-          <div class="field-label">Statement / Formula to Prove</div>
-          <input class="field-input" id="proof-stmt" placeholder="e.g. 1+2+3+...+n = n(n+1)/2" />
-        </div>
-        <div class="field-group" style="margin-top:.65rem">
-          <div class="field-label">Additional Details (optional)</div>
-          <input class="field-input" id="proof-extra" placeholder="e.g. prove for all n ≥ 1, or specific claim" />
-        </div>
-      </div>
-
-      <!-- GENERAL Panel (fallback) -->
-      <div class="input-panel show" id="panel-general">
-        <div class="panel-title">General Solver <span class="badge">AI-Powered</span></div>
-        <div class="fallback-wrap">
-          <textarea class="main-ta" id="user-input" placeholder="Type your problem here — e.g. Check if R = {(1,1),(2,2),(1,2),(2,1)} on A = {1,2,3} is reflexive, symmetric and transitive..."></textarea>
-          <div class="hint-chips">
-            <span style="font-size:.68rem;color:var(--text3)">Try:</span>
-            <span class="hc" onclick="fillHint('Generate truth table for p → (q ∧ r)')">Truth table</span>
-            <span class="hc" onclick="fillHint('Prove by induction: 1+2+...+n = n(n+1)/2')">Induction</span>
-            <span class="hc" onclick="fillHint('Find transitive closure of {(1,2),(2,3),(3,4)}')">Transitive closure</span>
-            <span class="hc" onclick="fillHint('A={1,2,3}, B={2,3,4}. Find A∪B, A∩B and A−B')">Set ops</span>
-          </div>
-        </div>
-      </div>
-
-      <button class="solve-btn" id="solve-btn" onclick="solveQuestion()">
-        <span>⚡</span> Solve with AI
-      </button>
-    </div>
-  </div>
-
-  <div id="response-container" style="display:none" class="response-wrap"></div>
-</div>
-
-<!-- TOPICS PAGE -->
-<div id="page-topics" style="display:none">
-  <div class="page-content">
-    <div class="page-hd">
-      <div class="page-title">📚 Course Topics</div>
-      <div class="page-sub">Mohammad Ali Jinnah University Karachi — Discrete Structures (All 16 Weeks)</div>
-    </div>
-    <div class="wk-grid" id="week-cards-container"></div>
-  </div>
-</div>
-
-<!-- HISTORY PAGE -->
-<div id="page-history" style="display:none">
-  <div class="hist-page">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
-      <div>
-        <div class="page-title" style="font-size:1.4rem">🕒 Solve History</div>
-        <div class="page-sub" style="margin-top:.2rem">Your recent AI-solved problems</div>
-      </div>
-      <button class="clear-btn" onclick="clearHistory()">Clear All</button>
-    </div>
-    <div id="history-list"></div>
-  </div>
-</div>
-</div><!-- end .app -->
-
-<script>
-const GEMINI_KEY = 'AIzaSyAhRvXGqncc1nrLOBe4oxiEX2wVI4AZeqI';
-
-// Topic panel mapping
-const PANEL_MAP = {
-  0:'sets',1:'sets',2:'sets',
-  3:'relations',4:'relations',5:'relations',6:'relations',7:'relations',
-  8:'logic',9:'logic',10:'logic',11:'logic',12:'logic',
-  13:'proof',14:'proof',15:'proof'
-};
-
-// ══════════════════════════════════════════════════════
-//  LOCAL COMPUTATION ENGINE — 100% accurate, no AI needed
-// ══════════════════════════════════════════════════════
-
-function parseSet(raw){
-  raw = raw.trim().replace(/^\{|\}$/g,'');
-  if(!raw) return [];
-  return raw.split(',').map(s=>s.trim()).filter(s=>s!=='');
-}
-
-function parseRelation(raw){
-  // accepts (1,2),(1,3)... or {(1,2),(1,3)}
-  raw = raw.trim().replace(/^\{|\}$/g,'');
-  const pairs=[];
-  const re=/\(([^)]+)\)/g; let m;
-  while((m=re.exec(raw))!==null){
-    const parts=m[1].split(',').map(s=>s.trim());
-    if(parts.length===2) pairs.push([parts[0],parts[1]]);
-  }
-  return pairs;
-}
-
-function setStr(arr){
-  if(!arr||arr.length===0) return '∅ (empty set)';
-  return '{' + arr.join(', ') + '}';
-}
-
-function arrEq(a,b){ return a.join(',')==b.join(','); }
-
-/* ── SET OPERATIONS ─────────────────────────────────── */
-function computeSets(rawA, rawB, rawU, op){
-  const A = parseSet(rawA);
-  const B = parseSet(rawB);
-  const U = rawU.trim() ? parseSet(rawU) : [...new Set([...A,...B])];
-
-  const setA = new Set(A), setB = new Set(B), setU = new Set(U);
-
-  const steps=[], formulas=[];
-  let directAnswer='', finalAnswer='';
-
-  function doUnion(){
-    const res=[...new Set([...A,...B])];
-    steps.push(`Start with Set A = ${setStr(A)} — ${A.length} element(s)`);
-    steps.push(`Add Set B = ${setStr(B)} — ${B.length} element(s)`);
-    steps.push(`Remove any duplicates (sets cannot have repeated elements)`);
-    const dups = A.filter(x=>setB.has(x));
-    if(dups.length) steps.push(`Duplicates found and removed: ${setStr(dups)}`);
-    else steps.push(`No duplicates found between A and B`);
-    steps.push(`A ∪ B = ${setStr(res)} — ${res.length} unique element(s)`);
-    formulas.push({expr:'A ∪ B = {x | x∈A OR x∈B}',applied:`All elements from A=${setStr(A)} plus all from B=${setStr(B)}, duplicates removed`,result:setStr(res)});
-    return {direct:`A ∪ B = ${setStr(res)}`, final:`The union of A and B is ${setStr(res)} containing ${res.length} element(s).`};
-  }
-
-  function doIntersection(){
-    const res = A.filter(x=>setB.has(x));
-    steps.push(`Set A = ${setStr(A)}`);
-    steps.push(`Set B = ${setStr(B)}`);
-    steps.push(`Check each element of A — is it also in B?`);
-    A.forEach(x=>{
-      const inB=setB.has(x);
-      steps.push(`  Element "${x}": ${inB?'✓ found in B → INCLUDE':'✗ not in B → EXCLUDE'}`);
-    });
-    steps.push(`A ∩ B = ${setStr(res)} — ${res.length} common element(s)`);
-    formulas.push({expr:'A ∩ B = {x | x∈A AND x∈B}',applied:`Only elements appearing in BOTH A=${setStr(A)} and B=${setStr(B)}`,result:setStr(res)});
-    return {direct:`A ∩ B = ${setStr(res)}`, final:`The intersection of A and B is ${setStr(res)} containing ${res.length} element(s).`};
-  }
-
-  function doDiffAB(){
-    const res = A.filter(x=>!setB.has(x));
-    steps.push(`Set A = ${setStr(A)}`);
-    steps.push(`Set B = ${setStr(B)}`);
-    steps.push(`Keep elements that are in A but NOT in B:`);
-    A.forEach(x=>{
-      const inB=setB.has(x);
-      steps.push(`  Element "${x}": ${inB?'✗ also in B → REMOVE':'✓ not in B → KEEP'}`);
-    });
-    steps.push(`A − B = ${setStr(res)}`);
-    formulas.push({expr:'A − B = {x | x∈A AND x∉B}',applied:`Elements of A=${setStr(A)} that do NOT appear in B=${setStr(B)}`,result:setStr(res)});
-    return {direct:`A − B = ${setStr(res)}`, final:`A minus B = ${setStr(res)}`};
-  }
-
-  function doDiffBA(){
-    const res = B.filter(x=>!setA.has(x));
-    steps.push(`Set B = ${setStr(B)}`);
-    steps.push(`Set A = ${setStr(A)}`);
-    steps.push(`Keep elements in B but NOT in A:`);
-    B.forEach(x=>{
-      const inA=setA.has(x);
-      steps.push(`  Element "${x}": ${inA?'✗ also in A → REMOVE':'✓ not in A → KEEP'}`);
-    });
-    steps.push(`B − A = ${setStr(res)}`);
-    formulas.push({expr:'B − A = {x | x∈B AND x∉A}',applied:`Elements of B=${setStr(B)} not in A=${setStr(A)}`,result:setStr(res)});
-    return {direct:`B − A = ${setStr(res)}`, final:`B minus A = ${setStr(res)}`};
-  }
-
-  function doCompA(){
-    const res = U.filter(x=>!setA.has(x));
-    steps.push(`Universal Set U = ${setStr(U)}`);
-    steps.push(`Set A = ${setStr(A)}`);
-    steps.push(`A′ = all elements in U that are NOT in A:`);
-    U.forEach(x=>{
-      const inA=setA.has(x);
-      steps.push(`  "${x}": ${inA?'✗ in A → not in A′':'✓ not in A → in A′'}`);
-    });
-    steps.push(`A′ = ${setStr(res)}`);
-    formulas.push({expr:"A′ = U − A = {x | x∈U AND x∉A}",applied:`U=${setStr(U)} minus A=${setStr(A)}`,result:setStr(res)});
-    return {direct:`A′ = ${setStr(res)}`, final:`The complement of A is ${setStr(res)}`};
-  }
-
-  function doCompB(){
-    const res = U.filter(x=>!setB.has(x));
-    steps.push(`Universal Set U = ${setStr(U)}`);
-    steps.push(`Set B = ${setStr(B)}`);
-    steps.push(`B′ = all elements in U not in B:`);
-    U.forEach(x=>{
-      const inB=setB.has(x);
-      steps.push(`  "${x}": ${inB?'✗ in B → not in B′':'✓ not in B → in B′'}`);
-    });
-    steps.push(`B′ = ${setStr(res)}`);
-    formulas.push({expr:"B′ = U − B",applied:`U=${setStr(U)} minus B=${setStr(B)}`,result:setStr(res)});
-    return {direct:`B′ = ${setStr(res)}`, final:`The complement of B is ${setStr(res)}`};
-  }
-
-  function doCartesian(){
-    const res=[];
-    A.forEach(a=>B.forEach(b=>res.push(`(${a},${b})`)));
-    steps.push(`Set A = ${setStr(A)}, |A| = ${A.length}`);
-    steps.push(`Set B = ${setStr(B)}, |B| = ${B.length}`);
-    steps.push(`|A × B| = |A| × |B| = ${A.length} × ${B.length} = ${res.length} ordered pairs`);
-    steps.push(`Form every pair (a, b) where a∈A and b∈B:`);
-    A.forEach(a=>{ const pairs=B.map(b=>`(${a},${b})`); steps.push(`  a="${a}": ${pairs.join(', ')}`); });
-    steps.push(`A × B = {${res.join(', ')}}`);
-    formulas.push({expr:'A × B = {(a,b) | a∈A, b∈B}',applied:`Every combination of elements from A=${setStr(A)} with B=${setStr(B)}`,result:`{${res.join(', ')}}`});
-    return {direct:`A × B has ${res.length} pairs: {${res.join(', ')}}`, final:`|A × B| = ${A.length} × ${B.length} = ${res.length}`};
-  }
-
-  function doPowerSet(){
-    const subsets=[[]];
-    A.forEach(a=>{
-      const cur=subsets.map(s=>[...s,a]);
-      subsets.push(...cur);
-    });
-    const subStrs=subsets.map(s=>s.length===0?'∅':'{'+s.join(',')+'}');
-    steps.push(`Set A = ${setStr(A)}, |A| = ${A.length}`);
-    steps.push(`|P(A)| = 2^|A| = 2^${A.length} = ${subsets.length} subsets`);
-    steps.push(`Build power set by including/excluding each element:`);
-    subStrs.forEach((s,i)=>steps.push(`  Subset ${i}: ${s}`));
-    formulas.push({expr:'|P(A)| = 2ⁿ where n = |A|',applied:`n = ${A.length}, so 2^${A.length} = ${subsets.length}`,result:`P(A) has ${subsets.length} subsets`});
-    return {direct:`P(A) has ${subsets.length} subsets: ${subStrs.join(', ')}`, final:`Power set of A contains ${subsets.length} subsets.`};
-  }
-
-  let out;
-  if(op==='union') out=doUnion();
-  else if(op==='intersection') out=doIntersection();
-  else if(op==='difference_ab') out=doDiffAB();
-  else if(op==='difference_ba') out=doDiffBA();
-  else if(op==='complement_a') out=doCompA();
-  else if(op==='complement_b') out=doCompB();
-  else if(op==='cartesian') out=doCartesian();
-  else if(op==='power') out=doPowerSet();
-  else if(op==='all'){
-    const u=doUnion(), i=doIntersection(), dab=doDiffAB(), dba=doDiffBA();
-    return {
-      directAnswer:`A∪B=${u.direct} | A∩B=${i.direct} | A−B=${dab.direct} | B−A=${dba.direct}`,
-      stepByStep:steps,
-      formulasUsed:formulas,
-      finalAnswer:`All set operations computed:\n• Union: ${u.direct}\n• Intersection: ${i.direct}\n• A−B: ${dab.direct}\n• B−A: ${dba.direct}`,
-      relatedConcepts:'Set operations follow algebraic laws like De Morgan\'s law: (A∪B)′=A′∩B′. These operations form the foundation for database queries, probability, and logic.',
-      beginnerExplanation:'Think of A and B as two groups of friends. Union is everyone in both groups. Intersection is people who are friends with both of you. Difference A−B is your friends who are not the other person\'s friends.'
-    };
-  }
-
-  return {
-    directAnswer: out.direct,
-    stepByStep: steps,
-    formulasUsed: formulas,
-    finalAnswer: out.final,
-    relatedConcepts: 'Set operations are the foundation of database queries (SQL uses ∪, ∩), probability theory, and logic gates in digital circuits.',
-    beginnerExplanation: op==='union'?'Imagine two boxes of toys. Union means ALL toys from both boxes combined in one pile, no copies.':op==='intersection'?'Imagine two playlists. Intersection is only the songs that appear on BOTH playlists.':op==='difference_ab'?'Imagine your playlist minus songs your friend also has — only YOUR exclusive songs remain.':'The complement contains everything in the universe that is NOT in the set — like everyone NOT on the guest list.'
-  };
-}
-
-/* ── RELATIONS ──────────────────────────────────────── */
-function computeRelations(rawSet, rawPairs, op){
-  const A = parseSet(rawSet);
-  const pairs = parseRelation(rawPairs);
-  const R = pairs; // array of [a,b]
-  const Rset = new Set(pairs.map(([a,b])=>`${a},${b}`));
-  const hasP=(a,b)=>Rset.has(`${a},${b}`);
-
-  const steps=[], formulas=[], checks={};
-
-  function checkReflexive(){
-    steps.push(`REFLEXIVE CHECK: ∀a∈A, (a,a)∈R`);
-    steps.push(`Set A = ${setStr(A)}`);
-    const missing=[];
-    A.forEach(a=>{
-      const ok=hasP(a,a);
-      steps.push(`  (${a},${a}) ∈ R? ${ok?'✓ YES':'✗ NO — MISSING'}`);
-      if(!ok) missing.push(`(${a},${a})`);
-    });
-    const result=missing.length===0;
-    steps.push(`Result: R is ${result?'':'NOT '}REFLEXIVE${!result?` — Missing pairs: ${missing.join(', ')}`:''}`);
-    formulas.push({expr:'Reflexive: ∀a∈A, (a,a)∈R',applied:`Check all diagonal pairs in A=${setStr(A)}`,result:result?'✅ IS Reflexive':'❌ NOT Reflexive'});
-    checks.reflexive=result;
-    return result;
-  }
-
-  function checkIrreflexive(){
-    steps.push(`IRREFLEXIVE CHECK: ∀a∈A, (a,a)∉R`);
-    const found=[];
-    A.forEach(a=>{
-      const ok=hasP(a,a);
-      steps.push(`  (${a},${a}) ∈ R? ${ok?'✗ YES (violates irreflexive)':'✓ NO (good)'}`);
-      if(ok) found.push(`(${a},${a})`);
-    });
-    const result=found.length===0;
-    steps.push(`Result: R is ${result?'':'NOT '}IRREFLEXIVE${!result?` — Diagonal pairs found: ${found.join(', ')}`:''}`);
-    formulas.push({expr:'Irreflexive: ∀a∈A, (a,a)∉R',applied:'No element should relate to itself',result:result?'✅ IS Irreflexive':'❌ NOT Irreflexive'});
-    checks.irreflexive=result;
-    return result;
-  }
-
-  function checkSymmetric(){
-    steps.push(`SYMMETRIC CHECK: if (a,b)∈R then (b,a)∈R`);
-    const violations=[];
-    R.forEach(([a,b])=>{
-      if(a===b){steps.push(`  (${a},${b}): diagonal pair — skip`);return;}
-      const ok=hasP(b,a);
-      steps.push(`  (${a},${b})∈R → need (${b},${a})∈R? ${ok?'✓ YES':'✗ NO — MISSING'}`);
-      if(!ok) violations.push(`(${b},${a})`);
-    });
-    const result=violations.length===0;
-    steps.push(`Result: R is ${result?'':'NOT '}SYMMETRIC${!result?` — Missing pairs: ${violations.join(', ')}`:''}`);
-    formulas.push({expr:'Symmetric: (a,b)∈R → (b,a)∈R',applied:`For every pair in R, its reverse must also be in R`,result:result?'✅ IS Symmetric':'❌ NOT Symmetric'});
-    checks.symmetric=result;
-    return result;
-  }
-
-  function checkAntisymmetric(){
-    steps.push(`ANTISYMMETRIC CHECK: if (a,b)∈R and (b,a)∈R then a=b`);
-    const violations=[];
-    R.forEach(([a,b])=>{
-      if(a===b){steps.push(`  (${a},${b}): a=b — trivially OK`);return;}
-      const reverse=hasP(b,a);
-      steps.push(`  (${a},${b})∈R: is (${b},${a})∈R? ${reverse?`✗ YES but ${a}≠${b} — VIOLATION`:'✓ NO — OK'}`);
-      if(reverse) violations.push(`(${a},${b})`);
-    });
-    const result=violations.length===0;
-    steps.push(`Result: R is ${result?'':'NOT '}ANTISYMMETRIC${!result?` — Violated by: ${violations.join(', ')}`:''}`);
-    formulas.push({expr:'Antisymmetric: (a,b)∈R ∧ (b,a)∈R → a=b',applied:'If both (a,b) and (b,a) in R, then a must equal b',result:result?'✅ IS Antisymmetric':'❌ NOT Antisymmetric'});
-    checks.antisymmetric=result;
-    return result;
-  }
-
-  function checkTransitive(){
-    steps.push(`TRANSITIVE CHECK: if (a,b)∈R and (b,c)∈R then (a,c)∈R`);
-    const violations=[];
-    R.forEach(([a,b])=>{
-      R.forEach(([b2,c])=>{
-        if(b!==b2) return;
-        const ok=hasP(a,c);
-        steps.push(`  (${a},${b})∈R ∧ (${b},${c})∈R → need (${a},${c})∈R? ${ok?'✓ YES':'✗ NO — MISSING'}`);
-        if(!ok) violations.push(`(${a},${c})`);
-      });
-    });
-    const result=violations.length===0;
-    steps.push(`Result: R is ${result?'':'NOT '}TRANSITIVE${!result?` — Missing: ${[...new Set(violations)].join(', ')}`:''}`);
-    formulas.push({expr:'Transitive: (a,b)∈R ∧ (b,c)∈R → (a,c)∈R',applied:'For every chain a→b→c in R, the shortcut a→c must exist',result:result?'✅ IS Transitive':'❌ NOT Transitive'});
-    checks.transitive=result;
-    return result;
-  }
-
-  function buildMatrix(){
-    steps.push(`MATRIX REPRESENTATION`);
-    steps.push(`Rows and columns = elements of A = ${setStr(A)}`);
-    steps.push(`M[i][j] = 1 if (aᵢ, aⱼ) ∈ R, else 0`);
-    steps.push(`\nMatrix (rows=A, cols=A):`);
-    let header = '     ' + A.map(a=>`  ${a} `).join('');
-    steps.push(header);
-    A.forEach(a=>{
-      let row = ` ${a} |`;
-      A.forEach(b=>{ row+=`  ${hasP(a,b)?1:0} `; });
-      steps.push(row);
-    });
-    formulas.push({expr:'M[i][j] = 1 if (aᵢ,aⱼ)∈R, else 0',applied:`Built ${A.length}×${A.length} matrix for R`,result:'Matrix shown in steps above'});
-    checks.matrix=true;
-    return true;
-  }
-
-  function transitiveClosure(){
-    steps.push(`TRANSITIVE CLOSURE using Warshall's Algorithm`);
-    steps.push(`Start: R⁺ = R = {${R.map(([a,b])=>`(${a},${b})`).join(', ')}}`);
-    let closure=R.map(([a,b])=>[a,b]);
-    let closureSet=new Set(closure.map(([a,b])=>`${a},${b}`));
-    let changed=true, iter=0;
-    while(changed){
-      changed=false; iter++;
-      const newPairs=[];
-      closure.forEach(([a,b])=>{
-        closure.forEach(([b2,c])=>{
-          if(b===b2&&!closureSet.has(`${a},${c}`)){
-            newPairs.push([a,c]);
-            closureSet.add(`${a},${c}`);
-            changed=true;
-          }
-        });
-      });
-      if(newPairs.length){
-        closure.push(...newPairs);
-        steps.push(`Iteration ${iter}: Added ${newPairs.map(([a,b])=>`(${a},${b})`).join(', ')}`);
-      }
-      if(iter>20) break;
-    }
-    const res=`{${closure.map(([a,b])=>`(${a},${b})`).join(', ')}}`;
-    steps.push(`No more new pairs — closure complete`);
-    steps.push(`R⁺ = ${res}`);
-    formulas.push({expr:'R⁺ = R ∪ R² ∪ R³ ∪ ... (Warshall)',applied:`Applied to R with ${R.length} initial pairs`,result:res});
-    checks.closure=res;
-    return res;
-  }
-
-  if(op==='reflexive') checkReflexive();
-  else if(op==='irreflexive') checkIrreflexive();
-  else if(op==='symmetric') checkSymmetric();
-  else if(op==='antisymmetric') checkAntisymmetric();
-  else if(op==='transitive') checkTransitive();
-  else if(op==='matrix') buildMatrix();
-  else if(op==='transitive_closure') transitiveClosure();
-  else if(op==='equivalence'){
-    const r=checkReflexive(), s=checkSymmetric(), t=checkTransitive();
-    const eq=r&&s&&t;
-    steps.push(`\nEQUIVALENCE RELATION = Reflexive AND Symmetric AND Transitive`);
-    steps.push(`Reflexive: ${r?'✅ YES':'❌ NO'}`);
-    steps.push(`Symmetric: ${s?'✅ YES':'❌ NO'}`);
-    steps.push(`Transitive: ${t?'✅ YES':'❌ NO'}`);
-    steps.push(`Conclusion: R is ${eq?'':'NOT '}an Equivalence Relation`);
-    if(eq){
-      steps.push(`\nEquivalence Classes:`);
-      const visited=new Set(), classes=[];
-      A.forEach(a=>{
-        if(!visited.has(a)){
-          const cls=A.filter(b=>hasP(a,b));
-          cls.forEach(x=>visited.add(x));
-          if(cls.length) classes.push(`[${a}] = ${setStr(cls)}`);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shanghai Travel & Tours Pvt Ltd - Your trusted China visa consultancy in Islamabad, Pakistan. Fast and reliable China (Shanghai) visa processing for Pakistani citizens.">
+    <meta name="keywords" content="China visa Pakistan, Shanghai visa, China tourist visa, China business visa, visa consultancy Islamabad, China work visa">
+    <title>Shanghai Travel & Tours Pvt Ltd | China Visa Services Islamabad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'inter': ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            orange: '#f97316',
+                            'orange-dark': '#ea580c',
+                            'orange-light': '#fed7aa',
+                            'orange-50': '#fff7ed',
+                            blue: '#1e40af',
+                            'blue-dark': '#1e3a8a',
+                            'blue-light': '#3b82f6',
+                            'blue-50': '#eff6ff',
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'fade-in-up-delay': 'fadeInUp 0.8s ease-out 0.2s forwards',
+                        'fade-in-up-delay2': 'fadeInUp 0.8s ease-out 0.4s forwards',
+                        'fade-in-up-delay3': 'fadeInUp 0.8s ease-out 0.6s forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    }
+                }
+            }
         }
-      });
-      classes.forEach(c=>steps.push(`  ${c}`));
-    }
-    formulas.push({expr:'Equivalence = Reflexive ∧ Symmetric ∧ Transitive',applied:`All three properties checked for R on A=${setStr(A)}`,result:eq?'✅ IS Equivalence Relation':'❌ NOT Equivalence Relation'});
-    return {
-      directAnswer: `R is ${eq?'':'NOT '}an Equivalence Relation (Ref:${r?'✓':'✗'} Sym:${s?'✓':'✗'} Trans:${t?'✓':'✗'})`,
-      stepByStep: steps, formulasUsed: formulas,
-      finalAnswer: eq?'R IS an Equivalence Relation — it is reflexive, symmetric, and transitive.':'R is NOT an Equivalence Relation. See which property fails above.',
-      relatedConcepts:'Equivalence relations partition a set into disjoint equivalence classes. They are used in modular arithmetic, graph coloring, and type theory.',
-      beginnerExplanation:'An equivalence relation is like "being in the same group." If you are in the same group as yourself (reflexive), if you and I are in the same group then I and you are too (symmetric), and if A is with B and B is with C then A is with C (transitive).'
-    };
-  }
-  else { // all_props
-    const r=checkReflexive(), irr=checkIrreflexive(), s=checkSymmetric(), as=checkAntisymmetric(), t=checkTransitive();
-    return {
-      directAnswer:`Reflexive:${r?'✅':'❌'} | Irreflexive:${irr?'✅':'❌'} | Symmetric:${s?'✅':'❌'} | Antisymmetric:${as?'✅':'❌'} | Transitive:${t?'✅':'❌'}`,
-      stepByStep:steps, formulasUsed:formulas,
-      finalAnswer:`R on A=${setStr(A)}:\n• Reflexive: ${r?'YES':'NO'}\n• Irreflexive: ${irr?'YES':'NO'}\n• Symmetric: ${s?'YES':'NO'}\n• Antisymmetric: ${as?'YES':'NO'}\n• Transitive: ${t?'YES':'NO'}`,
-      relatedConcepts:'Relations with different combinations of these properties have special names: partial order (reflexive+antisymmetric+transitive), equivalence relation (reflexive+symmetric+transitive).',
-      beginnerExplanation:'Think of a relation as a set of friendships. Reflexive = everyone is friends with themselves. Symmetric = if A is friends with B, B is friends with A. Transitive = if A→B and B→C, then A→C automatically.'
-    };
-  }
+    </script>
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        html, body { overflow-x: hidden; width: 100%; }
+        
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
 
-  const opLabels={reflexive:'Reflexive',irreflexive:'Irreflexive',symmetric:'Symmetric',antisymmetric:'Antisymmetric',transitive:'Transitive',matrix:'Matrix Representation',transitive_closure:'Transitive Closure'};
-  const opResult = op==='transitive_closure'?checks.closure:(op==='matrix'?'See matrix in steps':checks[op]);
-  return {
-    directAnswer:`${opLabels[op]||op}: ${op==='matrix'?'Matrix shown in steps':op==='transitive_closure'?checks.closure:(opResult?'✅ YES':'❌ NO')}`,
-    stepByStep:steps, formulasUsed:formulas,
-    finalAnswer:`R on A=${setStr(A)} — ${opLabels[op]}: ${op==='matrix'||op==='transitive_closure'?'See steps above':(opResult?'YES':'NO')}`,
-    relatedConcepts:'Relation properties are foundational to understanding partial orders, equivalence classes, graph theory, and database schema design.',
-    beginnerExplanation:'Relations describe how elements of a set connect to each other — like friendships, comparisons, or dependencies between tasks.'
-  };
-}
+        .observe-fade { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .observe-fade.visible { opacity: 1; transform: translateY(0); }
+        .observe-left { opacity: 0; transform: translateX(-40px); transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .observe-left.visible { opacity: 1; transform: translateX(0); }
+        .observe-right { opacity: 0; transform: translateX(40px); transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .observe-right.visible { opacity: 1; transform: translateX(0); }
+        .observe-scale { opacity: 0; transform: scale(0.85); transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .observe-scale.visible { opacity: 1; transform: scale(1); }
 
-/* ── TRUTH TABLE ────────────────────────────────────── */
-function computeTruthTable(expr){
-  // Normalise input symbols
-  let norm = expr
-    .replace(/∧/g,'&&').replace(/∨/g,'||')
-    .replace(/¬/g,'!').replace(/~/g,'!')
-    .replace(/→/g,'->').replace(/->/g,'IMPL')
-    .replace(/↔/g,'BICON').replace(/<->/g,'BICON');
+        .hero-bg {
+            position: relative;
+            overflow: hidden;
+            background-color: #0f1b3d;
+        }
+        .hero-bg .hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+        }
+        .hero-bg .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(15, 27, 61, 0.88) 0%,
+                rgba(30, 58, 138, 0.75) 40%,
+                rgba(37, 99, 235, 0.55) 70%,
+                rgba(30, 64, 175, 0.65) 100%
+            );
+        }
+        .hero-bg::before {
+            content: ''; position: absolute; top: -50%; right: -20%;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .hero-bg::after {
+            content: ''; position: absolute; bottom: -30%; left: -10%;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 1;
+        }
 
-  // Extract variables (single lowercase letters only)
-  const vars=[...new Set((expr.match(/\b[a-z]\b/g)||[]))].sort();
-  if(!vars.length) return null;
+        .glass-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.12);
+        }
 
-  const n=vars.length;
-  const rows=[];
-  for(let i=0;i<Math.pow(2,n);i++){
-    const assignment={};
-    vars.forEach((v,j)=>{ assignment[v]=!!((i>>(n-1-j))&1); });
-    rows.push(assignment);
-  }
+        .why-card {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .why-card:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(249,115,22,0.3);
+            transform: translateY(-3px);
+        }
 
-  // Evaluate formula for each row
-  function evalExpr(e, asgn){
-    let s=e;
-    // substitute variables
-    vars.forEach(v=>{ s=s.replace(new RegExp(`\\b${v}\\b`,'g'), asgn[v]?'T':'F'); });
-    // evaluate in passes
-    // NOT
-    for(let pass=0;pass<10;pass++){
-      s=s.replace(/!T/g,'F').replace(/!F/g,'T');
-      // parentheses
-      s=s.replace(/\(([TF])\)/g,'$1');
-      // AND
-      s=s.replace(/T&&T/g,'T').replace(/T&&F/g,'F').replace(/F&&T/g,'F').replace(/F&&F/g,'F');
-      // OR
-      s=s.replace(/T\|\|T/g,'T').replace(/T\|\|F/g,'T').replace(/F\|\|T/g,'T').replace(/F\|\|F/g,'F');
-      // IMPL: p->q = !p||q  (F only when T->F)
-      s=s.replace(/TIMPL T/g,'T').replace(/TIMPL F/g,'F').replace(/FIMPL T/g,'T').replace(/FIMPL F/g,'T');
-      s=s.replace(/T IMPL T/g,'T').replace(/T IMPL F/g,'F').replace(/F IMPL T/g,'T').replace(/F IMPL F/g,'T');
-      s=s.replace(/TIMPL([TF])/g,(_,q)=>q==='T'?'T':'F');
-      s=s.replace(/FIMPL([TF])/g,'T');
-      // BICON
-      s=s.replace(/TBICON T/g,'T').replace(/TBICON F/g,'F').replace(/FBICON T/g,'F').replace(/FBICON F/g,'T');
-      s=s.replace(/T BICON T/g,'T').replace(/T BICON F/g,'F').replace(/F BICON T/g,'F').replace(/F BICON F/g,'T');
-      s=s.replace(/([TF])BICON([TF])/g,(_,a,b)=>a===b?'T':'F');
-      s=s.replace(/([TF])IMPL([TF])/g,(_,p,q)=>(p==='T'&&q==='F')?'F':'T');
-    }
-    if(s==='T') return true;
-    if(s==='F') return false;
-    return null; // couldn't evaluate
-  }
+        .service-card { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .service-card:hover { transform: translateY(-8px); box-shadow: 0 25px 60px -12px rgba(30, 64, 175, 0.2); }
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, #f97316, #ea580c) !important;
+        }
+        .service-card:hover .service-icon iconify-icon {
+            color: #ffffff !important;
+        }
 
-  const results=rows.map(asgn=>{
-    const val=evalExpr(norm,asgn);
-    return {asgn,val};
-  });
+        .doc-card { transition: all 0.3s ease; }
+        .doc-card:hover { transform: translateX(8px); border-color: #f97316; }
 
-  const trueCount=results.filter(r=>r.val===true).length;
-  const falseCount=results.filter(r=>r.val===false).length;
-  const isTaut=trueCount===results.length;
-  const isCont=falseCount===results.length;
+        .whatsapp-float { animation: float 3s ease-in-out infinite; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4); }
 
-  // Build table HTML
-  let tableHtml=`<div class="tt-wrap"><table class="tt"><thead><tr>`;
-  vars.forEach(v=>tableHtml+=`<th>${v}</th>`);
-  tableHtml+=`<th>${expr.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</th></tr></thead><tbody>`;
-  results.forEach(({asgn,val})=>{
-    tableHtml+=`<tr>`;
-    vars.forEach(v=>tableHtml+=`<td class="${asgn[v]?'tt-true':'tt-false'}">${asgn[v]?'T':'F'}</td>`);
-    tableHtml+=`<td class="${val===true?'tt-true':val===false?'tt-false':''}">${val===true?'T':val===false?'F':'?'}</td>`;
-    tableHtml+=`</tr>`;
-  });
-  tableHtml+=`</tbody></table></div>`;
+        .gradient-text {
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
 
-  const steps=[
-    `Formula: ${expr}`,
-    `Variables identified: ${vars.join(', ')} — ${n} variable(s) → 2^${n} = ${results.length} rows`,
-    ...results.map(({asgn,val},i)=>`Row ${i+1}: ${vars.map(v=>`${v}=${asgn[v]?'T':'F'}`).join(', ')} → Result = ${val===true?'T':val===false?'F':'?'}`),
-    `TRUE rows: ${trueCount}/${results.length}   FALSE rows: ${falseCount}/${results.length}`,
-    `Classification: ${isTaut?'TAUTOLOGY (always true)':isCont?'CONTRADICTION (always false)':'CONTINGENCY (sometimes true)'}`
-  ];
+        .section-divider { width: 60px; height: 4px; background: linear-gradient(90deg, #f97316, #1e40af); border-radius: 2px; }
 
-  return {
-    directAnswer:`${isTaut?'TAUTOLOGY':isCont?'CONTRADICTION':'CONTINGENCY'} — ${trueCount}/${results.length} rows are TRUE`,
-    stepByStep:steps,
-    formulasUsed:[
-      {expr:'p → q ≡ F only when p=T and q=F',applied:'Applied to implication columns',result:'See table'},
-      {expr:'p ∧ q ≡ T only when both T',applied:'Applied to conjunction',result:'See table'},
-      {expr:'p ∨ q ≡ F only when both F',applied:'Applied to disjunction',result:'See table'}
-    ],
-    finalAnswer:`Truth table for "${expr}": ${trueCount} TRUE, ${falseCount} FALSE out of ${results.length} rows. ${isTaut?'It is a TAUTOLOGY.':isCont?'It is a CONTRADICTION.':'It is a CONTINGENCY.'}`,
-    truthTableHtml: tableHtml,
-    relatedConcepts:'Tautologies are used in proving logical equivalences. Contradictions show impossible conditions. Contingencies are the basis of conditional statements in programming.',
-    beginnerExplanation:'A truth table is like testing every possible on/off switch combination for a circuit. Each row is one combination of TRUE/FALSE values, and you check if the whole formula is TRUE or FALSE for that combination.'
-  };
-}
+        .trust-card { position: relative; overflow: hidden; }
+        .trust-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, #f97316, #1e40af); border-radius: 2px; }
 
-const TOPICS = [
-  {week:1,title:"Introduction to Discrete Structures",desc:"Set Theory Basics, Enumeration, Cardinality, Relations on Sets, Power Set, Cartesian Product",formulas:["A = {x | P(x)} — Set builder notation","|A| = n — Cardinality","A × B = {(a,b) | a∈A, b∈B} — Cartesian Product","|P(A)| = 2ⁿ — Power set size"],example:"Let A = {1,2,3}. Find power set P(A) and |A×A|.",note:"Power set of a set with n elements has 2ⁿ subsets."},
-  {week:2,title:"Set Operations & Venn Diagrams",desc:"Union, Intersection, Difference, Complement, Set identities",formulas:["A ∪ B — All elements in A or B","A ∩ B — Elements in both A and B","A − B = {x | x∈A ∧ x∉B}","A′ = U − A — Complement"],example:"A={1,2,3}, B={2,3,4}. Find A∪B, A∩B, A−B, B−A.",note:"Venn diagrams visually represent set relationships."},
-  {week:3,title:"Venn Diagrams & Set Identities",desc:"Distributive, Absorption, De Morgan's laws",formulas:["De Morgan: (A∪B)′ = A′∩B′","De Morgan: (A∩B)′ = A′∪B′","Absorption: A∪(A∩B) = A","Distributive: A∩(B∪C) = (A∩B)∪(A∩C)"],example:"Verify De Morgan's law: (A∪B)′ = A′∩B′ for A={1,2,3}, B={2,3,4}, U={1,2,3,4,5}.",note:"Set identities are analogous to Boolean algebra identities."},
-  {week:4,title:"Relations on Sets",desc:"Ordered pairs, Cartesian product, Binary relations, Domain/Range",formulas:["R ⊆ A × B — Binary Relation","dom(R) = {a | ∃b, (a,b)∈R}","range(R) = {b | ∃a, (a,b)∈R}"],example:"Let A={1,2}, B={a,b}. List all possible binary relations from A to B.",note:"A relation is a subset of the Cartesian product."},
-  {week:5,title:"Representation of Relations",desc:"Arrow diagrams, Directed graphs, Matrix representation",formulas:["M[i][j] = 1 if (i,j)∈R, else 0 — Matrix","Directed graph: vertex for each element, edge for each pair"],example:"Represent R={(1,2),(2,3),(3,1)} using a matrix and directed graph.",note:"Matrix representation enables algorithmic computation of relation properties."},
-  {week:6,title:"Types of Relations — Reflexive/Symmetric",desc:"Reflexive, Irreflexive, Symmetric, Antisymmetric properties",formulas:["Reflexive: ∀a∈A, (a,a)∈R","Irreflexive: ∀a∈A, (a,a)∉R","Symmetric: (a,b)∈R → (b,a)∈R","Antisymmetric: (a,b)∈R ∧ (b,a)∈R → a=b"],example:"Check if R={(1,1),(2,2),(1,2),(2,1)} on A={1,2,3} is reflexive and symmetric.",note:"A relation can be both symmetric and antisymmetric only if no two distinct elements are related to each other."},
-  {week:7,title:"Types of Relations — Transitive",desc:"Transitive Relations, Composition of relations",formulas:["Transitive: (a,b)∈R ∧ (b,c)∈R → (a,c)∈R","Composition: R∘S = {(a,c) | ∃b, (a,b)∈R ∧ (b,c)∈S}"],example:"Is R={(1,2),(2,3),(1,3)} transitive on A={1,2,3}?",note:"Composition of relations is analogous to matrix multiplication."},
-  {week:8,title:"Closures & Equivalence Classes",desc:"Transitive Closure, Equivalence classes, Partial Orderings",formulas:["Equivalence = Reflexive + Symmetric + Transitive","[a] = {b | (a,b)∈R} — Equivalence class","Transitive closure: R⁺ = R ∪ R² ∪ R³ ∪ ..."],example:"Find all equivalence classes for R={(1,1),(2,2),(3,3),(1,2),(2,1)} on {1,2,3}.",note:"Equivalence classes partition the set into disjoint non-empty subsets."},
-  {week:9,title:"Foundations of Logic",desc:"Propositional Logic, Logical connectives, Truth values",formulas:["p ∧ q — AND (true if both true)","p ∨ q — OR (true if at least one true)","¬p — NOT","p → q — Implication (false only when p=T, q=F)","p ↔ q — Biconditional"],example:"Construct the truth table for p → (q ∧ r).",note:"Logic is the mathematical foundation of computer science and formal proofs."},
-  {week:10,title:"Propositional Equivalences",desc:"Logical equivalences, Tautologies, Predicates and Quantifiers",formulas:["p → q ≡ ¬p ∨ q","De Morgan: ¬(p∧q) ≡ ¬p∨¬q","Contrapositive: p→q ≡ ¬q→¬p","Double negation: ¬¬p ≡ p"],example:"Show that p→q ≡ ¬q→¬p (contrapositive equivalence).",note:"Equivalences allow simplification of complex logical statements."},
-  {week:11,title:"Predicates & Quantifiers",desc:"Universal quantifier, Existential quantifier, Negation",formulas:["∀x P(x) — True for all x","∃x P(x) — True for some x","¬∀x P(x) ≡ ∃x ¬P(x)","¬∃x P(x) ≡ ∀x ¬P(x)"],example:"Negate: ∀x ∃y (x + y = 0). Show full steps.",note:"When negating quantifiers, ∀ and ∃ always swap."},
-  {week:12,title:"Rules of Inference",desc:"Modus Ponens, Modus Tollens, Hypothetical Syllogism",formulas:["Modus Ponens: p, p→q ∴ q","Modus Tollens: ¬q, p→q ∴ ¬p","Hypothetical Syllogism: p→q, q→r ∴ p→r","Disjunctive Syllogism: p∨q, ¬p ∴ q"],example:"Using Modus Ponens: 'If it rains, I carry an umbrella. It is raining. What follows?'",note:"Rules of inference are the building blocks of all formal proofs."},
-  {week:13,title:"Building Arguments",desc:"Chaining inference rules to build valid arguments",formulas:["Chain: p→q, q→r, r→s ∴ p→s","Simplification: p∧q ∴ p","Addition: p ∴ p∨q","Resolution: p∨q, ¬p∨r ∴ q∨r"],example:"Build a logical argument: Socrates is a man. All men are mortal. Therefore…",note:"A valid argument guarantees a true conclusion from true premises."},
-  {week:14,title:"Introduction to Proof",desc:"Direct proof, Contrapositive proof, Proof by contradiction",formulas:["Direct: assume p, derive q","Contrapositive: assume ¬q, derive ¬p","Contradiction: assume ¬p, derive contradiction"],example:"Prove: If n² is even, then n is even.",note:"Choosing the right proof technique often makes a hard problem straightforward."},
-  {week:15,title:"Methods of Proving",desc:"Existence proofs, Universal proofs, Biconditional proofs",formulas:["Existence: find one satisfying example","Universal: prove for all elements","Biconditional: prove p→q AND q→p"],example:"Prove by contradiction: √2 is irrational.",note:"Proof by contradiction is especially powerful for irrationality proofs."},
-  {week:16,title:"Mathematical Induction",desc:"Principle of Mathematical Induction, Strong Induction",formulas:["Base case: prove P(1) is true","Inductive step: assume P(k), prove P(k+1)","Strong induction: assume P(1)…P(k), prove P(k+1)","Conclusion: P(n) holds for all n ≥ 1"],example:"Prove by induction: 1+2+3+...+n = n(n+1)/2.",note:"Mathematical induction is the primary tool for proving statements about all natural numbers."}
-];
+        .testimonial-card { transition: all 0.4s ease; }
+        .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(30, 64, 175, 0.1); }
 
-let selectedTopic = null;
-let activeSetOp = 'union';
-let activeRelOp = 'all_props';
-let historyData = JSON.parse(localStorage.getItem('ds_history')||'[]');
-let solvedCount = parseInt(localStorage.getItem('ds_solved')||'0');
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f97316, #1e40af); border-radius: 4px; }
 
-// ─── INIT ─────────────────────────────────────────────
-function init(){
-  renderTopicSelector();
-  renderWeekCards();
-  updateHistCount();
-  document.getElementById('solved-count').textContent = solvedCount;
-}
+        .toast { transform: translateX(120%); transition: transform 0.4s ease; }
+        .toast.show { transform: translateX(0); }
 
-function renderTopicSelector(){
-  const g = document.getElementById('topic-selector');
-  g.innerHTML = TOPICS.map((t,i)=>`
-    <div class="tc" id="tc-${i}" onclick="selectTopic(${i})">
-      <span class="tc-w">W${t.week}</span>${t.title.split(' ').slice(0,3).join(' ')}
-    </div>`).join('');
-}
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1); }
 
-function selectTopic(idx){
-  document.querySelectorAll('.tc').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('tc-'+idx).classList.add('sel');
-  selectedTopic = idx;
+        #navbar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        #navbar.navbar-scrolled {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .nav-link { color: #4b5563; transition: color 0.3s ease, background-color 0.3s ease; }
+        .nav-link:hover { color: #f97316; background-color: #fff7ed; }
+        .nav-link.nav-active { color: #f97316 !important; }
+        .hamburger-icon { color: #4b5563 !important; }
 
-  // Hide all panels
-  ['sets','relations','logic','proof','general'].forEach(p=>{
-    document.getElementById('panel-'+p).classList.remove('show');
-  });
+        .nav-logo-img { height: 40px; width: auto; object-fit: contain; }
+        @media (min-width: 640px) { .nav-logo-img { height: 44px; } }
+        @media (min-width: 768px) { .nav-logo-img { height: 48px; } }
+        .footer-logo-img { height: 36px; width: auto; object-fit: contain; }
+        @media (min-width: 640px) { .footer-logo-img { height: 40px; } }
 
-  const panel = PANEL_MAP[idx] || 'general';
-  document.getElementById('panel-'+panel).classList.add('show');
-  if(panel==='general') document.getElementById('panel-general').classList.add('show');
-}
+        .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 0; }
+        .mobile-menu.open { max-height: 400px; opacity: 1; }
+        .mobile-menu a { transition: all 0.2s ease; }
 
-function pickSetOp(btn){
-  document.querySelectorAll('#set-ops .op-btn').forEach(b=>b.classList.remove('active-op'));
-  btn.classList.add('active-op');
-  activeSetOp = btn.dataset.op;
-  const needU = ['complement_a','complement_b','all'].includes(activeSetOp);
-  document.getElementById('setU-row').style.display = needU ? 'grid' : 'none';
-}
+        section { overflow-x: hidden; }
 
-function pickRelOp(btn){
-  document.querySelectorAll('#rel-ops .op-btn').forEach(b=>b.classList.remove('active-op'));
-  btn.classList.add('active-op');
-  activeRelOp = btn.dataset.op;
-}
+        .important-note { background: linear-gradient(135deg, #fff7ed, #fef3c7); border-left: 4px solid #f97316; }
+        .id-number { font-family: 'Inter', monospace; letter-spacing: 0.15em; }
+        .social-icon { transition: all 0.3s ease; }
+        .social-icon:hover { transform: translateY(-2px); }
 
-function onLogicTypeChange(){
-  const t = document.getElementById('logic-type').value;
-  const p = document.getElementById('logic-expr');
-  const hints = {
-    truth_table:'e.g. p → (q ∧ r)',
-    equivalence:'e.g. p → q ≡ ¬p ∨ q',
-    inference:'e.g. Premises: "It rains → I use umbrella", "It rains". Conclusion?',
-    quantifier:'e.g. ∀x ∃y (x + y = 0)'
-  };
-  p.placeholder = hints[t]||'Enter expression...';
-}
+        .team-card { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .team-card:hover { transform: translateY(-8px); box-shadow: 0 25px 60px -12px rgba(30, 64, 175, 0.15); }
+        .team-card:hover .team-avatar { transform: scale(1.05); }
+        .team-avatar { transition: transform 0.4s ease; }
 
-function fillHint(txt){ document.getElementById('user-input').value = txt; }
+        @keyframes pinPulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .map-red-pin { animation: pinPulse 2s ease-out infinite; }
 
-// ─── SOLVE — LOCAL FIRST, THEN AI FOR PROOFS/LOGIC ────
-async function solveQuestion(){
-  if(selectedTopic===null){alert('Please select a topic first!');return;}
+        @keyframes heroGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .hero-glow { animation: heroGlow 3s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-white text-gray-800 font-inter antialiased">
 
-  const topic = TOPICS[selectedTopic];
-  const panel = PANEL_MAP[selectedTopic] || 'general';
-  const btn = document.getElementById('solve-btn');
-  const rc = document.getElementById('response-container');
-
-  btn.disabled=true; btn.innerHTML='<span>⏳</span> Computing...';
-  rc.style.display='block';
-  rc.innerHTML=`<div class="resp-card"><div class="loading-dots"><div class="ld"></div><div class="ld"></div><div class="ld"></div></div></div>`;
-
-  let result = null;
-  let useAI = false;
-
-  // ── LOCAL COMPUTATION (100% accurate, no AI) ──────────
-  if(panel==='sets'){
-    const A = document.getElementById('setA').value.trim();
-    const B = document.getElementById('setB').value.trim();
-    const U = document.getElementById('setU').value.trim();
-    if(!A && !B){ alert('Please enter at least Set A values.'); btn.disabled=false; btn.innerHTML='<span>⚡</span> Solve with AI'; return; }
-    result = computeSets(A, B, U, activeSetOp);
-
-  } else if(panel==='relations'){
-    const S = document.getElementById('relSet').value.trim();
-    const P = document.getElementById('relPairs').value.trim();
-    if(!S || !P){ alert('Please enter the base set and relation pairs.'); btn.disabled=false; btn.innerHTML='<span>⚡</span> Solve with AI'; return; }
-    result = computeRelations(S, P, activeRelOp);
-
-  } else if(panel==='logic'){
-    const logicType = document.getElementById('logic-type').value;
-    const expr = document.getElementById('logic-expr').value.trim();
-    if(!expr){ alert('Please enter a formula or expression.'); btn.disabled=false; btn.innerHTML='<span>⚡</span> Solve with AI'; return; }
-
-    if(logicType==='truth_table'){
-      // Local truth table — 100% accurate
-      result = computeTruthTable(expr);
-      if(!result){ alert('Could not parse formula. Use variables p,q,r and symbols: ∧ ∨ ¬ → ↔ or & | ! -> <->'); btn.disabled=false; btn.innerHTML='<span>⚡</span> Solve with AI'; return; }
-    } else {
-      // Equivalences, inference, quantifiers → AI
-      useAI = true;
-      const labels={equivalence:'Verify logical equivalence step by step',inference:'Apply rules of inference, show each rule name and step',quantifier:'Negate the quantified statement showing each step'};
-      result = await callGeminiForProof(topic, `${labels[logicType]||'Solve'}: ${expr}`);
-    }
-
-  } else if(panel==='proof'){
-    const method = document.getElementById('proof-method').value;
-    const stmt = document.getElementById('proof-stmt').value.trim();
-    const extra = document.getElementById('proof-extra').value.trim();
-    if(!stmt){ alert('Please enter the statement to prove.'); btn.disabled=false; btn.innerHTML='<span>⚡</span> Solve with AI'; return; }
-    const mLabel={induction:'Mathematical Induction',direct:'Direct Proof',contradiction:'Proof by Contradiction',contrapositive:'Contrapositive Proof'};
-    useAI = true;
-    result = await callGeminiForProof(topic, `Prove using ${mLabel[method]}: ${stmt}${extra?`. (${extra})`:''}`);
-
-  } else {
-    const q = document.getElementById('user-input').value.trim();
-    if(!q){ alert('Please type your problem.'); btn.disabled=false; btn.innerHTML='<span>⚡</span> Solve with AI'; return; }
-    useAI = true;
-    result = await callGeminiForProof(topic, q);
-  }
-
-  if(result) renderResponse(topic, result, useAI);
-  if(result) saveHistory(topic, result);
-  btn.disabled=false; btn.innerHTML='<span>⚡</span> Solve with AI';
-}
-
-async function callGeminiForProof(topic, problemDescription){
-  const prompt=`You are a STRICT Discrete Structures CALCULATOR and SOLVER for university students at MAJU Karachi. You MUST compute EXACT answers from the given values.
-
-TOPIC: "${topic.title}" (Week ${topic.week})
-PROBLEM: ${problemDescription}
-
-CRITICAL RULES:
-1. Compute the EXACT answer first using the given values.
-2. Show every step with actual values substituted — not generic symbols.
-3. For proofs: show base case with n=1 substituted, then inductive step with actual algebra.
-4. For inference: name each rule (Modus Ponens, etc.) and show the exact propositions.
-5. For quantifiers: show each negation step explicitly.
-6. NEVER return only "1" or a single digit. Return full mathematical working.
-7. Each stepByStep entry must be a complete sentence with values.
-
-Respond ONLY in this JSON (no markdown, no backticks, just raw JSON):
-{"directAnswer":"exact answer here","stepByStep":["Step 1: ...","Step 2: ...","Step 3: ..."],"formulasUsed":[{"expr":"formula","applied":"how used here","result":"what it gave"}],"finalAnswer":"complete restatement of answer","relatedConcepts":"2-3 sentences on related topics","beginnerExplanation":"real-life analogy"}`;
-
-  try{
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.05,maxOutputTokens:4000}})
-    });
-    const data = await resp.json();
-    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text||'';
-    // Aggressive JSON extraction
-    let cleaned = raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
-    // Try to extract JSON object even if there's surrounding text
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-    if(jsonMatch) cleaned = jsonMatch[0];
-    try{
-      const parsed = JSON.parse(cleaned);
-      // Validate — reject if directAnswer is just a single character/number
-      if(parsed.directAnswer && parsed.directAnswer.length < 3){
-        parsed.directAnswer = parsed.finalAnswer || parsed.stepByStep?.[0] || 'See step-by-step solution below';
-      }
-      return parsed;
-    }catch{
-      // JSON parse failed — wrap the raw text properly
-      const lines = raw.split('\n').filter(l=>l.trim());
-      return {
-        directAnswer: lines[0]||'See full solution below',
-        stepByStep: lines.length>1?lines:['Full response: '+raw],
-        formulasUsed:[],
-        finalAnswer: lines[lines.length-1]||raw,
-        relatedConcepts:'',
-        beginnerExplanation:''
-      };
-    }
-  }catch(e){
-    const rc=document.getElementById('response-container');
-    rc.innerHTML=`<div class="resp-card"><div class="resp-body"><div class="error-box">⚠ Network error: ${e.message}. Check internet connection or API key.</div></div></div>`;
-    return null;
-  }
-}
-
-// ─── RENDER RESPONSE ───────────────────────────────────
-function renderResponse(topic, r, usedAI){
-  const rc = document.getElementById('response-container');
-
-  const stepsHtml = (r.stepByStep||[]).map((s,i)=>`
-    <div class="step">
-      <div class="step-n">${i+1}</div>
-      <div class="step-t">${formatText(s)}</div>
-    </div>`).join('');
-
-  const formulasHtml = (r.formulasUsed||[]).map((f,i)=>{
-    const expr = typeof f==='object'?(f.expr||f):(f||'');
-    const applied = typeof f==='object'?(f.applied||''):'';
-    const result2 = typeof f==='object'?(f.result||''):'';
-    return `<div class="formula-item" id="fi-${i}" onclick="toggleFormula(${i})">
-      <div class="formula-top">
-        <span class="formula-expr">${escH(expr)}</span>
-        <span class="formula-expand-icon">▾</span>
-      </div>
-      ${(applied||result2)?`<div class="formula-detail"><strong>Applied:</strong> ${escH(applied)}<br><strong>Result:</strong> ${escH(result2)}</div>`:''}
-    </div>`;
-  }).join('');
-
-  const engineBadge = usedAI
-    ? `<span class="resp-badge" style="background:rgba(155,107,255,.15);border-color:rgba(155,107,255,.3);color:var(--accent2)">AI-Powered</span>`
-    : `<span class="resp-badge" style="background:rgba(32,224,138,.1);border-color:rgba(32,224,138,.3);color:var(--green)">✓ Local Engine — 100% Exact</span>`;
-
-  rc.innerHTML=`<div class="resp-card">
-    <div class="resp-head">
-      <div class="resp-head-left">
-        <div class="ai-pulse"></div>
-        <div class="resp-title">Solution Ready</div>
-      </div>
-      <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
-        <div class="resp-badge">Week ${topic.week} — ${topic.title.split(' ').slice(0,3).join(' ')}</div>
-        ${engineBadge}
-      </div>
-    </div>
-    <div class="resp-body">
-
-      <div class="answer-box">
-        <div class="answer-lbl">⚡ Direct Answer</div>
-        <div class="answer-val">${formatText(r.directAnswer||r.finalAnswer||'')}</div>
-      </div>
-
-      ${r.truthTableHtml?`<div class="sec open">
-        <div class="sec-hd" onclick="toggleSec(this)">
-          <div class="sec-hd-left"><span class="icon">📊</span> Truth Table</div>
-          <span class="sec-toggle">▾</span>
+    <!-- ========== NAVIGATION ========== -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center flex-shrink-0">
+                    <img src="https://z-cdn-media.chatglm.cn/files/6ff81dfa-93c3-46b7-a68b-5b795895e49b.png?auth_key=1876970550-f588c873a73b4f8eba144940c0af9fa5-0-9aa811b65a989622ae9247567e61d657" alt="Shanghai Travel & Tours Pvt Ltd" class="nav-logo-img">
+                </a>
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="#home" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Home</a>
+                    <a href="#about" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">About</a>
+                    <a href="#services" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Services</a>
+                    <a href="#requirements" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Requirements</a>
+                    <a href="#contact" class="nav-link px-4 py-2 text-sm font-medium rounded-lg">Contact</a>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="https://wa.me/923100059895" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-sm font-semibold rounded-xl shadow-lg shadow-orange-200/50 hover:shadow-orange-300 hover:scale-105 transition-all duration-300">
+                        <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>WhatsApp
+                    </a>
+                    <a href="https://wa.me/923100059895" target="_blank" class="sm:hidden w-10 h-10 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white flex items-center justify-center shadow-lg shadow-orange-200/50 hover:scale-105 transition-all duration-300 flex-shrink-0" aria-label="WhatsApp">
+                        <iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>
+                    </a>
+                    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0" aria-label="Toggle menu">
+                        <iconify-icon icon="mdi:menu" class="hamburger-icon text-2xl transition-colors" id="menuIcon"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+            <div id="mobileMenu" class="mobile-menu md:hidden">
+                <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 mt-1 mb-2 overflow-hidden">
+                    <a href="#home" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50"><iconify-icon icon="mdi:home" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Home</a>
+                    <a href="#about" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50"><iconify-icon icon="mdi:information" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>About</a>
+                    <a href="#services" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50"><iconify-icon icon="mdi:briefcase" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Services</a>
+                    <a href="#requirements" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium border-b border-gray-50"><iconify-icon icon="mdi:file-document" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Requirements</a>
+                    <a href="#contact" class="mobile-link block px-5 py-3.5 text-gray-700 hover:text-brand-orange hover:bg-brand-orange-50 text-sm font-medium"><iconify-icon icon="mdi:phone" class="text-brand-orange mr-2 text-base align-middle"></iconify-icon>Contact</a>
+                </div>
+            </div>
         </div>
-        <div class="sec-body">${r.truthTableHtml}</div>
-      </div>`:''}
+    </nav>
 
-      <div class="sec open">
-        <div class="sec-hd" onclick="toggleSec(this)">
-          <div class="sec-hd-left"><span class="icon">📋</span> Step-by-Step Solution</div>
-          <span class="sec-toggle">▾</span>
+    <!-- ========== HERO (UPDATED TEXT FROM IMAGE) ========== -->
+    <section id="home" class="hero-bg min-h-screen flex items-center relative">
+        <img src="https://z-cdn-media.chatglm.cn/files/d8a58ee3-0513-4b19-9199-5ed640757916.jpeg?auth_key=1876971118-9bc21c432587464f8fc7c85a4078c4e7-0-a924e5002f59bc7caac4c64eed313e2f" alt="Shanghai Skyline" class="hero-img">
+        <div class="hero-overlay"></div>
+
+        <div class="absolute top-20 right-10 w-72 h-72 bg-brand-orange/10 rounded-full blur-3xl animate-float z-[1]"></div>
+        <div class="absolute bottom-20 left-10 w-48 h-48 bg-white/5 rounded-full blur-2xl z-[1]" style="animation: float 8s ease-in-out infinite;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 md:py-32 relative z-10 w-full">
+            <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <!-- LEFT SIDE - Updated text from image -->
+                <div class="w-full">
+                    <div class="opacity-0 animate-fade-in-up">
+                        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-orange-200 text-xs font-semibold tracking-wider uppercase mb-6">
+                            <iconify-icon icon="mdi:shield-check" class="text-brand-orange"></iconify-icon>SECP Registered Company
+                        </span>
+                    </div>
+
+                    <h1 class="opacity-0 animate-fade-in-up-delay text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-extrabold text-white leading-[1.1] tracking-tight mb-5">
+                        Trusted China Visa<br><span class="gradient-text">Consultancy Partner</span>
+                    </h1>
+
+                    <p class="opacity-0 animate-fade-in-up-delay2 text-base sm:text-lg text-blue-100/80 font-light leading-relaxed mb-7 max-w-lg">
+                        Fast and reliable visa processing with complete guidance at every step.
+                    </p>
+
+                    <div class="opacity-0 animate-fade-in-up-delay2 flex flex-wrap gap-3 sm:gap-4 mb-10">
+                        <a href="#contact" class="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-2xl shadow-xl shadow-orange-900/30 hover:shadow-orange-900/50 hover:scale-105 transition-all duration-300 text-sm">
+                            <iconify-icon icon="mdi:file-document-edit" class="text-lg"></iconify-icon>Apply Now
+                        </a>
+                        <a href="https://wa.me/923100059895" target="_blank" class="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 glass-card text-white font-bold rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-sm">
+                            <iconify-icon icon="mdi:whatsapp" class="text-lg text-green-400"></iconify-icon>WhatsApp Us
+                        </a>
+                    </div>
+
+                    <!-- Why Choose Us - Inside Hero -->
+                    <div class="opacity-0 animate-fade-in-up-delay3">
+                        <h4 class="text-white/90 text-xs sm:text-sm font-bold tracking-wider uppercase mb-3 sm:mb-4 flex items-center gap-2">
+                            <span class="w-8 h-[2px] bg-brand-orange"></span>Why Choose Us
+                        </h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-brand-orange/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:lightning-bolt" class="text-brand-orange text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">Fast Visa Processing</span>
+                            </div>
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-400/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:account-group" class="text-blue-300 text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">Professional Team</span>
+                            </div>
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-green-400/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:compass" class="text-green-300 text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">Complete Guidance</span>
+                            </div>
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-purple-400/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:shield-check" class="text-purple-300 text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">Trusted Consultancy</span>
+                            </div>
+                            <div class="why-card rounded-xl sm:rounded-2xl px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-3 col-span-2 sm:col-span-1">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-yellow-400/20 flex items-center justify-center flex-shrink-0">
+                                    <iconify-icon icon="mdi:trending-up" class="text-yellow-300 text-sm sm:text-base"></iconify-icon>
+                                </div>
+                                <span class="text-white text-[10px] sm:text-xs font-semibold leading-tight">High Success Rate</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE - Glass Card -->
+                <div class="hidden lg:flex justify-center relative">
+                    <div class="relative">
+                        <div class="w-96 h-[500px] rounded-3xl glass-card p-8 flex flex-col justify-between animate-float">
+                            <div>
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mb-6 shadow-lg"><iconify-icon icon="mdi:passport" class="text-white text-3xl"></iconify-icon></div>
+                                <h3 class="text-2xl font-bold text-white mb-2">China Visa</h3>
+                                <p class="text-blue-100/60 text-sm leading-relaxed">Shanghai & all major cities covered. Tourist, Business & Work visas available.</p>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between py-3 border-t border-white/10"><span class="text-blue-100/60 text-sm">Processing Time</span><span class="text-white font-semibold text-sm">5-7 Working Days</span></div>
+                                <div class="flex items-center justify-between py-3 border-t border-white/10"><span class="text-blue-100/60 text-sm">Success Rate</span><span class="text-green-400 font-bold text-sm">99.2%</span></div>
+                                <div class="flex items-center justify-between py-3 border-t border-white/10"><span class="text-blue-100/60 text-sm">Starting From</span><span class="text-brand-orange font-bold text-lg">PKR 15,000</span></div>
+                            </div>
+                        </div>
+                        <div class="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-green-400 to-green-500 rounded-2xl flex flex-col items-center justify-center shadow-xl shadow-green-500/30" style="animation: float 4s ease-in-out infinite 1s;">
+                            <iconify-icon icon="mdi:check-bold" class="text-white text-2xl"></iconify-icon><span class="text-white text-[10px] font-bold mt-0.5">APPROVED</span>
+                        </div>
+                        <div class="absolute -bottom-6 -left-6 glass-card rounded-2xl px-5 py-3 flex items-center gap-2" style="animation: float 5s ease-in-out infinite 0.5s;">
+                            <div class="flex text-yellow-400"><iconify-icon icon="mdi:star" class="text-sm"></iconify-icon><iconify-icon icon="mdi:star" class="text-sm"></iconify-icon><iconify-icon icon="mdi:star" class="text-sm"></iconify-icon><iconify-icon icon="mdi:star" class="text-sm"></iconify-icon><iconify-icon icon="mdi:star" class="text-sm"></iconify-icon></div>
+                            <span class="text-white text-xs font-semibold">4.9/5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple Visa Process Label -->
+            <div class="opacity-0 animate-fade-in-up-delay3 mt-12 sm:mt-16 text-center">
+                <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full glass-card">
+                    <iconify-icon icon="mdi:arrow-right-circle" class="text-brand-orange text-lg hero-glow"></iconify-icon>
+                    <span class="text-white/90 text-sm font-semibold tracking-wide">Simple Visa Process</span>
+                    <iconify-icon icon="mdi:arrow-right-circle" class="text-brand-orange text-lg hero-glow"></iconify-icon>
+                </div>
+            </div>
         </div>
-        <div class="sec-body">${stepsHtml}</div>
-      </div>
 
-      ${formulasHtml?`<div class="sec open">
-        <div class="sec-hd" onclick="toggleSec(this)">
-          <div class="sec-hd-left"><span class="icon">🔢</span> Formulas Used (click to expand)</div>
-          <span class="sec-toggle">▾</span>
+        <div class="absolute bottom-0 left-0 right-0 w-full z-10">
+            <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full block" preserveAspectRatio="none"><path d="M0 80L60 73.3C120 66.7 240 53.3 360 46.7C480 40 600 40 720 46.7C840 53.3 960 66.7 1080 66.7C1200 66.7 1320 53.3 1380 46.7L1440 40V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0Z" fill="white"/></svg>
         </div>
-        <div class="sec-body"><div class="formula-list">${formulasHtml}</div></div>
-      </div>`:''}
+    </section>
 
-      ${r.finalAnswer?`<div class="sec open">
-        <div class="sec-hd" onclick="toggleSec(this)">
-          <div class="sec-hd-left"><span class="icon">✅</span> Final Answer</div>
-          <span class="sec-toggle">▾</span>
+    <!-- ========== TRUST STATS ========== -->
+    <section class="py-12 sm:py-16 bg-white relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+                <div class="observe-fade text-center p-4 sm:p-6 rounded-2xl bg-brand-orange-50 border border-orange-100" data-delay="0"><div class="text-2xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">10+</div><div class="text-xs sm:text-sm text-gray-500 font-medium">Years Experience</div></div>
+                <div class="observe-fade text-center p-4 sm:p-6 rounded-2xl bg-brand-blue-50 border border-blue-100" data-delay="100"><div class="text-2xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">5,000+</div><div class="text-xs sm:text-sm text-gray-500 font-medium">Visas Processed</div></div>
+                <div class="observe-fade text-center p-4 sm:p-6 rounded-2xl bg-brand-orange-50 border border-orange-100" data-delay="200"><div class="text-2xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">99.2%</div><div class="text-xs sm:text-sm text-gray-500 font-medium">Success Rate</div></div>
+                <div class="observe-fade text-center p-4 sm:p-6 rounded-2xl bg-brand-blue-50 border border-blue-100" data-delay="300"><div class="text-2xl sm:text-4xl font-extrabold text-brand-blue-dark mb-1">4.9</div><div class="text-xs sm:text-sm text-gray-500 font-medium">Customer Rating</div></div>
+            </div>
         </div>
-        <div class="sec-body">
-          <div class="answer-box"><div class="answer-lbl">Result</div><div class="answer-val">${formatText(r.finalAnswer)}</div></div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section id="about" class="py-16 sm:py-20 lg:py-28 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16 observe-fade">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">About Us</span>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Pakistan's Trusted Partner for <span class="gradient-text">China Visas</span></h2>
+                <div class="section-divider mx-auto mb-6"></div>
+                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">A legally registered company with SECP, dedicated to providing professional China visa services.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+                <div class="observe-left space-y-6">
+                    <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10">
+                        <img src="https://picsum.photos/seed/shanghai-skyline-bund/700/420.jpg" alt="Shanghai Skyline" class="w-full h-64 sm:h-[420px] object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-blue-dark/60 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6">
+                            <div class="glass-card rounded-xl sm:rounded-2xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-white text-lg sm:text-xl"></iconify-icon></div>
+                                <div><div class="text-white font-bold text-xs sm:text-sm">Islamabad, Pakistan</div><div class="text-blue-100/60 text-[10px] sm:text-xs">Your gateway to China</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-lg border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3 sm:gap-4">
+                                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200"><iconify-icon icon="mdi:identifier" class="text-white text-xl sm:text-2xl"></iconify-icon></div>
+                                <div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Identification No.</h4><p class="text-gray-400 text-[10px] sm:text-xs">SECP Registration</p></div>
+                            </div>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-green-50 text-green-600 text-[9px] sm:text-[10px] font-bold rounded-full uppercase tracking-wider flex-shrink-0"><iconify-icon icon="mdi:check-decagram" class="text-xs"></iconify-icon>Verified</span>
+                        </div>
+                        <div class="mt-4 sm:mt-5 bg-gradient-to-r from-gray-50 to-brand-blue-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-4 sm:py-5 border border-gray-100 text-center">
+                            <span class="id-number text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-widest">0232629</span>
+                        </div>
+                        <p class="text-gray-400 text-[10px] sm:text-xs mt-2 sm:mt-3 text-center">Registered with Securities and Exchange Commission of Pakistan under Companies Act 2017</p>
+                    </div>
+                </div>
+                <div class="observe-right">
+                    <p class="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base"><strong class="text-gray-800">Shanghai Travel & Tours (Private) Limited</strong> is a premier visa consultancy based in Islamabad, Pakistan, specializing in China visa processing. Legally incorporated under the <strong class="text-gray-800">Companies Act 2017</strong> with the Securities and Exchange Commission of Pakistan (SECP).</p>
+                    <p class="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">Founded by <strong class="text-gray-800">Salman Sadiq (CEO)</strong>, our company has helped thousands of Pakistani citizens successfully obtain their China visas with over a decade of experience.</p>
+                    <p class="text-gray-600 leading-relaxed mb-6 sm:mb-8 text-sm sm:text-base">Our dedicated team ensures that every application is handled with precision, maximizing your chances of approval with complete transparency.</p>
+                    <div class="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                        <div class="trust-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm"><div class="flex items-center gap-3 mb-2 sm:mb-3 pl-3"><iconify-icon icon="mdi:target" class="text-brand-orange text-lg sm:text-xl"></iconify-icon><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Our Mission</h4></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed pl-3">To make China visa accessible and stress-free for every Pakistani citizen.</p></div>
+                        <div class="trust-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm"><div class="flex items-center gap-3 mb-2 sm:mb-3 pl-3"><iconify-icon icon="mdi:eye-outline" class="text-brand-blue text-lg sm:text-xl"></iconify-icon><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Our Vision</h4></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed pl-3">To become the leading China visa consultancy in Pakistan with global standards.</p></div>
+                    </div>
+                    <div class="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-100 mb-6 sm:mb-8">
+                        <h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-3 sm:mb-4 flex items-center gap-2"><iconify-icon icon="mdi:star-four-points" class="text-brand-orange"></iconify-icon>Why Choose Us</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">SECP Registered Company</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">10+ Years Experience</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">99.2% Success Rate</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">Affordable Fees</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">Form Filling Assistance</span></div>
+                            <div class="flex items-center gap-2 sm:gap-2.5"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-600 text-xs sm:text-sm">Direct Embassy Submission</span></div>
+                        </div>
+                    </div>
+                    <a href="#contact" class="inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-gradient-to-r from-brand-blue to-brand-blue-dark text-white font-bold rounded-xl shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:scale-105 transition-all duration-300 text-xs sm:text-sm">Get in Touch<iconify-icon icon="mdi:arrow-right" class="text-lg"></iconify-icon></a>
+                </div>
+            </div>
         </div>
-      </div>`:''}
+    </section>
 
-      ${r.relatedConcepts?`<div class="sec">
-        <div class="sec-hd" onclick="toggleSec(this)">
-          <div class="sec-hd-left"><span class="icon">🔗</span> Related Concepts</div>
-          <span class="sec-toggle">▾</span>
+    <!-- ========== OUR TEAM ========== -->
+    <section id="team" class="py-16 sm:py-20 lg:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16 observe-fade">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Our Team</span>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Meet the <span class="gradient-text">People Behind</span></h2>
+                <div class="section-divider mx-auto mb-6"></div>
+                <p class="text-gray-500 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">The dedicated professionals who make your China visa journey seamless and successful.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <div class="team-card observe-scale bg-white rounded-2xl sm:rounded-3xl border-2 border-brand-orange/20 p-6 sm:p-8 shadow-lg shadow-orange-50 relative text-center sm:col-span-2 lg:col-span-1" data-delay="0">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-xs font-bold rounded-full flex items-center gap-1.5"><iconify-icon icon="mdi:crown" class="text-sm"></iconify-icon>CEO</div>
+                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-orange-200/50 mt-2 border-4 border-white"><img src="https://z-cdn-media.chatglm.cn/files/f9337705-b2d4-4b82-a9ae-828a9761786a.jpg?auth_key=1876832679-1e1d356e198b4ad1a50e6ef02743ae40-0-bf78bdf8674c0b6a87bdf620cea29537" alt="Salman Sadiq - CEO" class="w-full h-full object-cover"></div>
+                    <h3 class="text-lg sm:text-xl font-extrabold text-brand-blue-dark mb-1">Salman Sadiq</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-orange/10 text-brand-orange text-xs font-bold rounded-full mb-4 sm:mb-5">Chief Executive Officer</span>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Founder of Shanghai Travel & Tours with over 10 years of expertise in China visa consultancy.</p>
+                    <div class="flex items-center justify-center gap-3"><a href="https://wa.me/923100059895" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a><a href="tel:03100059895" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a></div>
+                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-orange-100"><div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-orange text-sm"></iconify-icon><span>03100059895</span></div></div>
+                </div>
+                <div class="team-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm text-center" data-delay="150">
+                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-blue-200/50 border-4 border-white"><img src="https://z-cdn-media.chatglm.cn/files/b1dd1dae-ed99-4142-9fde-fa2253d8d91d.jpeg?auth_key=1876871265-3b119715d03e41f297f275a3567192cf-0-7b2134441d3dd30d084b36b8bda54213" alt="Afzaal Minhas" class="w-full h-full object-cover"></div>
+                    <h3 class="text-lg sm:text-xl font-extrabold text-brand-blue-dark mb-1">Afzaal Minhas</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-4 sm:mb-5">Director</span>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Experienced professional dedicated to providing seamless visa processing.</p>
+                    <div class="flex items-center justify-center gap-3"><a href="https://wa.me/923100059893" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a><a href="tel:03100059893" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a></div>
+                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-100"><div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon><span>0310 0059893</span></div></div>
+                </div>
+                <div class="team-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm text-center" data-delay="300">
+                    <div class="team-avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6 shadow-xl shadow-blue-200/50 border-4 border-white"><img src="https://z-cdn-media.chatglm.cn/files/7472852b-2faa-421e-a46b-686dc0d87fc5.jpeg?auth_key=1876870678-077b5f76d74f470b8d83baeb34a07ffe-0-957605c34e0695be4726495ed3d3a85b" alt="Shakeeb Hussain" class="w-full h-full object-cover"></div>
+                    <h3 class="text-lg sm:text-xl font-extrabold text-brand-blue-dark mb-1">Shakeeb Hussain</h3>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-blue-50 text-brand-blue text-xs font-bold rounded-full mb-4 sm:mb-5">Director</span>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Committed to delivering excellent client service and smooth embassy submissions.</p>
+                    <div class="flex items-center justify-center gap-3"><a href="https://wa.me/923118666935" target="_blank" class="w-10 h-10 rounded-xl bg-green-50 hover:bg-green-100 flex items-center justify-center transition-colors" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-green-500 text-lg"></iconify-icon></a><a href="tel:03118666935" class="w-10 h-10 rounded-xl bg-brand-blue-50 hover:bg-brand-blue/10 flex items-center justify-center transition-colors" aria-label="Call"><iconify-icon icon="mdi:phone" class="text-brand-blue text-lg"></iconify-icon></a></div>
+                    <div class="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-100"><div class="flex items-center justify-center gap-2 text-gray-400 text-xs"><iconify-icon icon="mdi:phone" class="text-brand-blue text-sm"></iconify-icon><span>0311 8666935</span></div></div>
+                </div>
+            </div>
         </div>
-        <div class="sec-body"><div class="text-content">${formatText(r.relatedConcepts)}</div></div>
-      </div>`:''}
+    </section>
 
-      ${r.beginnerExplanation?`<div class="sec">
-        <div class="sec-hd" onclick="toggleSec(this)">
-          <div class="sec-hd-left"><span class="icon">💡</span> Beginner-Friendly Explanation</div>
-          <span class="sec-toggle">▾</span>
+    <!-- ========== SERVICES ========== -->
+    <section id="services" class="py-16 sm:py-20 lg:py-28 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16 observe-fade">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-brand-blue-50 text-brand-blue text-xs font-bold tracking-wider uppercase mb-4">Our Services</span>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">China Visa <span class="gradient-text">Categories</span></h2>
+                <div class="section-divider mx-auto mb-6"></div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+                <div class="service-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm" data-delay="0">
+                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400"><iconify-icon icon="mdi:palm-tree" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div>
+                    <h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-2 sm:mb-3">Tourist Visa (L)</h3>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Perfect for leisure travel, sightseeing, and visiting friends or family in China.</p>
+                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6"><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Single/Double entry</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Hotel booking assistance</li></ul>
+                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-gray-100"><div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div><a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a></div>
+                </div>
+                <div class="service-card observe-scale bg-white rounded-2xl sm:rounded-3xl border-2 border-brand-orange/20 p-6 sm:p-8 shadow-lg shadow-orange-50 relative" data-delay="150">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white text-[10px] sm:text-xs font-bold rounded-full whitespace-nowrap">Most Popular</div>
+                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400"><iconify-icon icon="mdi:briefcase" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div>
+                    <h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-2 sm:mb-3">Business Visa (M)</h3>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">Ideal for business meetings, trade fairs, and Canton Fair participants.</p>
+                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6"><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 30-90 days</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Multiple entry available</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Invitation letter help</li></ul>
+                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-orange-100"><div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">5-7 Working Days</span></div><a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a></div>
+                </div>
+                <div class="service-card observe-scale bg-white rounded-2xl sm:rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm" data-delay="300">
+                    <div class="service-icon w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center mb-5 sm:mb-6 transition-all duration-400"><iconify-icon icon="mdi:hard-hat" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div>
+                    <h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-2 sm:mb-3">Work Visa (Z)</h3>
+                    <p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">For employment in China. Complete work permit and residence permit assistance.</p>
+                    <ul class="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6"><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Duration: 1 Year+</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Work permit included</li><li class="flex items-center gap-2 text-xs sm:text-sm text-gray-600"><iconify-icon icon="mdi:check-circle" class="text-green-500 flex-shrink-0"></iconify-icon>Residence permit help</li></ul>
+                    <div class="flex items-center justify-between pt-4 sm:pt-5 border-t border-gray-100"><div><span class="text-[10px] sm:text-xs text-gray-400 block">Processing Time</span><span class="text-xs sm:text-sm font-bold text-brand-blue-dark">10-15 Working Days</span></div><a href="#contact" class="inline-flex items-center gap-1 text-brand-orange text-xs sm:text-sm font-semibold hover:gap-2 transition-all">Apply <iconify-icon icon="mdi:arrow-right" class="text-sm sm:text-base"></iconify-icon></a></div>
+                </div>
+            </div>
         </div>
-        <div class="sec-body"><div class="beginner-box">${formatText(r.beginnerExplanation)}</div></div>
-      </div>`:''}
+    </section>
 
-    </div>
-  </div>`;
-}
+    <!-- ========== REQUIREMENTS ========== -->
+    <section id="requirements" class="py-16 sm:py-20 lg:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16 observe-fade">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Documents Required</span>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Visa <span class="gradient-text">Requirements</span></h2>
+                <div class="section-divider mx-auto mb-6"></div>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="0"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:passport" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-blue text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">1</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Original Passport</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Your current valid original passport. Must be submitted at the time of application processing.</p></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="80"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:book-open-variant" class="text-brand-blue text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-orange text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">2</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Old Passport</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Your previous/expired passport. Required to verify travel history and previous visa records.</p></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="160"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:camera" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-blue text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">3</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Passport Size Photo</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Recent passport-size photograph with <strong class="text-gray-700">white background</strong>. Clear, without glasses.</p></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="240"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:card-account-details" class="text-brand-blue text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-orange text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">4</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">CNIC Copy</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Clear copy of your valid CNIC. Both front and back sides required.</p></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm relative" data-delay="320"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:shield-account" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-blue text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">5</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Police Character Certificate</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3">Certificate covering <strong class="text-gray-700">from since birth to today</strong>.</p><div class="important-note rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3"><div class="flex items-start gap-2"><iconify-icon icon="mdi:alert-circle" class="text-brand-orange text-sm sm:text-base flex-shrink-0 mt-0.5"></iconify-icon><p class="text-brand-orange-dark text-[10px] sm:text-xs font-semibold leading-relaxed"><strong>Apostille attestation from MOFA</strong> is required on this certificate.</p></div></div></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm" data-delay="400"><div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:bank" class="text-brand-blue text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-orange text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">6</span><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Bank Statement</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3">Personal account statement of <strong class="text-gray-700">last 6 months</strong>.</p><div class="flex items-center gap-2 px-3 py-2 bg-red-50 rounded-lg border border-red-100"><iconify-icon icon="mdi:information" class="text-red-500 text-xs sm:text-sm flex-shrink-0"></iconify-icon><span class="text-red-700 text-[10px] sm:text-xs font-semibold">Min balance: 1 Million PKR</span></div></div>
+                <div class="observe-scale doc-card bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-100 shadow-sm sm:col-span-2 lg:col-span-3" data-delay="480"><div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4"><div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-brand-orange/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account-group" class="text-brand-orange text-2xl sm:text-3xl"></iconify-icon></div><div class="flex items-center gap-2"><span class="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-blue text-white text-[10px] sm:text-xs font-bold flex items-center justify-center">7</span><h4 class="font-bold text-brand-blue-dark text-sm sm:text-lg">Family Details for Application Form</h4></div></div><p class="text-gray-500 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4">Complete family details required for the China visa application form:</p><div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3"><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:account" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Father's name</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:account" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Mother's name</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:account-heart" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Spouse name</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:human-male-child" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Children & DOB</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:calendar" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Your DOB</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:map-marker" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Place of birth</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:translate" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Nationality</span></div><div class="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-gray-50 rounded-lg sm:rounded-xl"><iconify-icon icon="mdi:briefcase" class="text-brand-orange text-sm sm:text-base flex-shrink-0"></iconify-icon><span class="text-gray-700 text-[11px] sm:text-sm font-medium">Occupation</span></div></div></div>
+            </div>
+            <div class="observe-fade mt-8 sm:mt-12 bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 text-white relative overflow-hidden"><div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div><div class="absolute bottom-0 left-0 w-32 h-32 bg-brand-orange/10 rounded-full translate-y-1/2 -translate-x-1/2"></div><div class="relative z-10 flex flex-col sm:flex-row items-center gap-5 sm:gap-6 text-center sm:text-left"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:whatsapp" class="text-green-400 text-2xl sm:text-3xl"></iconify-icon></div><div class="flex-1"><h4 class="font-bold text-lg sm:text-xl mb-1">Need Help with Documents?</h4><p class="text-blue-100/70 text-xs sm:text-sm leading-relaxed">Don't worry if any document seems complicated — especially the Police Character Certificate with MOFA apostille. We'll guide you step by step.</p></div><a href="https://wa.me/923100059895?text=Hi, I need help with China visa documents." target="_blank" class="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors text-xs sm:text-sm whitespace-nowrap flex-shrink-0"><iconify-icon icon="mdi:whatsapp" class="text-lg sm:text-xl"></iconify-icon>Ask Us Now</a></div></div>
+        </div>
+    </section>
 
-function toggleSec(hd){ hd.closest('.sec').classList.toggle('open'); }
-function toggleFormula(i){ document.getElementById('fi-'+i).classList.toggle('fx-open'); }
+    <!-- ========== HOW IT WORKS ========== -->
+    <section class="py-16 sm:py-20 lg:py-28 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Process</span><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">How It <span class="gradient-text">Works</span></h2><div class="section-divider mx-auto mb-6"></div></div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+                <div class="observe-fade text-center relative" data-delay="0"><div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg shadow-orange-200"><span class="text-white text-base sm:text-xl font-extrabold">1</span></div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-1 sm:mb-2">Contact Us</h4><p class="text-gray-500 text-[11px] sm:text-sm leading-relaxed">Reach out via WhatsApp or visit our office.</p><div class="hidden lg:block absolute top-6 sm:top-8 left-[60%] w-[80%] border-t-2 border-dashed border-orange-200"></div></div>
+                <div class="observe-fade text-center relative" data-delay="150"><div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg shadow-blue-200"><span class="text-white text-base sm:text-xl font-extrabold">2</span></div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-1 sm:mb-2">Submit Documents</h4><p class="text-gray-500 text-[11px] sm:text-sm leading-relaxed">We verify and help with all forms.</p><div class="hidden lg:block absolute top-6 sm:top-8 left-[60%] w-[80%] border-t-2 border-dashed border-blue-200"></div></div>
+                <div class="observe-fade text-center relative" data-delay="300"><div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg shadow-orange-200"><span class="text-white text-base sm:text-xl font-extrabold">3</span></div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-1 sm:mb-2">We Process</h4><p class="text-gray-500 text-[11px] sm:text-sm leading-relaxed">We submit to embassy and track progress.</p><div class="hidden lg:block absolute top-6 sm:top-8 left-[60%] w-[80%] border-t-2 border-dashed border-orange-200"></div></div>
+                <div class="observe-fade text-center" data-delay="450"><div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-lg shadow-blue-200"><span class="text-white text-base sm:text-xl font-extrabold">4</span></div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm mb-1 sm:mb-2">Get Your Visa</h4><p class="text-gray-500 text-[11px] sm:text-sm leading-relaxed">Collect your passport. Ready to travel!</p></div>
+            </div>
+        </div>
+    </section>
 
-function formatText(s){
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-    .replace(/`([^`]+)`/g,'<code>$1</code>')
-    .replace(/\n/g,'<br>');
-}
-function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    <!-- ========== TESTIMONIALS ========== -->
+    <section class="py-16 sm:py-20 lg:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-blue-50 text-brand-blue text-xs font-bold tracking-wider uppercase mb-4">Testimonials</span><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">What Our <span class="gradient-text">Clients Say</span></h2><div class="section-divider mx-auto mb-6"></div></div>
+            <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+                <div class="testimonial-card observe-scale bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm" data-delay="0"><div class="flex text-yellow-400 mb-3 sm:mb-4 text-sm sm:text-base"><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon></div><p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">"Excellent service! Salman Sadiq and his team made the entire process so smooth. I got my China business visa in just 5 days. Highly recommended!"</p><div class="flex items-center gap-3 pt-4 sm:pt-5 border-t border-gray-100"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center text-white font-bold text-xs sm:text-sm">AK</div><div><div class="font-bold text-brand-blue-dark text-xs sm:text-sm">Ahmed Khan</div><div class="text-gray-400 text-[10px] sm:text-xs">Businessman, Lahore</div></div></div></div>
+                <div class="testimonial-card observe-scale bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm" data-delay="150"><div class="flex text-yellow-400 mb-3 sm:mb-4 text-sm sm:text-base"><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon></div><p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">"I was worried about my first China visa, but Shanghai Travel guided me through every step. Very professional and affordable!"</p><div class="flex items-center gap-3 pt-4 sm:pt-5 border-t border-gray-100"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center text-white font-bold text-xs sm:text-sm">SF</div><div><div class="font-bold text-brand-blue-dark text-xs sm:text-sm">Sara Fatima</div><div class="text-gray-400 text-[10px] sm:text-xs">Tourist, Islamabad</div></div></div></div>
+                <div class="testimonial-card observe-scale bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm" data-delay="300"><div class="flex text-yellow-400 mb-3 sm:mb-4 text-sm sm:text-base"><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star"></iconify-icon><iconify-icon icon="mdi:star-half-full"></iconify-icon></div><p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">"Applied for a work visa. The team helped with all paperwork including police certificate and MOFA attestation. Got approved!"</p><div class="flex items-center gap-3 pt-4 sm:pt-5 border-t border-gray-100"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-brand-orange to-brand-blue flex items-center justify-center text-white font-bold text-xs sm:text-sm">MR</div><div><div class="font-bold text-brand-blue-dark text-xs sm:text-sm">Muhammad Rizwan</div><div class="text-gray-400 text-[10px] sm:text-xs">Engineer, Rawalpindi</div></div></div></div>
+            </div>
+        </div>
+    </section>
 
-// ─── HISTORY ───────────────────────────────────────────
-function saveHistory(topic, result){
-  const entry={id:Date.now(),question:buildDisplayQuestion(),topic:topic.title,topicWeek:topic.week,preview:result.directAnswer||result.finalAnswer,full:result,date:new Date().toLocaleString()};
-  historyData.unshift(entry);
-  if(historyData.length>50) historyData.pop();
-  localStorage.setItem('ds_history',JSON.stringify(historyData));
-  solvedCount++;
-  localStorage.setItem('ds_solved',solvedCount);
-  document.getElementById('solved-count').textContent=solvedCount;
-  updateHistCount();
-}
+    <!-- ========== CONTACT ========== -->
+    <section id="contact" class="py-16 sm:py-20 lg:py-28 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 sm:mb-16 observe-fade"><span class="inline-block px-4 py-1.5 rounded-full bg-brand-orange/10 text-brand-orange text-xs font-bold tracking-wider uppercase mb-4">Get in Touch</span><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-blue-dark tracking-tight mb-4">Contact <span class="gradient-text">Us</span></h2><div class="section-divider mx-auto mb-6"></div></div>
+            <div class="grid lg:grid-cols-5 gap-6 sm:gap-10">
+                <div class="lg:col-span-2 observe-left">
+                    <div class="bg-gradient-to-br from-brand-blue to-brand-blue-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden"><div class="absolute -bottom-6 -right-6 w-32 h-32 bg-white/5 rounded-full"></div><div class="relative z-10"><h3 class="font-bold text-lg sm:text-xl mb-5 sm:mb-6">Shanghai Travel & Tours</h3><div class="space-y-4 sm:space-y-5"><div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:account" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">CEO</div><div class="font-semibold text-xs sm:text-sm">Salman Sadiq</div></div></div><div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:phone" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Phone</div><a href="tel:03100059895" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors block">03100059895</a><a href="tel:03118666935" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors block">0311 8666935</a></div></div><div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:email" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Email</div><a href="mailto:shanghaitravel92@hotmail.com" class="font-semibold text-xs sm:text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></div></div><div class="flex items-start gap-3 sm:gap-4"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-brand-orange text-lg sm:text-xl"></iconify-icon></div><div><div class="text-blue-100/60 text-[10px] sm:text-xs font-medium mb-0.5">Office Address</div><div class="font-semibold text-xs sm:text-sm leading-relaxed">Office 1-A, Ahmed Center, Main Park Road Chatha Bakhtawar, Next to Gerrys Building, Islamabad</div></div></div></div><a href="https://wa.me/923100059895" target="_blank" class="mt-6 sm:mt-8 inline-flex items-center gap-2 w-full justify-center px-5 sm:px-6 py-3 sm:py-3.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-colors text-xs sm:text-sm"><iconify-icon icon="mdi:whatsapp" class="text-lg sm:text-xl"></iconify-icon>Chat on WhatsApp</a></div></div>
+                </div>
+                <div class="lg:col-span-3 observe-right">
+                    <form id="contactForm" class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-10 border border-gray-100"><h3 class="text-lg sm:text-xl font-bold text-brand-blue-dark mb-1 sm:mb-2">Send Us a Message</h3><p class="text-gray-400 text-xs sm:text-sm mb-5 sm:mb-8">Fill out the form and we'll get back to you within hours.</p><div class="grid sm:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5"><div><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Full Name *</label><input type="text" id="formName" required placeholder="Your full name" class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 placeholder-gray-400 transition-all"></div><div><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Phone Number *</label><input type="tel" id="formPhone" required placeholder="+92 3XX XXXXXXX" class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 placeholder-gray-400 transition-all"></div></div><div class="mb-4 sm:mb-5"><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Visa Type</label><select id="formVisaType" class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 transition-all"><option value="">Select visa type</option><option value="tourist">Tourist Visa (L)</option><option value="business">Business Visa (M)</option><option value="work">Work Visa (Z)</option><option value="other">Other / Not Sure</option></select></div><div class="mb-5 sm:mb-6"><label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">Your Message *</label><textarea id="formMessage" required rows="4" placeholder="Tell us about your visa requirements..." class="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border border-gray-200 bg-white text-xs sm:text-sm text-gray-800 placeholder-gray-400 transition-all resize-none"></textarea></div><button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-brand-orange to-brand-orange-dark text-white font-bold rounded-xl shadow-lg shadow-orange-200 hover:shadow-orange-300 hover:scale-105 transition-all duration-300 text-xs sm:text-sm"><iconify-icon icon="mdi:send" class="text-lg"></iconify-icon>Send Message</button></form>
+                </div>
+            </div>
+            <div class="observe-fade mt-8 sm:mt-12 rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-200 shadow-sm relative">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-200 gap-2 sm:gap-0">
+                    <div class="flex items-center gap-2 sm:gap-3"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:map-marker" class="text-red-500 text-lg sm:text-xl"></iconify-icon></div><div><h4 class="font-bold text-brand-blue-dark text-xs sm:text-sm">Shanghai Travel & Tours (Pvt) Ltd</h4><p class="text-gray-400 text-[10px] sm:text-xs hidden sm:block">Office 1-A, Ahmed Center, Park Rd, Chatta Bakhtawar, Islamabad</p></div></div>
+                    <a href="https://maps.google.com?q=Office%201-A,%20Shanghai%20Travel%20and%20Tours%20(Pvt)%20ltd,%20ahmad%20center,%20Park%20Rd,%20Chatta%20Bakhtawar,%20Islamabad,%2044000&ftid=0x38dfeb613308a5ef:0x1c199bf2d523ca13&entry=gps&shh=CAE&lucs=,94259550,94297699,94284499,94231188,94280568,47071704,94218641,94282134,94286869&g_st=iw" target="_blank" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white text-[10px] sm:text-xs font-semibold rounded-lg transition-colors flex-shrink-0"><iconify-icon icon="mdi:directions" class="text-sm sm:text-base"></iconify-icon>Get Directions</a>
+                </div>
+                <div class="relative">
+                    <iframe src="https://maps.google.com/maps?q=Office+1-A,+Shanghai+Travel+and+Tours+(Pvt)+ltd,+ahmad+center,+Park+Rd,+Chatta+Bakhtawar,+Islamabad,+44000&t=&z=17&ie=UTF8&iwloc=&output=embed" width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full" title="Office Location"></iframe>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[90%] pointer-events-none z-10 flex flex-col items-center"><div class="map-red-pin w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-500 flex items-center justify-center shadow-lg shadow-red-500/40 border-[3px] border-white"><iconify-icon icon="mdi:map-marker" class="text-white text-xl sm:text-2xl"></iconify-icon></div><div class="w-3 h-3 bg-red-500 rotate-45 -mt-1.5 shadow-md shadow-red-500/30"></div><div class="mt-1 px-3 py-1.5 bg-white rounded-lg shadow-lg shadow-gray-300/50 border border-gray-100 whitespace-nowrap"><p class="text-[10px] sm:text-xs font-bold text-gray-800">Shanghai Travel & Tours</p><p class="text-[8px] sm:text-[10px] text-gray-500">Office 1-A, Ahmed Center</p></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-function buildDisplayQuestion(){
-  if(selectedTopic===null) return document.getElementById('user-input')?.value||'';
-  const panel=PANEL_MAP[selectedTopic]||'general';
-  if(panel==='sets') return `Set A={${document.getElementById('setA').value}}, B={${document.getElementById('setB').value}} — ${activeSetOp}`;
-  if(panel==='relations') return `A={${document.getElementById('relSet').value}}, R={${document.getElementById('relPairs').value}} — ${activeRelOp}`;
-  if(panel==='logic') return document.getElementById('logic-expr').value;
-  if(panel==='proof') return document.getElementById('proof-stmt').value;
-  return document.getElementById('user-input').value;
-}
+    <!-- ========== CTA ========== -->
+    <section class="py-16 sm:py-20 bg-gradient-to-br from-brand-blue via-brand-blue-dark to-brand-blue relative overflow-hidden"><div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 30px 30px;"></div><div class="absolute top-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-brand-orange/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 observe-fade"><div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 text-orange-200 text-[10px] sm:text-xs font-semibold tracking-wider uppercase mb-4 sm:mb-6"><iconify-icon icon="mdi:clock-fast" class="text-brand-orange"></iconify-icon>Don't Delay Your Travel Plans</div><h2 class="text-2xl sm:text-3xl lg:text-5xl font-extrabold text-white tracking-tight mb-5 sm:mb-6 leading-tight">Ready to Get Your <span class="text-brand-orange">China Visa?</span></h2><p class="text-blue-100/70 text-sm sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto">Visit our office or contact us today for a free consultation.</p><div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4"><a href="https://wa.me/923100059895?text=Hi, I want to apply for a China visa." target="_blank" class="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl sm:rounded-2xl shadow-xl shadow-green-500/30 hover:scale-105 transition-all duration-300 text-xs sm:text-sm"><iconify-icon icon="mdi:whatsapp" class="text-lg sm:text-xl"></iconify-icon>WhatsApp: 03100059895</a><a href="tel:03100059895" class="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 glass-card text-white font-bold rounded-xl sm:rounded-2xl hover:bg-white/15 hover:scale-105 transition-all duration-300 text-xs sm:text-sm"><iconify-icon icon="mdi:phone" class="text-lg sm:text-xl text-brand-orange"></iconify-icon>Call Now</a></div></div></section>
 
-function renderHistory(){
-  const l=document.getElementById('history-list');
-  if(!historyData.length){
-    l.innerHTML=`<div class="hist-empty"><div style="font-size:2.5rem;margin-bottom:1rem;opacity:.3">🕒</div><div style="font-size:1rem;font-family:'Space Grotesk',sans-serif;margin-bottom:.4rem">No history yet</div><div style="font-size:.82rem">Solve problems to see them here.</div></div>`;
-    return;
-  }
-  l.innerHTML=`<div class="hist-items">${historyData.map(h=>`
-    <div class="hist-card">
-      <div class="hist-meta">
-        <span>${h.date}</span>
-        <span class="hist-topic-tag">Week ${h.topicWeek||'?'}: ${(h.topic||'').split(' ').slice(0,3).join(' ')}</span>
-      </div>
-      <div class="hist-q">${escH(h.question||'')}</div>
-      <div class="hist-prev">${escH(h.preview||'')}</div>
-      <div class="hist-actions"><button class="hist-use" onclick="reuseHistory(${h.id})">↩ Re-solve</button></div>
-    </div>`).join('')}</div>`;
-}
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+                <div class="col-span-2 sm:col-span-2 lg:col-span-1">
+                    <div class="flex items-center gap-2 sm:gap-3 mb-5"><img src="https://z-cdn-media.chatglm.cn/files/6ff81dfa-93c3-46b7-a68b-5b795895e49b.png?auth_key=1876970550-f588c873a73b4f8eba144940c0af9fa5-0-9aa811b65a989622ae9247567e61d657" alt="Shanghai Travel & Tours" class="footer-logo-img"></div>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed mb-5">Your trusted partner for China visa services in Islamabad. SECP registered.</p>
+                    <div class="flex gap-3"><a href="https://www.facebook.com/shanghaitravel92/" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-600/20 flex items-center justify-center" aria-label="Facebook"><iconify-icon icon="mdi:facebook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon></a><a href="https://wa.me/923100059895" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 flex items-center justify-center" aria-label="WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-gray-400 hover:text-green-400 text-lg"></iconify-icon></a><a href="mailto:shanghaitravel92@hotmail.com" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-500/20 flex items-center justify-center" aria-label="Email"><iconify-icon icon="mdi:microsoft-outlook" class="text-gray-400 hover:text-blue-400 text-lg"></iconify-icon></a><a href="https://maps.google.com?q=Office%201-A,%20Shanghai%20Travel%20and%20Tours%20(Pvt)%20ltd,%20ahmad%20center,%20Park%20Rd,%20Chatta%20Bakhtawar,%20Islamabad,%2044000&ftid=0x38dfeb613308a5ef:0x1c199bf2d523ca13&entry=gps&g_st=iw" target="_blank" class="social-icon w-9 h-9 rounded-lg bg-white/5 hover:bg-red-500/20 flex items-center justify-center" aria-label="Location"><iconify-icon icon="mdi:map-marker" class="text-gray-400 hover:text-red-400 text-lg"></iconify-icon></a></div>
+                </div>
+                <div><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Quick Links</h4><ul class="space-y-2.5 sm:space-y-3"><li><a href="#home" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Home</a></li><li><a href="#about" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">About Us</a></li><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Services</a></li><li><a href="#requirements" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Requirements</a></li><li><a href="#contact" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Contact</a></li></ul></div>
+                <div><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Visa Types</h4><ul class="space-y-2.5 sm:space-y-3"><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Tourist Visa (L)</a></li><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Business Visa (M)</a></li><li><a href="#services" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Work Visa (Z)</a></li><li><a href="#requirements" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">Document Checklist</a></li></ul></div>
+                <div class="col-span-2 sm:col-span-1"><h4 class="font-bold text-xs sm:text-sm mb-4 sm:mb-5 text-white">Contact Info</h4><ul class="space-y-2.5 sm:space-y-3"><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:03100059895" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">03100059895</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:phone" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="tel:03118666935" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors">0311 8666935</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:email" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="mailto:shanghaitravel92@hotmail.com" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors break-all">shanghaitravel92@hotmail.com</a></li><li class="flex items-start gap-2"><iconify-icon icon="mdi:map-marker" class="text-brand-orange mt-0.5 text-sm flex-shrink-0"></iconify-icon><a href="https://maps.google.com?q=Office%201-A,%20Shanghai%20Travel%20and%20Tours%20(Pvt)%20ltd,%20ahmad%20center,%20Park%20Rd,%20Chatta%20Bakhtawar,%20Islamabad,%2044000&ftid=0x38dfeb613308a5ef:0x1c199bf2d523ca13&entry=gps&g_st=iw" target="_blank" class="text-gray-400 text-xs sm:text-sm hover:text-brand-orange transition-colors leading-relaxed">Office 1-A, Ahmed Center, Islamabad</a></li></ul></div>
+            </div>
+        </div>
+        <div class="border-t border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4"><p class="text-gray-500 text-[10px] sm:text-xs">&copy; 2025 Shanghai Travel & Tours (Private) Limited. All rights reserved.</p><p class="text-gray-600 text-[10px] sm:text-xs">SECP Registered | China Visa Specialist | Islamabad</p></div></div>
+    </footer>
 
-function reuseHistory(id){
-  const h=historyData.find(x=>x.id===id);
-  if(!h) return;
-  const ti=TOPICS.findIndex(t=>t.title===h.topic);
-  if(ti>=0) selectTopic(ti);
-  showPage('solver');
-}
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/923100059895?text=Hi, I need information about China visa services." target="_blank" class="whatsapp-float fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 bg-green-500 rounded-full flex items-center justify-center shadow-xl hover:bg-green-600 hover:scale-110 transition-all duration-300 group" aria-label="Chat on WhatsApp"><iconify-icon icon="mdi:whatsapp" class="text-white text-2xl sm:text-3xl"></iconify-icon><span class="absolute right-18 sm:right-20 bg-gray-900 text-white text-[10px] sm:text-xs font-medium px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Chat with us!<span class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-gray-900 rotate-45"></span></span></a>
 
-function clearHistory(){
-  if(confirm('Clear all history?')){historyData=[];localStorage.removeItem('ds_history');updateHistCount();renderHistory();}
-}
-function updateHistCount(){ document.getElementById('hist-count').textContent=historyData.length; }
+    <!-- Toast -->
+    <div id="toast" class="toast fixed top-20 sm:top-24 right-4 sm:right-6 z-50 bg-white rounded-xl sm:rounded-2xl shadow-2xl border border-gray-100 p-4 sm:p-5 max-w-[calc(100vw-2rem)] sm:max-w-sm"><div class="flex items-start gap-3"><div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0"><iconify-icon icon="mdi:check-circle" class="text-green-500 text-lg sm:text-xl"></iconify-icon></div><div><h4 class="font-bold text-gray-800 text-xs sm:text-sm">Message Sent!</h4><p class="text-gray-500 text-[10px] sm:text-xs mt-0.5">We'll contact you shortly via WhatsApp.</p></div><button onclick="hideToast()" class="text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0 ml-1"><iconify-icon icon="mdi:close" class="text-base sm:text-lg"></iconify-icon></button></div></div>
 
-// ─── TOPICS PAGE ───────────────────────────────────────
-function renderWeekCards(){
-  const c=document.getElementById('week-cards-container');
-  c.innerHTML=TOPICS.map((t,i)=>`
-    <div class="wk-card" id="wc-${i}" onclick="toggleWeek(${i})">
-      <div class="wk-hd">
-        <div class="wk-badge">Week ${t.week}</div>
-        <span class="wk-arrow">▾</span>
-      </div>
-      <div class="wk-title">${t.title}</div>
-      <div class="wk-desc">${t.desc}</div>
-      <div class="wk-detail">
-        <div class="dl-label" style="margin-bottom:.5rem">Key Formulas</div>
-        ${t.formulas.map(f=>`<div class="dl-formula">${f}</div>`).join('')}
-        <div class="dl-label" style="margin:.75rem 0 .35rem">Example Problem</div>
-        <div class="dl-text">${t.example}</div>
-        <div class="dl-label" style="margin:.5rem 0 .3rem">Note</div>
-        <div class="dl-text" style="color:var(--amber)">💡 ${t.note}</div>
-        <button class="try-btn" onclick="tryTopic(${i},event)">⚡ Solve this with AI →</button>
-      </div>
-    </div>`).join('');
-}
-
-function toggleWeek(i){ document.getElementById('wc-'+i).classList.toggle('wk-open'); }
-
-function tryTopic(i,e){
-  e.stopPropagation();
-  selectTopic(i);
-  showPage('solver');
-  // Pre-fill example values into appropriate panel
-  const panel=PANEL_MAP[i]||'general';
-  const ex=TOPICS[i].example;
-  if(panel==='general') document.getElementById('user-input').value=ex;
-  else if(panel==='sets'){
-    // Try to extract sets from example text
-    const m=ex.match(/[AB]\s*=\s*\{([^}]+)\}/g);
-    if(m&&m[0]) document.getElementById('setA').value=m[0].replace(/.*\{/,'').replace(/\}/,'');
-    if(m&&m[1]) document.getElementById('setB').value=m[1].replace(/.*\{/,'').replace(/\}/,'');
-  } else if(panel==='relations'){
-    const sm=ex.match(/A\s*=\s*\{([^}]+)\}/);
-    const rm=ex.match(/R\s*=\s*\{([^}]+)\}/);
-    if(sm) document.getElementById('relSet').value=sm[1];
-    if(rm) document.getElementById('relPairs').value=rm[1];
-  } else if(panel==='proof'){
-    document.getElementById('proof-stmt').value=ex;
-  } else if(panel==='logic'){
-    document.getElementById('logic-expr').value=ex;
-  }
-}
-
-// ─── NAVIGATION ────────────────────────────────────────
-function showPage(p){
-  ['solver','topics','history'].forEach(n=>{
-    document.getElementById('page-'+n).style.display=n===p?'block':'none';
-    document.getElementById('nav-'+n).classList.toggle('active',n===p);
-  });
-  if(p==='history') renderHistory();
-}
-
-init();
-</script>
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            const s = window.pageYOffset;
+            if (s > 50) { navbar.classList.add('navbar-scrolled'); } else { navbar.classList.remove('navbar-scrolled'); }
+            document.querySelectorAll('section[id]').forEach(sec => {
+                const top = sec.offsetTop - 120, h = sec.offsetHeight, id = sec.id;
+                if (s >= top && s < top + h) {
+                    document.querySelectorAll('.nav-link').forEach(l => { l.classList.remove('nav-active'); if (l.getAttribute('href') === '#' + id) l.classList.add('nav-active'); });
+                }
+            });
+        });
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn'), mobileMenu = document.getElementById('mobileMenu'), menuIcon = document.getElementById('menuIcon');
+        let menuOpen = false;
+        mobileMenuBtn.addEventListener('click', () => { menuOpen = !menuOpen; mobileMenu.classList.toggle('open', menuOpen); menuIcon.setAttribute('icon', menuOpen ? 'mdi:close' : 'mdi:menu'); });
+        document.querySelectorAll('.mobile-link').forEach(link => { link.addEventListener('click', () => { menuOpen = false; mobileMenu.classList.remove('open'); menuIcon.setAttribute('icon', 'mdi:menu'); }); });
+        document.addEventListener('click', (e) => { if (menuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) { menuOpen = false; mobileMenu.classList.remove('open'); menuIcon.setAttribute('icon', 'mdi:menu'); } });
+        document.getElementById('contactForm').addEventListener('submit', e => { e.preventDefault(); const n = document.getElementById('formName').value.trim(), p = document.getElementById('formPhone').value.trim(), v = document.getElementById('formVisaType').value, m = document.getElementById('formMessage').value.trim(); if (!n || !p || !m) return; showToast(); e.target.reset(); setTimeout(() => { window.open('https://wa.me/923100059895?text=' + encodeURIComponent("Hi, I'm " + n + ".\nPhone: " + p + "\nVisa Type: " + (v || 'Not sure') + "\nMessage: " + m), '_blank'); }, 1500); });
+        function showToast() { document.getElementById('toast').classList.add('show'); setTimeout(hideToast, 5000); }
+        function hideToast() { document.getElementById('toast').classList.remove('show'); }
+        const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) { const delay = parseInt(entry.target.dataset.delay || 0); setTimeout(() => entry.target.classList.add('visible'), delay); observer.unobserve(entry.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.observe-fade, .observe-left, .observe-right, .observe-scale').forEach(el => { observer.observe(el); });
+        window.dispatchEvent(new Event('scroll'));
+    </script>
 </body>
 </html>
